@@ -8,6 +8,8 @@ import homeTry.product.model.entity.ProductTagMapping;
 import homeTry.product.repository.ProductRepository;
 import homeTry.product.repository.ProductTagMappingRepository;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,13 +24,13 @@ public class ProductService {
         this.productTagMappingRepository = productTagMappingRepository;
     }
 
-    public List<ProductResponse> getProducts(List<Long> tagIds, MemberDTO memberDTO) {
+    public Page<ProductResponse> getProducts(List<Long> tagIds, MemberDTO memberDTO, Pageable pageable) {
 
         if (memberDTO == null) {
             throw new InvalidMemberException();
         }
 
-        List<Product> products;
+        Page<Product> products;
 
         // TODO : if-else 분리
         // tag O -> 해당 태그에 맞는 상품들을 가격순으로 정렬
@@ -40,15 +42,12 @@ public class ProductService {
                 .map(ProductTagMapping::getProductId) // productId 추출
                 .toList();
 
-            products = productRepository.findByIdInOrderByPriceAsc(productIds);
+            products = productRepository.findByIdInOrderByPriceAsc(productIds, pageable);
         } else {
-            products = productRepository.findAllByOrderByPriceAsc();
+            products = productRepository.findAllByOrderByPriceAsc(pageable);
         }
 
-        return products
-            .stream()
-            .map(ProductResponse::from)
-            .toList();
+        return products.map(ProductResponse::from);
 
     }
 
