@@ -3,6 +3,7 @@ package homeTry.product.service;
 import homeTry.member.dto.MemberDTO;
 import homeTry.product.dto.response.ProductResponse;
 import homeTry.product.model.entity.Product;
+import homeTry.product.model.entity.ProductTagMapping;
 import homeTry.product.repository.ProductRepository;
 import homeTry.product.repository.ProductTagMappingRepository;
 import java.util.List;
@@ -33,7 +34,12 @@ public class ProductService {
         // tag O -> 해당 태그에 맞는 상품들을 가격순으로 정렬
         // tag X -> 전체 상품을 가격순으로 정렬
         if (tagIds != null && !tagIds.isEmpty()) {
-            List<Long> productIds = productTagMappingRepository.findProductIdsByTagIds(tagIds);
+            List<ProductTagMapping> mappings = productTagMappingRepository.findByProductTagIdIn(tagIds);
+
+            List<Long> productIds = mappings.stream()
+                .map(ProductTagMapping::getProductId) // productId 추출
+                .toList();
+
             products = productRepository.findByIdInOrderByPriceAsc(productIds);
         } else {
             products = productRepository.findAllByOrderByPriceAsc();
