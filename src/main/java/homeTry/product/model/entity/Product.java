@@ -1,13 +1,19 @@
 package homeTry.product.model.entity;
 
 import homeTry.common.entity.BaseEntity;
+import homeTry.product.model.vo.ProductImageUrl;
+import homeTry.product.model.vo.ProductName;
+import homeTry.product.model.vo.ProductPrice;
+import homeTry.product.model.vo.ProductUrl;
+import homeTry.product.model.vo.StoreName;
+import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-// TODO : 원시값 포장하기
 @Entity
 public class Product extends BaseEntity {
 
@@ -15,31 +21,36 @@ public class Product extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String imageUrl;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "image_url"))
+    private ProductImageUrl imageUrl;
 
-    @Column(nullable = false)
-    private String productUrl;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "product_url"))
+    private ProductUrl productUrl;
 
-    @Column(nullable = false)
-    private String name;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "name"))
+    private ProductName name;
 
-    @Column(nullable = false)
-    private Long price;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "price"))
+    private ProductPrice price;
 
-    @Column(nullable = false)
-    private String storeName;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "store_name"))
+    private StoreName storeName;
 
     protected Product() {
 
     }
 
     public Product(String imageUrl, String productUrl, String name, Long price, String storeName) {
-        this.imageUrl = imageUrl;
-        this.productUrl = productUrl;
-        this.name = name;
-        this.price = price;
-        this.storeName = storeName;
+        this.imageUrl = new ProductImageUrl(imageUrl);
+        this.productUrl = new ProductUrl(productUrl);
+        this.name = new ProductName(name);
+        this.price = new ProductPrice(price);
+        this.storeName = new StoreName(storeName);
     }
 
     public Long getId() {
@@ -47,22 +58,22 @@ public class Product extends BaseEntity {
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        return imageUrl.value();
     }
 
     public String getProductUrl() {
-        return productUrl;
+        return productUrl.value();
     }
 
     public String getName() {
-        return name;
+        return name.value();
     }
 
     public Long getPrice() {
-        return price;
+        return price.value();
     }
 
     public String getStoreName() {
-        return storeName;
+        return storeName.value();
     }
 }
