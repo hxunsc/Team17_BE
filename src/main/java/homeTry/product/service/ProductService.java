@@ -2,6 +2,7 @@ package homeTry.product.service;
 
 import homeTry.member.dto.MemberDTO;
 import homeTry.product.dto.response.ProductResponse;
+import homeTry.product.exception.badRequestException.InvalidMemberException;
 import homeTry.product.model.entity.Product;
 import homeTry.product.model.entity.ProductTagMapping;
 import homeTry.product.repository.ProductRepository;
@@ -23,9 +24,8 @@ public class ProductService {
 
     public List<ProductResponse> getProducts(List<Long> tagIds, MemberDTO memberDTO) {
 
-        // TODO : 커스텀 예외 추가
         if (memberDTO == null) {
-            throw new IllegalArgumentException("유효하지 않은 회원입니다.");
+            throw new InvalidMemberException();
         }
 
         List<Product> products;
