@@ -25,8 +25,7 @@ public class ProductController {
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
-
-    // TODO : 페이지네이션 구현
+    
     @GetMapping
     public ResponseEntity<Page<ProductResponse>> getProducts(
         @RequestParam(required = false) List<Long> tagIds,
