@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/market")
-public class ProductController {
+public class MarketController {
 
     private final ProductService productService;
 
-    public ProductController(ProductService productService) {
+    public MarketController(ProductService productService) {
         this.productService = productService;
     }
 
