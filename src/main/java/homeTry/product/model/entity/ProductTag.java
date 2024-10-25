@@ -2,6 +2,7 @@ package homeTry.product.model.entity;
 
 import homeTry.common.entity.BaseEntity;
 import homeTry.product.model.vo.ProductTagName;
+import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -17,7 +18,7 @@ public class ProductTag extends BaseEntity {
     private Long id;
 
     @Embedded
-    @Column(nullable = false)
+    @AttributeOverride(name = "value", column = @Column(name = "name"))
     private ProductTagName name;
 
     protected ProductTag() {
