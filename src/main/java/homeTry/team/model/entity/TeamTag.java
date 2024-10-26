@@ -1,10 +1,11 @@
 package homeTry.team.model.entity;
 
+import homeTry.common.entity.BaseEntity;
 import homeTry.tag.model.entity.Tag;
 import jakarta.persistence.*;
 
 @Entity
-public class TeamTag {
+public class TeamTag extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
