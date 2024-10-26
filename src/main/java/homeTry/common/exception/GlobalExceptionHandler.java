@@ -99,7 +99,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(ConstraintViolationException e) {
+    public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException e) {
         ErrorResponse errorResponse = new ErrorResponse(CONSTRAINT_VIOLATION_ERROR_CODE, e.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
