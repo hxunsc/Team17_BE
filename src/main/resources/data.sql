@@ -18,7 +18,8 @@ values ('test1@naver.com', 'test1', '2024-10-04T12:30:00'),
        ('test2@naver.com', 'test2', '2024-10-04T12:40:00');
 
 insert into team (team_name, team_description, leader_member_id, max_participants, current_participants, password)
-values ('test1 team', 'test1 team description', 1, 8, 2, null);
+values ('test1 team', 'test1 team description', 1, 8, 2, null),
+       ('test2 team', 'test2 team description', 1, 8, 2, '1234');
 
 insert into team_member (member_member_id, team_id)
 values (1, 1),
