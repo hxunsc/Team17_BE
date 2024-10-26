@@ -10,14 +10,12 @@ import homeTry.tag.model.entity.Tag;
 import homeTry.tag.service.TagService;
 import homeTry.team.dto.DateDTO;
 import homeTry.team.dto.RankingDTO;
+import homeTry.team.dto.request.CheckingPasswordRequest;
 import homeTry.team.dto.request.TeamCreateRequest;
 import homeTry.team.dto.response.NewTeamFromResponse;
 import homeTry.team.dto.response.RankingResponse;
 import homeTry.team.dto.response.TeamResponse;
-import homeTry.team.exception.MyRankingNotFoundException;
-import homeTry.team.exception.NotTeamLeaderException;
-import homeTry.team.exception.TeamNameAlreadyExistsException;
-import homeTry.team.exception.TeamNotFoundException;
+import homeTry.team.exception.*;
 import homeTry.team.model.entity.Team;
 import homeTry.team.model.entity.TeamMember;
 import homeTry.team.model.vo.Name;
@@ -231,8 +229,12 @@ public class TeamService {
         return totalExerciseTimeList //멤버들 랭킹 구함
                 .stream()
                 .sorted(Comparator.comparing(RankingDTO::totalExerciseTime))
-                .map(RankingDTO::autoIncrementRanking)
+                .map(this::autoIncrementRankig)
                 .toList();
+    }
+
+    private RankingDTO autoIncrementRankig(RankingDTO rankingDTO) {
+        return new RankingDTO(rankingDTO.name(), rankingDTO.ranking() + 1, rankingDTO.totalExerciseTime());
     }
 
     //멤버들의 오늘 totalExerciseTime 을 조회
@@ -277,6 +279,26 @@ public class TeamService {
         Member member = memberService.getMemberEntity(memberDTO.id());
 
         teamMemberService.deleteTeamMember(team, member);
+    }
+
+    //팀 비밀번호 검사
+    @Transactional(readOnly = true)
+    public void checkPassword(Long teamId, CheckingPasswordRequest checkingPasswordRequest) {
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new TeamNotFoundException());
+
+        verifyPassword(team, checkingPasswordRequest);
+    }
+
+    //팀 비밀번호와 맞는 지 검사 수행
+    private void verifyPassword(Team team, CheckingPasswordRequest checkingPasswordRequest) {
+        boolean result = team.getPassword()
+                .map(password -> password.getValue().equals(checkingPasswordRequest.password()))
+                .orElseThrow(() -> new TeamHasNotPasswordException());
+
+        if (!result) {
+            throw new InvalidPasswordException();
+        }
     }
 }
 

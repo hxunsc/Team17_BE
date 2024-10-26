@@ -4,6 +4,7 @@ import homeTry.common.annotation.LoginMember;
 import homeTry.member.dto.MemberDTO;
 import homeTry.team.dto.DateDTO;
 import homeTry.team.dto.request.TeamCreateRequest;
+import homeTry.team.dto.request.CheckingPasswordRequest;
 import homeTry.team.dto.response.NewTeamFromResponse;
 import homeTry.team.dto.response.RankingResponse;
 import homeTry.team.dto.response.TeamResponse;
@@ -99,4 +100,16 @@ public class TeamController {
         teamService.withDrawTeam(memberDTO, teamId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+
+    //비밀번호 일치 검사 api
+    @PostMapping("/checking/{teamId}")
+    public ResponseEntity<Void> verifyPassword(
+            @PathVariable("teamId") Long teamId,
+            @RequestBody @Valid CheckingPasswordRequest checkingPasswordRequest) {
+        teamService.checkPassword(teamId, checkingPasswordRequest);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+
 }
