@@ -1,8 +1,13 @@
 package homeTry.team.model.entity;
 
 import homeTry.member.model.entity.Member;
-import homeTry.team.model.vo.*;
+import homeTry.team.model.vo.Description;
+import homeTry.team.model.vo.Name;
+import homeTry.team.model.vo.Participant;
+import homeTry.team.model.vo.Password;
 import jakarta.persistence.*;
+
+import java.util.Optional;
 
 @Entity
 public class Team {
@@ -39,7 +44,7 @@ public class Team {
     }
 
     public Team(String teamName, String teamDescription, Member leader, long maxParticipants,
-        long currentParticipants, String password) {
+                long currentParticipants, String password) {
         this.teamName = new Name(teamName);
         this.teamDescription = new Description(teamDescription);
         this.leader = leader;
@@ -72,12 +77,12 @@ public class Team {
         return currentParticipants;
     }
 
-    public Password getPassword() {
-        return password;
+    public Optional<Password> getPassword() {
+        return Optional.ofNullable(password);
     }
 
     public void updateTeam(String teamName, String teamDescription, Member leader,
-        long maxParticipants, long currentParticipants, String password) {
+                           long maxParticipants, long currentParticipants, String password) {
         this.teamName = new Name(teamName);
         this.teamDescription = new Description(teamDescription);
         this.leader = leader;

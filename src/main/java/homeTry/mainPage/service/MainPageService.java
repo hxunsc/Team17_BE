@@ -1,15 +1,14 @@
 package homeTry.mainPage.service;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
-
 import homeTry.diary.service.DiaryService;
 import homeTry.exerciseList.service.ExerciseHistoryService;
 import homeTry.exerciseList.service.ExerciseTimeService;
 import homeTry.mainPage.dto.request.MainPageRequest;
 import homeTry.mainPage.dto.response.MainPageResponse;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
 
 @Service
 public class MainPageService {
@@ -31,7 +30,7 @@ public class MainPageService {
 
         LocalDate date = mainPageRequest.toDate();
 
-        if (isToday(date)) {
+        if (mainPageRequest.isToday(date)) {
             return getTodayMainPageResponse(memberId);
         }
 
@@ -54,9 +53,5 @@ public class MainPageService {
                 exerciseHistoryService.getExerciseHistoriesForDay(memberId, date),
                 exerciseHistoryService.getExerciseResponsesForDay(memberId, date),
                 diaryService.getDiaryByDate(date, memberId));
-    }
-
-    private boolean isToday(LocalDate date) {
-        return date.equals(LocalDate.now());
     }
 }
