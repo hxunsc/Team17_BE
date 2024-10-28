@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -56,6 +57,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             WebRequest request) {
         ErrorType errorType = CommonErrorType.MISSING_REQUEST_PARAM_EXCEPTION;
         String message = String.format("%s (누락된 RequestParameter: %s)", errorType.getMessage(), ex.getParameterName());
+        ErrorResponse errorResponse = new ErrorResponse(
+                errorType.getErrorCode(),
+                message
+        );
+        return new ResponseEntity<>(errorResponse, errorType.getHttpStatus());
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
+            HttpRequestMethodNotSupportedException ex,
+            HttpHeaders headers,
+            HttpStatusCode status,
+            WebRequest request) { 
+        ErrorType errorType = CommonErrorType.HTTP_REQUEST_METHOD_NOT_SUPPORT_EXCEPTION;
+        String message = String.format("%s (Not allwed Method: %s)", errorType.getMessage(), ex.getMethod());
         ErrorResponse errorResponse = new ErrorResponse(
                 errorType.getErrorCode(),
                 message
