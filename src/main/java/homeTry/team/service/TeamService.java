@@ -8,7 +8,6 @@ import homeTry.member.service.MemberService;
 import homeTry.tag.dto.TagDTO;
 import homeTry.tag.model.entity.Tag;
 import homeTry.tag.service.TagService;
-import homeTry.team.dto.DateDTO;
 import homeTry.team.dto.RankingDTO;
 import homeTry.team.dto.request.CheckingPasswordRequest;
 import homeTry.team.dto.request.TeamCreateRequest;
@@ -185,13 +184,13 @@ public class TeamService {
 
     //팀 랭킹 조회 기능(페이징 적용)
     @Transactional(readOnly = true)
-    public RankingResponse getTeamRanking(MemberDTO memberDTO, Long teamId, Pageable pageable, DateDTO dateDTO) {
+    public RankingResponse getTeamRanking(MemberDTO memberDTO, Long teamId, Pageable pageable, LocalDate date) {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new TeamNotFoundException());
 
         List<Member> memberList = getMemberList(team); //팀의 멤버들을 조회해옴
 
-        List<RankingDTO> rankingList = getRankingList(memberList, dateDTO.toLocalDate()); //랭킹을 구해옴
+        List<RankingDTO> rankingList = getRankingList(memberList, date); //랭킹을 구해옴
 
         RankingDTO myRanking = rankingList //내 랭킹을 찾음
                 .stream()

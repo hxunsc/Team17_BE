@@ -1,8 +1,8 @@
 package homeTry.team.controller;
 
+import homeTry.common.annotation.DateValid;
 import homeTry.common.annotation.LoginMember;
 import homeTry.member.dto.MemberDTO;
-import homeTry.team.dto.DateDTO;
 import homeTry.team.dto.request.TeamCreateRequest;
 import homeTry.team.dto.request.CheckingPasswordRequest;
 import homeTry.team.dto.response.NewTeamFromResponse;
@@ -14,10 +14,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -78,8 +80,8 @@ public class TeamController {
             @LoginMember MemberDTO memberDTO,
             @PathVariable("teamId") Long teamId,
             @PageableDefault(size = 8, sort = "totalExerciseTime", direction = Sort.Direction.DESC) Pageable pageable,
-            @Valid @ModelAttribute DateDTO dateDTO) {
-        RankingResponse rankingPage = teamService.getTeamRanking(memberDTO, teamId, pageable, dateDTO);
+            @RequestParam(name = "date") @DateValid @DateTimeFormat(pattern = "yyyyMMdd") LocalDate date) {
+        RankingResponse rankingPage = teamService.getTeamRanking(memberDTO, teamId, pageable, date);
         return ResponseEntity.ok(rankingPage);
     }
 
