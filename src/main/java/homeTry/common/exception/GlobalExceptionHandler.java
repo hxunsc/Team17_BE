@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -18,9 +19,6 @@ import java.util.NoSuchElementException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
-    private static final String CONSTRAINT_VIOLATION_ERROR_CODE = "Field400_001";
-    private static final String ILLEGAL_ARGUMENT_ERROR_CODE = "Field400_002";
-
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
@@ -43,9 +41,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             HttpStatusCode status,
             WebRequest request) {
         ErrorType errorType = CommonErrorType.MISSING_PATH_VARIABLE_EXCEPTION;
+        String message = String.format("%s (누락된 PathVariable: %s)", errorType.getMessage(), ex.getVariableName());
         ErrorResponse errorResponse = new ErrorResponse(
                 errorType.getErrorCode(),
-                errorType.getMessage()
+                message
         );
         return new ResponseEntity<>(errorResponse, errorType.getHttpStatus());
     }
@@ -57,9 +56,25 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             HttpStatusCode status,
             WebRequest request) {
         ErrorType errorType = CommonErrorType.MISSING_REQUEST_PARAM_EXCEPTION;
+        String message = String.format("%s (누락된 RequestParameter: %s)", errorType.getMessage(), ex.getParameterName());
         ErrorResponse errorResponse = new ErrorResponse(
                 errorType.getErrorCode(),
-                errorType.getMessage()
+                message
+        );
+        return new ResponseEntity<>(errorResponse, errorType.getHttpStatus());
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
+            HttpRequestMethodNotSupportedException ex,
+            HttpHeaders headers,
+            HttpStatusCode status,
+            WebRequest request) { 
+        ErrorType errorType = CommonErrorType.HTTP_REQUEST_METHOD_NOT_SUPPORT_EXCEPTION;
+        String message = String.format("%s (Not allwed Method: %s)", errorType.getMessage(), ex.getMethod());
+        ErrorResponse errorResponse = new ErrorResponse(
+                errorType.getErrorCode(),
+                message
         );
         return new ResponseEntity<>(errorResponse, errorType.getHttpStatus());
     }
@@ -91,16 +106,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, errorType.getHttpStatus());
     }
 
-
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException e) {
-        ErrorResponse errorResponse = new ErrorResponse(ILLEGAL_ARGUMENT_ERROR_CODE, e.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(CommonErrorType.ILLEGAL_ARGUMENT_EXCEPTION.getErrorCode(), e.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgumentException(ConstraintViolationException e) {
-        ErrorResponse errorResponse = new ErrorResponse(CONSTRAINT_VIOLATION_ERROR_CODE, e.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(CommonErrorType.CONSTRAINT_VIOLATION_EXCEPTION.getErrorCode(), e.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
+
 }
