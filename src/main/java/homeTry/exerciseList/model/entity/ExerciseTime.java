@@ -1,9 +1,11 @@
 package homeTry.exerciseList.model.entity;
 
+import homeTry.common.constants.DateTimeUtil;
 import homeTry.common.entity.BaseEntity;
 import jakarta.persistence.*;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -31,8 +33,7 @@ public class ExerciseTime extends BaseEntity {
 
     public ExerciseTime(Exercise exercise) {
         this.exercise = exercise;
-        this.startTime = LocalDateTime.now();
-        isActive = true;
+        this.startTime = DateTimeUtil.getStartOfDay(LocalDate.now());
     }
 
     public void startExercise() {

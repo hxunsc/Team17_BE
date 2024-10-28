@@ -5,8 +5,8 @@ import homeTry.member.dto.MemberDTO;
 import homeTry.product.dto.response.ProductResponse;
 import homeTry.product.service.ProductService;
 import java.util.List;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -27,12 +27,12 @@ public class MarketController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ProductResponse>> getProducts(
+    public ResponseEntity<Slice<ProductResponse>> getProducts(
         @RequestParam(required = false) List<Long> tagIds,
         @LoginMember MemberDTO memberDTO,
         @PageableDefault(size = 5, sort = "price", direction = Sort.Direction.ASC) Pageable pageable) {
 
-        Page<ProductResponse> products = productService.getProducts(tagIds, memberDTO, pageable);
+        Slice<ProductResponse> products = productService.getProducts(tagIds, memberDTO, pageable);
         return new ResponseEntity<>(products, HttpStatus.OK);  // 상태 코드 200
     }
 
