@@ -10,6 +10,6 @@ values ('성별', '여성'),
        ('운동강도', '중'),
        ('운동강도', '약');
 
-insert into member (email, nickname, attendance_date, created_at)
+insert into member (email, nickname, exercise_attendance_date, created_at)
 values ('test1@naver.com', 'test1', '0','2024-10-04T12:30:00'),
        ('test2@naver.com', 'test2', '0','2024-10-04T12:40:00');
