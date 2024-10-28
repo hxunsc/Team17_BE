@@ -8,8 +8,8 @@ import homeTry.product.model.entity.ProductTagMapping;
 import homeTry.product.repository.ProductRepository;
 import homeTry.product.repository.ProductTagMappingRepository;
 import java.util.List;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,7 +24,7 @@ public class ProductService {
         this.productTagMappingRepository = productTagMappingRepository;
     }
 
-    public Page<ProductResponse> getProducts(List<Long> tagIds, MemberDTO memberDTO,
+    public Slice<ProductResponse> getProducts(List<Long> tagIds, MemberDTO memberDTO,
         Pageable pageable) {
 
         if (memberDTO == null) {
@@ -33,14 +33,14 @@ public class ProductService {
         
         // tag O -> 해당 태그에 맞는 상품들을 가격순으로 정렬
         // tag X -> 전체 상품을 가격순으로 정렬
-        Page<Product> products = (tagIds != null && !tagIds.isEmpty())
+        Slice<Product> products = (tagIds != null && !tagIds.isEmpty())
             ? getProductsByTagIds(tagIds, pageable)
             : productRepository.findAllByOrderByPriceAsc(pageable);
 
         return products.map(ProductResponse::from);
     }
 
-    private Page<Product> getProductsByTagIds(List<Long> tagIds, Pageable pageable) {
+    private Slice<Product> getProductsByTagIds(List<Long> tagIds, Pageable pageable) {
         List<ProductTagMapping> mappings = productTagMappingRepository.findByProductTagIdIn(tagIds);
 
         List<Long> productIds = mappings.stream()
