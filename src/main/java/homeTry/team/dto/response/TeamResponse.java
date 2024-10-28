@@ -13,15 +13,13 @@ public record TeamResponse(
         String teamDescription,
         long maxParticipants,
         long currentParticipants,
-        String password,
+        boolean hasPassword,
         List<TagDTO> tagList
 ) {
 
 
     public static TeamResponse of(Team team, List<TagDTO> tagList) {
-        String password = team.getPassword()
-                .map(Password::getValue)
-                .orElse(null);
+        boolean hasPassword = team.getPassword().isPresent();
 
         return new TeamResponse(
                 team.getId(),
@@ -30,7 +28,7 @@ public record TeamResponse(
                 team.getTeamDescription().value(),
                 team.getMaxParticipants().value(),
                 team.getCurrentParticipants().value(),
-                password,
+                hasPassword,
                 tagList);
     }
 }

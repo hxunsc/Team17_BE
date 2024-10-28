@@ -8,23 +8,18 @@ import homeTry.member.service.MemberService;
 import homeTry.tag.dto.TagDTO;
 import homeTry.tag.model.entity.Tag;
 import homeTry.tag.service.TagService;
-import homeTry.team.dto.DateDTO;
 import homeTry.team.dto.RankingDTO;
+import homeTry.team.dto.request.CheckingPasswordRequest;
 import homeTry.team.dto.request.TeamCreateRequest;
 import homeTry.team.dto.response.NewTeamFromResponse;
 import homeTry.team.dto.response.RankingResponse;
 import homeTry.team.dto.response.TeamResponse;
-import homeTry.team.exception.MyRankingNotFoundException;
-import homeTry.team.exception.NotTeamLeaderException;
-import homeTry.team.exception.TeamNameAlreadyExistsException;
-import homeTry.team.exception.TeamNotFoundException;
+import homeTry.team.exception.*;
 import homeTry.team.model.entity.Team;
 import homeTry.team.model.entity.TeamMember;
 import homeTry.team.model.vo.Name;
 import homeTry.team.repository.TeamRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -136,15 +131,15 @@ public class TeamService {
 
     //전체 팀 조회 (페이징 적용)
     @Transactional(readOnly = true)
-    public Page<TeamResponse> getTotalTeamPage(MemberDTO memberDTO, Pageable pageable) {
+    public Slice<TeamResponse> getTotalTeamSlice(MemberDTO memberDTO, Pageable pageable) {
         Member member = memberService.getMemberEntity(memberDTO.id());
 
-        Page<Team> teamListPage = teamRepository.findTeamExcludingMember(member, pageable);
+        Slice<Team> teamListSlice = teamRepository.findTeamExcludingMember(member, pageable);
 
         //TeamResponse 로 변환
-        List<TeamResponse> teamResponseList = getTeamResponseList(teamListPage.getContent());
+        List<TeamResponse> teamResponseList = getTeamResponseList(teamListSlice.getContent());
 
-        return new PageImpl<>(teamResponseList, pageable, teamListPage.getTotalElements());
+        return new SliceImpl<>(teamResponseList, pageable, teamListSlice.hasNext());
     }
 
     //팀 리스트를 TeamResponse 리스트로 변환
@@ -171,29 +166,29 @@ public class TeamService {
 
     //태그 처리 된 팀 리스트 조회 기능(페이징 적용)
     @Transactional(readOnly = true)
-    public Page<TeamResponse> getTaggedTeamList(Pageable pageable, MemberDTO memberDTO, List<Long> tagIdList) {
+    public Slice<TeamResponse> getTaggedTeamList(Pageable pageable, MemberDTO memberDTO, List<Long> tagIdList) {
         Member member = memberService.getMemberEntity(memberDTO.id());
 
         List<Tag> tagList = tagService.getTagList(tagIdList);
 
         long tagListSize = tagList.size();
 
-        Page<Team> teamListPage = teamRepository.findTaggedTeamExcludingMember(tagList, tagListSize, member, pageable);
+        Slice<Team> teamListSlice = teamRepository.findTaggedTeamExcludingMember(tagList, tagListSize, member, pageable);
 
-        List<TeamResponse> teamResponseList = getTeamResponseList(teamListPage.getContent());
+        List<TeamResponse> teamResponseList = getTeamResponseList(teamListSlice.getContent());
 
-        return new PageImpl<>(teamResponseList, pageable, teamListPage.getTotalElements());
+        return new SliceImpl<>(teamResponseList, pageable, teamListSlice.hasNext());
     }
 
     //팀 랭킹 조회 기능(페이징 적용)
     @Transactional(readOnly = true)
-    public RankingResponse getTeamRanking(MemberDTO memberDTO, Long teamId, Pageable pageable, DateDTO dateDTO) {
+    public RankingResponse getTeamRanking(MemberDTO memberDTO, Long teamId, Pageable pageable, LocalDate date) {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new TeamNotFoundException());
 
         List<Member> memberList = getMemberList(team); //팀의 멤버들을 조회해옴
 
-        List<RankingDTO> rankingList = getRankingList(memberList, dateDTO.toLocalDate()); //랭킹을 구해옴
+        List<RankingDTO> rankingList = getRankingList(memberList, date); //랭킹을 구해옴
 
         RankingDTO myRanking = rankingList //내 랭킹을 찾음
                 .stream()
@@ -205,9 +200,11 @@ public class TeamService {
         int end = Math.min(start + pageable.getPageSize(), rankingList.size());
         List<RankingDTO> PagedRankingList = rankingList.subList(start, end); //페이징 처리를 위해 리스트 슬라이싱
 
-        Page<RankingDTO> page = new PageImpl<>(rankingList, pageable, rankingList.size()); // 랭킹 페이지 생성
+        boolean hasNext = end < rankingList.size();
 
-        return new RankingResponse(myRanking.ranking(), myRanking.name(), myRanking.totalExerciseTime(), page);
+        Slice<RankingDTO> slice = new SliceImpl<>(rankingList, pageable, hasNext); // 랭킹 페이지 생성
+
+        return new RankingResponse(myRanking.ranking(), myRanking.name(), myRanking.totalExerciseTime(), slice);
     }
 
     //팀의 멤버를 찾아와주는 기능
@@ -231,8 +228,12 @@ public class TeamService {
         return totalExerciseTimeList //멤버들 랭킹 구함
                 .stream()
                 .sorted(Comparator.comparing(RankingDTO::totalExerciseTime))
-                .map(RankingDTO::autoIncrementRanking)
+                .map(this::autoIncrementRankig)
                 .toList();
+    }
+
+    private RankingDTO autoIncrementRankig(RankingDTO rankingDTO) {
+        return new RankingDTO(rankingDTO.name(), rankingDTO.ranking() + 1, rankingDTO.totalExerciseTime());
     }
 
     //멤버들의 오늘 totalExerciseTime 을 조회
@@ -277,6 +278,26 @@ public class TeamService {
         Member member = memberService.getMemberEntity(memberDTO.id());
 
         teamMemberService.deleteTeamMember(team, member);
+    }
+
+    //팀 비밀번호 검사
+    @Transactional(readOnly = true)
+    public void checkPassword(Long teamId, CheckingPasswordRequest checkingPasswordRequest) {
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new TeamNotFoundException());
+
+        verifyPassword(team, checkingPasswordRequest);
+    }
+
+    //팀 비밀번호와 맞는 지 검사 수행
+    private void verifyPassword(Team team, CheckingPasswordRequest checkingPasswordRequest) {
+        boolean result = team.getPassword()
+                .map(password -> password.getValue().equals(checkingPasswordRequest.password()))
+                .orElseThrow(() -> new TeamHasNotPasswordException());
+
+        if (!result) {
+            throw new InvalidPasswordException();
+        }
     }
 }
 

@@ -10,8 +10,4 @@ public record RankingDTO(
     public static RankingDTO of(String name, int ranking, Duration totalExerciseTime) {
         return new RankingDTO(name, ranking, totalExerciseTime);
     }
-
-    public RankingDTO autoIncrementRanking() {
-        return new RankingDTO(name, ranking + 1, totalExerciseTime);
-    }
 }

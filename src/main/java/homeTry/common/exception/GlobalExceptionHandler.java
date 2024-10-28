@@ -13,12 +13,28 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.NoSuchElementException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @Override
+    protected ResponseEntity<Object> handleHandlerMethodValidationException(
+            HandlerMethodValidationException ex,
+            HttpHeaders headers,
+            HttpStatusCode status,
+            WebRequest request) {
+        ErrorType errorType = CommonErrorType.HANDLER_METHOD_VALIDATION_EXCEPTION;
+        ErrorResponse errorResponse = new ErrorResponse(
+                errorType.getErrorCode(),
+                errorType.getMessage()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
@@ -69,7 +85,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             HttpRequestMethodNotSupportedException ex,
             HttpHeaders headers,
             HttpStatusCode status,
-            WebRequest request) { 
+            WebRequest request) {
         ErrorType errorType = CommonErrorType.HTTP_REQUEST_METHOD_NOT_SUPPORT_EXCEPTION;
         String message = String.format("%s (Not allwed Method: %s)", errorType.getMessage(), ex.getMethod());
         ErrorResponse errorResponse = new ErrorResponse(
@@ -100,21 +116,42 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<ErrorResponse> handleNoSuchElementException(NoSuchElementException e) {
+    public ResponseEntity<ErrorResponse> handleNoSuchElementException(NoSuchElementException ex) {
         ErrorType errorType = CommonErrorType.NO_SUCH_ARGUMENT_EXCEPTION;
-        ErrorResponse errorResponse = new ErrorResponse(errorType.getErrorCode(), errorType.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(
+                errorType.getErrorCode(),
+                errorType.getMessage()
+        );
         return new ResponseEntity<>(errorResponse, errorType.getHttpStatus());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException e) {
-        ErrorResponse errorResponse = new ErrorResponse(CommonErrorType.ILLEGAL_ARGUMENT_EXCEPTION.getErrorCode(), e.getMessage());
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
+        ErrorType errorType = CommonErrorType.ILLEGAL_ARGUMENT_EXCEPTION;
+        ErrorResponse errorResponse = new ErrorResponse(
+                errorType.getErrorCode(),
+                errorType.getMessage()
+        );
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(ConstraintViolationException e) {
-        ErrorResponse errorResponse = new ErrorResponse(CommonErrorType.CONSTRAINT_VIOLATION_EXCEPTION.getErrorCode(), e.getMessage());
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(ConstraintViolationException ex) {
+        ErrorType errorType = CommonErrorType.CONSTRAINT_VIOLATION_EXCEPTION;
+        ErrorResponse errorResponse = new ErrorResponse(
+                errorType.getErrorCode(),
+                errorType.getMessage()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
+        ErrorType errorType = CommonErrorType.METHOD_ARGUMENT_TYPE_MISMATCH_EXCEPTION;
+        ErrorResponse errorResponse = new ErrorResponse(
+                errorType.getErrorCode(),
+                errorType.getMessage()
+        );
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
