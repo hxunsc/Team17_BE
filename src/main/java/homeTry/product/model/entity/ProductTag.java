@@ -1,13 +1,15 @@
 package homeTry.product.model.entity;
 
 import homeTry.common.entity.BaseEntity;
+import homeTry.product.model.vo.ProductTagName;
+import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-// TODO : 원시값 포장하기
 @Entity
 public class ProductTag extends BaseEntity {
 
@@ -15,15 +17,16 @@ public class ProductTag extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String name;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "name"))
+    private ProductTagName name;
 
     protected ProductTag() {
 
     }
 
     public ProductTag(String name) {
-        this.name = name;
+        this.name = new ProductTagName(name);
     }
 
     public Long getId() {
@@ -31,7 +34,7 @@ public class ProductTag extends BaseEntity {
     }
 
     public String getName() {
-        return name;
+        return name.value();
     }
 
 }
