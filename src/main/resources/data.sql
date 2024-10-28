@@ -25,6 +25,11 @@ insert into team_member (member_member_id, team_id)
 values (1, 1),
        (2, 1);
 
+insert into team_tag (tag_id, team_id)
+values (1, 1),
+       (4, 1),
+       (2, 2),
+       (5, 2);
 
 insert into exercise (exercise_name, is_deprecated, member_member_id)
 values ('test1 User exercise1', false, 1),
