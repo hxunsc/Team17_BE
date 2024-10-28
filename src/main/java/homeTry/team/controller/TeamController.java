@@ -10,8 +10,8 @@ import homeTry.team.dto.response.RankingResponse;
 import homeTry.team.dto.response.TeamResponse;
 import homeTry.team.service.TeamService;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -50,11 +50,11 @@ public class TeamController {
 
     //모든 팀 조회 api (페이징 적용)
     @GetMapping
-    public ResponseEntity<Page<TeamResponse>> getTotalTeamList(
+    public ResponseEntity<Slice<TeamResponse>> getTotalTeamList(
             @PageableDefault(size = 8, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
             @LoginMember MemberDTO memberDTO) {
-        Page<TeamResponse> totalTeamPage = teamService.getTotalTeamPage(memberDTO, pageable);
-        return ResponseEntity.ok(totalTeamPage);
+        Slice<TeamResponse> totalTeamSlice = teamService.getTotalTeamSlice(memberDTO, pageable);
+        return ResponseEntity.ok(totalTeamSlice);
     }
 
     //팀 생성 페이지에 필요한 정보 조회 api
@@ -66,12 +66,12 @@ public class TeamController {
 
     //태그를 통한 일부팀 조회 api (페이징 적용)
     @GetMapping("/tagged")
-    public ResponseEntity<Page<TeamResponse>> getTaggedTeamList(
+    public ResponseEntity<Slice<TeamResponse>> getTaggedTeamList(
             @PageableDefault(size = 8, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
             @RequestParam(name = "tagIdList") List<Long> tagIdList,
             @LoginMember MemberDTO memberDTO) {
-        Page<TeamResponse> taggedTeamPage = teamService.getTaggedTeamList(pageable, memberDTO, tagIdList);
-        return ResponseEntity.ok(taggedTeamPage);
+        Slice<TeamResponse> taggedTeamSlice = teamService.getTaggedTeamList(pageable, memberDTO, tagIdList);
+        return ResponseEntity.ok(taggedTeamSlice);
     }
 
     //팀 내 랭킹을 조회하는 api (페이징 적용)
@@ -81,8 +81,8 @@ public class TeamController {
             @PathVariable("teamId") Long teamId,
             @PageableDefault(size = 8, sort = "totalExerciseTime", direction = Sort.Direction.DESC) Pageable pageable,
             @RequestParam(name = "date") @DateValid @DateTimeFormat(pattern = "yyyyMMdd") LocalDate date) {
-        RankingResponse rankingPage = teamService.getTeamRanking(memberDTO, teamId, pageable, date);
-        return ResponseEntity.ok(rankingPage);
+        RankingResponse rankingSlice = teamService.getTeamRanking(memberDTO, teamId, pageable, date);
+        return ResponseEntity.ok(rankingSlice);
     }
 
     // 팀에 가입

@@ -19,9 +19,7 @@ import homeTry.team.model.entity.Team;
 import homeTry.team.model.entity.TeamMember;
 import homeTry.team.model.vo.Name;
 import homeTry.team.repository.TeamRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -133,15 +131,15 @@ public class TeamService {
 
     //전체 팀 조회 (페이징 적용)
     @Transactional(readOnly = true)
-    public Page<TeamResponse> getTotalTeamPage(MemberDTO memberDTO, Pageable pageable) {
+    public Slice<TeamResponse> getTotalTeamSlice(MemberDTO memberDTO, Pageable pageable) {
         Member member = memberService.getMemberEntity(memberDTO.id());
 
-        Page<Team> teamListPage = teamRepository.findTeamExcludingMember(member, pageable);
+        Slice<Team> teamListSlice = teamRepository.findTeamExcludingMember(member, pageable);
 
         //TeamResponse 로 변환
-        List<TeamResponse> teamResponseList = getTeamResponseList(teamListPage.getContent());
+        List<TeamResponse> teamResponseList = getTeamResponseList(teamListSlice.getContent());
 
-        return new PageImpl<>(teamResponseList, pageable, teamListPage.getTotalElements());
+        return new SliceImpl<>(teamResponseList, pageable, teamListSlice.hasNext());
     }
 
     //팀 리스트를 TeamResponse 리스트로 변환
@@ -168,18 +166,18 @@ public class TeamService {
 
     //태그 처리 된 팀 리스트 조회 기능(페이징 적용)
     @Transactional(readOnly = true)
-    public Page<TeamResponse> getTaggedTeamList(Pageable pageable, MemberDTO memberDTO, List<Long> tagIdList) {
+    public Slice<TeamResponse> getTaggedTeamList(Pageable pageable, MemberDTO memberDTO, List<Long> tagIdList) {
         Member member = memberService.getMemberEntity(memberDTO.id());
 
         List<Tag> tagList = tagService.getTagList(tagIdList);
 
         long tagListSize = tagList.size();
 
-        Page<Team> teamListPage = teamRepository.findTaggedTeamExcludingMember(tagList, tagListSize, member, pageable);
+        Slice<Team> teamListSlice = teamRepository.findTaggedTeamExcludingMember(tagList, tagListSize, member, pageable);
 
-        List<TeamResponse> teamResponseList = getTeamResponseList(teamListPage.getContent());
+        List<TeamResponse> teamResponseList = getTeamResponseList(teamListSlice.getContent());
 
-        return new PageImpl<>(teamResponseList, pageable, teamListPage.getTotalElements());
+        return new SliceImpl<>(teamResponseList, pageable, teamListSlice.hasNext());
     }
 
     //팀 랭킹 조회 기능(페이징 적용)
@@ -202,9 +200,11 @@ public class TeamService {
         int end = Math.min(start + pageable.getPageSize(), rankingList.size());
         List<RankingDTO> PagedRankingList = rankingList.subList(start, end); //페이징 처리를 위해 리스트 슬라이싱
 
-        Page<RankingDTO> page = new PageImpl<>(rankingList, pageable, rankingList.size()); // 랭킹 페이지 생성
+        boolean hasNext = end < rankingList.size();
 
-        return new RankingResponse(myRanking.ranking(), myRanking.name(), myRanking.totalExerciseTime(), page);
+        Slice<RankingDTO> slice = new SliceImpl<>(rankingList, pageable, hasNext); // 랭킹 페이지 생성
+
+        return new RankingResponse(myRanking.ranking(), myRanking.name(), myRanking.totalExerciseTime(), slice);
     }
 
     //팀의 멤버를 찾아와주는 기능
