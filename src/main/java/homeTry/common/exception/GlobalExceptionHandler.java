@@ -18,9 +18,6 @@ import java.util.NoSuchElementException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
-    private static final String CONSTRAINT_VIOLATION_ERROR_CODE = "Field400_001";
-    private static final String ILLEGAL_ARGUMENT_ERROR_CODE = "Field400_002";
-
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
@@ -94,13 +91,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException e) {
-        ErrorResponse errorResponse = new ErrorResponse(ILLEGAL_ARGUMENT_ERROR_CODE, e.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(CommonErrorType.ILLEGAL_ARGUMENT_EXCEPTION.getErrorCode(), e.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgumentException(ConstraintViolationException e) {
-        ErrorResponse errorResponse = new ErrorResponse(CONSTRAINT_VIOLATION_ERROR_CODE, e.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(CommonErrorType.CONSTRAINT_VIOLATION_EXCEPTION.getErrorCode(), e.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 }

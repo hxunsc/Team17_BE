@@ -7,7 +7,8 @@ public enum CommonErrorType implements ErrorType {
     ILLEGAL_ARGUMENT_EXCEPTION("Common400_002", HttpStatus.BAD_REQUEST, "IllegalArgumentException 발생"),
     NO_SUCH_ARGUMENT_EXCEPTION("Common400_003", HttpStatus.NOT_FOUND, "요구하신 요청에 맞는 리소스를 찾을 수 없습니다."),
     MISSING_PATH_VARIABLE_EXCEPTION("Common400_004", HttpStatus.BAD_REQUEST, "PathVariable이 누락됐습니다."),
-    MISSING_REQUEST_PARAM_EXCEPTION("Common400_005", HttpStatus.BAD_REQUEST, "RequestParameter가 누락됐습니다.");
+    MISSING_REQUEST_PARAM_EXCEPTION("Common400_005", HttpStatus.BAD_REQUEST, "RequestParameter가 누락됐습니다."),
+    CONSTRAINT_VIOLATION_EXCEPTION("Common400_006", HttpStatus.BAD_REQUEST, "ConstraintViolationException 발생");
 
     private String errorCode;
     private HttpStatus httpStatus;
