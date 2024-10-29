@@ -28,7 +28,7 @@ public class MainPageService {
     @Transactional(readOnly = true)
     public MainPageResponse getMainPage(MainPageRequest mainPageRequest, Long memberId) {
 
-        LocalDate date = mainPageRequest.toDate();
+        LocalDate date = mainPageRequest.date();
 
         if (mainPageRequest.isToday(date)) {
             return getTodayMainPageResponse(memberId);
