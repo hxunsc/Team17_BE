@@ -227,7 +227,7 @@ public class TeamService {
 
         return totalExerciseTimeList //멤버들 랭킹 구함
                 .stream()
-                .sorted(Comparator.comparing(RankingDTO::totalExerciseTime))
+                .sorted(Comparator.comparing(RankingDTO::totalExerciseTime).reversed())
                 .map(this::autoIncrementRankig)
                 .toList();
     }
