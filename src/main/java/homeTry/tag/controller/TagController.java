@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/admin/tag")
-public class TeamTagController {
+public class TagController {
 
     private final TeamTagService teamTagService;
 
-    public TeamTagController(TeamTagService teamTagService) {
+    public TagController(TeamTagService teamTagService) {
         this.teamTagService = teamTagService;
     }
 }
