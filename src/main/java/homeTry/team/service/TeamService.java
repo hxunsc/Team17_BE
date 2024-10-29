@@ -5,9 +5,9 @@ import homeTry.exerciseList.service.ExerciseTimeService;
 import homeTry.member.dto.MemberDTO;
 import homeTry.member.model.entity.Member;
 import homeTry.member.service.MemberService;
-import homeTry.tag.dto.TagDTO;
-import homeTry.tag.model.entity.Tag;
-import homeTry.tag.service.TagService;
+import homeTry.tag.dto.TeamTagDTO;
+import homeTry.tag.model.entity.TeamTag;
+import homeTry.tag.service.TeamTagService;
 import homeTry.team.dto.RankingDTO;
 import homeTry.team.dto.request.CheckingPasswordRequest;
 import homeTry.team.dto.request.TeamCreateRequest;
@@ -37,23 +37,23 @@ public class TeamService {
     private static final int DEFAULT_RANKING = -1;
     private final TeamRepository teamRepository;
     private final MemberService memberService;
-    private final TagService tagService;
     private final TeamTagService teamTagService;
+    private final TeamTagMappingService teamTagMappingService;
     private final TeamMemberService teamMemberService;
     private final ExerciseHistoryService exerciseHistoryService;
     private final ExerciseTimeService exerciseTimeService;
 
     public TeamService(TeamRepository teamRepository,
                        MemberService memberService,
-                       TagService tagService,
                        TeamTagService teamTagService,
+                       TeamTagMappingService teamTagMappingService,
                        TeamMemberService teamMemberService,
                        ExerciseHistoryService exerciseHistoryService,
                        ExerciseTimeService exerciseTimeService) {
         this.teamRepository = teamRepository;
         this.memberService = memberService;
-        this.tagService = tagService;
         this.teamTagService = teamTagService;
+        this.teamTagMappingService = teamTagMappingService;
         this.teamMemberService = teamMemberService;
         this.exerciseHistoryService = exerciseHistoryService;
         this.exerciseTimeService = exerciseTimeService;
@@ -93,15 +93,15 @@ public class TeamService {
     }
 
     //팀의 태그 정보를 추가
-    private void addTagsToTeam(List<TagDTO> tagDTOList, Team team) {
-        List<Long> tagIdList = tagDTOList
+    private void addTagsToTeam(List<TeamTagDTO> teamTagDTOList, Team team) {
+        List<Long> tagIdList = teamTagDTOList
                 .stream()
-                .map(TagDTO::tagId)
+                .map(TeamTagDTO::tagId)
                 .toList();
 
-        List<Tag> tagList = tagService.getTagList(tagIdList);
+        List<TeamTag> tagList = teamTagService.getTeamTagList(tagIdList);
 
-        teamTagService.addTeamTags(tagList, team);
+        teamTagMappingService.addTeamTagMappings(tagList, team);
     }
 
     //팀 삭제 기능
@@ -116,7 +116,7 @@ public class TeamService {
 
         teamMemberService.deleteAllTeamMemberFromTeam(team); // 해당 팀에 대한 TeamMember 데이터 삭제
 
-        teamTagService.deleteAllTeamTagFromTeam(team); //해당 팀에 대한 TeamTag 데이터 삭제
+        teamTagMappingService.deleteAllTeamTagMappingFromTeam(team); //해당 팀에 대한 TeamTag 데이터 삭제
 
         teamRepository.delete(team); //Team 삭제
     }
@@ -152,7 +152,7 @@ public class TeamService {
 
     //개별 팀에 대해서 응답을 위한 TeamResponse 로 변환
     private TeamResponse convertToTeamResponse(Team team) {
-        List<TagDTO> tagList = tagService.getTagsOfTeam(team);
+        List<TeamTagDTO> tagList = teamTagService.getTeamTagsOfTeam(team);
         return TeamResponse.of(team, tagList);
 
     }
@@ -160,8 +160,8 @@ public class TeamService {
     //새로운 팀 생성에 필요한 정보 조회
     @Transactional(readOnly = true)
     public NewTeamFromResponse getNewTeamForm() {
-        List<TagDTO> tagDTOList = tagService.getAllTagList();
-        return new NewTeamFromResponse(tagDTOList);
+        List<TeamTagDTO> teamTagDTOList = teamTagService.getAllTeamTagList();
+        return new NewTeamFromResponse(teamTagDTOList);
     }
 
     //태그 처리 된 팀 리스트 조회 기능(페이징 적용)
@@ -169,7 +169,7 @@ public class TeamService {
     public Slice<TeamResponse> getTaggedTeamList(Pageable pageable, MemberDTO memberDTO, List<Long> tagIdList) {
         Member member = memberService.getMemberEntity(memberDTO.id());
 
-        List<Tag> tagList = tagService.getTagList(tagIdList);
+        List<TeamTag> tagList = teamTagService.getTeamTagList(tagIdList);
 
         long tagListSize = tagList.size();
 

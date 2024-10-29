@@ -1,8 +1,7 @@
 package homeTry.team.dto.response;
 
-import homeTry.tag.dto.TagDTO;
+import homeTry.tag.dto.TeamTagDTO;
 import homeTry.team.model.entity.Team;
-import homeTry.team.model.vo.Password;
 
 import java.util.List;
 
@@ -14,11 +13,11 @@ public record TeamResponse(
         long maxParticipants,
         long currentParticipants,
         boolean hasPassword,
-        List<TagDTO> tagList
+        List<TeamTagDTO> tagList
 ) {
 
 
-    public static TeamResponse of(Team team, List<TagDTO> tagList) {
+    public static TeamResponse of(Team team, List<TeamTagDTO> tagList) {
         boolean hasPassword = team.getPassword().isPresent();
 
         return new TeamResponse(
