@@ -5,7 +5,6 @@ import homeTry.mainPage.dto.request.MainPageRequest;
 import homeTry.mainPage.dto.response.MainPageResponse;
 import homeTry.mainPage.service.MainPageService;
 import homeTry.member.dto.MemberDTO;
-import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
