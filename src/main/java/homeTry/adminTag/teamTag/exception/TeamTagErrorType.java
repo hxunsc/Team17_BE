@@ -18,7 +18,6 @@ public enum TeamTagErrorType implements ErrorType {
         this.message = message;
     }
     
-    
     @Override
     public String getErrorCode() {
         return errorCode;

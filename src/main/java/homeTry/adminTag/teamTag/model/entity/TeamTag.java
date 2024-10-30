@@ -20,8 +20,7 @@ public class TeamTag extends BaseEntity {
     @AttributeOverride(name = "value", column = @Column(name = "team_tag_attribute", nullable = false))
     private TeamTagAttribute teamTagAttribute;
 
-    protected TeamTag() {
-    }
+    protected TeamTag() {}
 
     public TeamTag(String teamTagName, String teamTagAttribute) {
         this.teamTagName = new TeamTagName(teamTagName);

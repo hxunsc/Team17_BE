@@ -1,5 +1,8 @@
 package homeTry.adminTag.teamTag.model.vo;
 
+import jakarta.persistence.Embeddable;
+
+@Embeddable
 public record TeamTagAttribute(String value) {
 
     public TeamTagAttribute {
