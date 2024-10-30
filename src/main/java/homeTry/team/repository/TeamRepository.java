@@ -1,7 +1,7 @@
 package homeTry.team.repository;
 
 import homeTry.member.model.entity.Member;
-import homeTry.tag.model.entity.Tag;
+import homeTry.tag.model.entity.TeamTag;
 import homeTry.team.model.entity.Team;
 import homeTry.team.model.vo.Name;
 import org.springframework.data.domain.Pageable;
@@ -31,10 +31,10 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
             "                   FROM TeamMember tm " +
             "                   WHERE tm.member = :member) " +
             "AND t IN (SELECT tt.team " +
-            "          FROM TeamTag tt " +
-            "          WHERE tt.tag IN :tagList " +
+            "          FROM TeamTagMapping tt " +
+            "          WHERE tt.teamTag IN :tagList " +
             "          GROUP BY tt.team " +
-            "          HAVING COUNT(DISTINCT tt.tag) = :tagListSize)"
+            "          HAVING COUNT(DISTINCT tt.teamTag) = :tagListSize)"
     )
-    Slice<Team> findTaggedTeamExcludingMember(@Param("tagList") List<Tag> tagList, @Param("tagListSize") long tagListSize, @Param("member") Member member, Pageable pageable);
+    Slice<Team> findTaggedTeamExcludingMember(@Param("tagList") List<TeamTag> tagList, @Param("tagListSize") long tagListSize, @Param("member") Member member, Pageable pageable);
 }

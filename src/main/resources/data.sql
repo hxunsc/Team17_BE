@@ -1,4 +1,4 @@
-insert into tag (tag_name, tag_attribute)
+insert into team_tag (tag_name, tag_attribute)
 values ('성별', '여성'),
        ('성별', '남성'),
        ('성별', '무관'),
@@ -25,7 +25,7 @@ insert into team_member (member_member_id, team_id)
 values (1, 1),
        (2, 1);
 
-insert into team_tag (tag_id, team_id)
+insert into team_tag_mapping (team_tag_id, team_id)
 values (1, 1),
        (4, 1),
        (2, 2),
