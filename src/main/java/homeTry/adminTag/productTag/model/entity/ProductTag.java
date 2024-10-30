@@ -1,6 +1,7 @@
 package homeTry.adminTag.productTag.model.entity;
 
 import homeTry.adminTag.productTag.model.vo.ProductTagName;
+import homeTry.common.entity.BaseEntity;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -10,7 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class ProductTag {
+public class ProductTag extends BaseEntity{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
