@@ -17,7 +17,7 @@ import homeTry.common.annotation.LoginMember;
 import homeTry.member.dto.MemberDTO;
 
 @RestController
-@RequestMapping("/api/admin/teamtag")
+@RequestMapping("/api/admin/teamTag")
 public class TeamTagController {
     
     private final TeamTagService teamTagService;
@@ -28,7 +28,7 @@ public class TeamTagController {
 
     @GetMapping
     public ResponseEntity<TeamTagResponse> getTeamTagList(
-        @LoginMember MemberDTO memberDTO
+            @LoginMember MemberDTO memberDTO
     ) {
         return new ResponseEntity<>(teamTagService.getTeamTagList(), HttpStatus.OK);
     }

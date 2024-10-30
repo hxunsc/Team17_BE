@@ -14,7 +14,7 @@ public record TeamTagName(String value) {
             throw new IllegalArgumentException("팀태그 이름값은 필수입니다");
         }
         if (value.length() > 15) {
-            throw new IllegalArgumentException("팀태그 이름의 길이는 최대 15자 입니다");
+            throw new IllegalArgumentException("팀태그의 길이는 최대 15자 입니다");
         }
     }
 }
