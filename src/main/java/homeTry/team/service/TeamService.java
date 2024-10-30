@@ -278,6 +278,11 @@ public class TeamService {
 
         teamMemberService.deleteTeamMember(team, member);
     }
+
+    @Transactional(readOnly = true)
+    public Team getTeamEntity(Long teamId){
+        return teamRepository.findById(teamId).orElseThrow(TeamNotFoundException::new);
+    }
 }
 
 

@@ -1,0 +1,50 @@
+package homeTry.chatting.interceptor;
+
+import homeTry.chatting.exception.badRequestException.InvalidChattingTokenException;
+import homeTry.common.auth.JwtAuth;
+import homeTry.common.auth.exception.badRequestException.InvalidTokenException;
+import homeTry.member.dto.MemberDTO;
+import homeTry.member.service.MemberService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.simp.stomp.StompCommand;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.messaging.support.ChannelInterceptor;
+import org.springframework.stereotype.Component;
+
+@Component
+public class StompInterceptor implements ChannelInterceptor {
+    private final JwtAuth jwtAuth;
+    private final MemberService memberService;
+
+    @Autowired
+    public StompInterceptor(JwtAuth jwtAuth, MemberService memberService) {
+        this.jwtAuth = jwtAuth;
+        this.memberService = memberService;
+    }
+
+    @Override
+    public Message<?> preSend(Message<?> message, MessageChannel channel) {
+        //Stomp 메세지 intercept
+
+        StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
+
+        if (accessor.getCommand() == StompCommand.CONNECT) { // Stomp 연결할 때만 header 확인
+            String token = String.valueOf(accessor.getNativeHeader("Authorization").getFirst());
+            if (token == null || !token.startsWith("Bearer "))
+                throw new InvalidChattingTokenException();
+
+            token = token.substring(7);
+
+            if (!jwtAuth.validateToken(token))
+                throw new InvalidChattingTokenException();
+
+            MemberDTO memberDTO = memberService.getMember(jwtAuth.extractId(token));
+            
+            //세션에 저장
+            accessor.getSessionAttributes().put("member", memberDTO);
+        }
+        return message;
+    }
+}
