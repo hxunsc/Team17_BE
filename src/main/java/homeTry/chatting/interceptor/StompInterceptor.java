@@ -2,7 +2,6 @@ package homeTry.chatting.interceptor;
 
 import homeTry.chatting.exception.badRequestException.InvalidChattingTokenException;
 import homeTry.common.auth.JwtAuth;
-import homeTry.common.auth.exception.badRequestException.InvalidTokenException;
 import homeTry.member.dto.MemberDTO;
 import homeTry.member.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
