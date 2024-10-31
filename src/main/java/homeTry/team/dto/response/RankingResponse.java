@@ -9,7 +9,7 @@ import java.time.Duration;
 public record RankingResponse(
         int myRanking,
         String myNickname,
-        Duration myExerciseTime,
+        Long myExerciseTime,
         Slice<RankingDTO> slice
 ) {
 
