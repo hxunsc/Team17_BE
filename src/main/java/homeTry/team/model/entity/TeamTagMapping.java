@@ -1,10 +1,11 @@
 package homeTry.team.model.entity;
 
-import homeTry.tag.model.entity.Tag;
+import homeTry.common.entity.BaseEntity;
+import homeTry.tag.model.entity.TeamTag;
 import jakarta.persistence.*;
 
 @Entity
-public class TeamTag {
+public class TeamTagMapping extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,13 +17,13 @@ public class TeamTag {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
-    private Tag tag;
+    private TeamTag teamTag;
 
-    protected TeamTag() {
+    protected TeamTagMapping() {
     }
 
-    public TeamTag(Tag tag, Team team) {
-        this.tag = tag;
+    public TeamTagMapping(TeamTag teamTag, Team team) {
+        this.teamTag = teamTag;
         this.team = team;
     }
 
@@ -30,7 +31,7 @@ public class TeamTag {
         return team;
     }
 
-    public Tag getTag() {
-        return tag;
+    public TeamTag getTeamTag() {
+        return teamTag;
     }
 }

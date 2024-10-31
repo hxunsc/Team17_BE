@@ -1,6 +1,6 @@
 package homeTry.tag.controller;
 
-import homeTry.tag.service.TagService;
+import homeTry.tag.service.TeamTagService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/admin/tag")
-public class TagController {
+public class TeamTagController {
 
-    private final TagService tagService;
+    private final TeamTagService teamTagService;
 
-    public TagController(TagService tagService) {
-        this.tagService = tagService;
+    public TeamTagController(TeamTagService teamTagService) {
+        this.teamTagService = teamTagService;
     }
 }
