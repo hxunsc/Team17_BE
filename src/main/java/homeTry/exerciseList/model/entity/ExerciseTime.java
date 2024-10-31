@@ -1,6 +1,7 @@
 package homeTry.exerciseList.model.entity;
 
 import homeTry.common.constants.DateTimeUtil;
+import homeTry.common.converter.DurationToLongConverter;
 import homeTry.common.entity.BaseEntity;
 import jakarta.persistence.*;
 
@@ -19,6 +20,7 @@ public class ExerciseTime extends BaseEntity {
     private LocalDateTime startTime;
 
     @Column(nullable = false)
+    @Convert(converter = DurationToLongConverter.class)
     private Duration exerciseTime = Duration.ZERO;
 
     @Column(nullable = false)
