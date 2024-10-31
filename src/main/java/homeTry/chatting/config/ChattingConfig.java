@@ -28,11 +28,10 @@ public class ChattingConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        // 메시지 구독 요청
-        registry.enableSimpleBroker("/sub");
 
-        // 메시지 발행 요청
-        registry.setApplicationDestinationPrefixes("/pub");
+        registry.setApplicationDestinationPrefixes("/pub")
+                .setUserDestinationPrefix("/user")
+                .enableSimpleBroker("/sub", "/queue");
     }
 
     @Override

@@ -7,7 +7,6 @@ import homeTry.member.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Component;
@@ -26,24 +25,29 @@ public class StompInterceptor implements ChannelInterceptor {
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         //Stomp 메세지 intercept
-
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
 
-        if (accessor.getCommand() == StompCommand.CONNECT) { // Stomp 연결할 때만 header 확인
-            String token = String.valueOf(accessor.getNativeHeader("Authorization").getFirst());
-            if (token == null || !token.startsWith("Bearer "))
-                throw new InvalidChattingTokenException();
+        switch (accessor.getCommand()){
+            case CONNECT:
+                String token = String.valueOf(accessor.getNativeHeader("Authorization").getFirst());
+                if (token == null || !token.startsWith("Bearer "))
+                    throw new InvalidChattingTokenException();
 
-            token = token.substring(7);
+                token = token.substring(7);
 
-            if (!jwtAuth.validateToken(token))
-                throw new InvalidChattingTokenException();
+                if (!jwtAuth.validateToken(token))
+                    throw new InvalidChattingTokenException();
 
-            MemberDTO memberDTO = memberService.getMember(jwtAuth.extractId(token));
-            
-            //세션에 저장
-            accessor.getSessionAttributes().put("member", memberDTO);
+                MemberDTO memberDTO = memberService.getMember(jwtAuth.extractId(token));
+
+                //세션에 저장
+                accessor.getSessionAttributes().put("member", memberDTO);
+                
+                break;
+                
+            //todo: 추후 다른 케이스 추가하기
         }
+
         return message;
     }
 }
