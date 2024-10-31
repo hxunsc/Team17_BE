@@ -1,11 +1,7 @@
 package homeTry.product.model.entity;
 
 import homeTry.common.entity.BaseEntity;
-import homeTry.product.model.vo.ProductImageUrl;
-import homeTry.product.model.vo.ProductName;
-import homeTry.product.model.vo.ProductPrice;
-import homeTry.product.model.vo.ProductUrl;
-import homeTry.product.model.vo.StoreName;
+import homeTry.product.model.vo.*;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -13,8 +9,16 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(
+    indexes = {
+        @Index(name = "idx_view_count", columnList = "view_count"),
+        @Index(name = "idx_price", columnList = "price")
+    }
+)
 public class Product extends BaseEntity {
 
     @Id
