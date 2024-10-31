@@ -9,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
+import org.springframework.data.web.SortDefault.SortDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,8 +32,10 @@ public class MarketController {
     public ResponseEntity<Slice<ProductResponse>> getProducts(
         @RequestParam(required = false) List<Long> tagIds,
         @LoginMember MemberDTO memberDTO,
-        @PageableDefault(size = 5, sort = "price", direction = Sort.Direction.ASC) Pageable pageable) {
-
+        @PageableDefault(size = 5)
+        @SortDefaults({@SortDefault(sort = "viewCount", direction = Sort.Direction.DESC),
+                       @SortDefault(sort = "price", direction = Sort.Direction.ASC)})
+        Pageable pageable) {
         Slice<ProductResponse> products = productService.getProducts(tagIds, memberDTO, pageable);
         return new ResponseEntity<>(products, HttpStatus.OK);  // 상태 코드 200
     }

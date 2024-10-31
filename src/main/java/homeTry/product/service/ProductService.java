@@ -30,19 +30,18 @@ public class ProductService {
             throw new InvalidMemberException();
         }
 
-        // tag O -> 해당 태그에 맞는 상품들을 가격순으로 정렬
-        // tag X -> 전체 상품을 가격순으로 정렬
+        // tag O -> 해당 태그에 맞는 상품들을 1. 조회수 내림차순 2. 가격 오름차순으로 정렬
+        // tag X -> 전체 상품을 1. 조회수 내림차순 2. 가격 오름차순으로 정렬
         Slice<Product> products = (tagIds != null && !tagIds.isEmpty())
             ? getProductsByTagIds(tagIds, pageable)
-            : productRepository.findAllByOrderByPriceAsc(pageable);
+            : productRepository.findAllByOrderByViewCountDescPriceAsc(pageable);
 
         return products.map(ProductResponse::from);
     }
 
     private Slice<Product> getProductsByTagIds(List<Long> tagIds, Pageable pageable) {
         List<Long> productIds = productTagMappingService.getProductIdsByTagIds(tagIds);
-
-        return productRepository.findByIdInOrderByPriceAsc(productIds, pageable);
+        return productRepository.findByIdInOrderByViewCountDescPriceAsc(productIds, pageable);
     }
 
 }
