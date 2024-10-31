@@ -1,6 +1,6 @@
 package homeTry.team.dto.request;
 
-import homeTry.tag.dto.TeamTagDTO;
+import homeTry.tag.teamTag.dto.TeamTagDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 

@@ -1,6 +1,7 @@
-package homeTry.tag.model.entity;
+package homeTry.tag.productTag.model.entity;
 
-import homeTry.team.model.vo.Name;
+import homeTry.tag.model.entity.Tag;
+import homeTry.tag.model.vo.TagName;
 import jakarta.persistence.Entity;
 
 @Entity
@@ -11,7 +12,7 @@ public class ProductTag extends Tag {
     }
 
     public ProductTag(String name) {
-        super(new Name(name));
+        super(new TagName(name));
     }
 
     public String getTagNameValue() {

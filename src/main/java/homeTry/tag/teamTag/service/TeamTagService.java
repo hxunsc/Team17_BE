@@ -1,10 +1,11 @@
-package homeTry.tag.service;
+package homeTry.tag.teamTag.service;
 
-import homeTry.tag.dto.TeamTagDTO;
-import homeTry.tag.exeception.TagNotFoundException;
-import homeTry.tag.model.entity.Tag;
-import homeTry.tag.model.entity.TeamTag;
-import homeTry.tag.repository.TeamTagRepository;
+import homeTry.tag.teamTag.dto.TeamTagDTO;
+import homeTry.tag.teamTag.dto.request.TeamTagRequest;
+import homeTry.tag.teamTag.dto.response.TeamTagResponse;
+import homeTry.tag.teamTag.exception.BadRequestException.TeamTagNotFoundException;
+import homeTry.tag.teamTag.model.entity.TeamTag;
+import homeTry.tag.teamTag.repository.TeamTagRepository;
 import homeTry.team.model.entity.Team;
 import homeTry.team.model.entity.TeamTagMapping;
 import homeTry.team.service.TeamTagMappingService;
@@ -30,7 +31,7 @@ public class TeamTagService {
         List<TeamTag> tagList = teamTagRepository.findAll();
         return tagList
                 .stream()
-                .map(TeamTagDTO::of)
+                .map(TeamTagDTO::from)
                 .toList();
     }
 
@@ -40,7 +41,7 @@ public class TeamTagService {
         List<TeamTagMapping> teamTagMappingList = teamTagMappingService.getTeamTagMappingsOfTeam(team);
         return teamTagMappingList
                 .stream()
-                .map(teamTagMapping -> TeamTagDTO.of(teamTagMapping.getTeamTag()))
+                .map(teamTagMapping -> TeamTagDTO.from(teamTagMapping.getTeamTag()))
                 .toList();
     }
 
@@ -49,8 +50,37 @@ public class TeamTagService {
         return tagIdList
                 .stream()
                 .map(tagId -> teamTagRepository.findById(tagId)
-                        .orElseThrow(() -> new TagNotFoundException()))
+                        .orElseThrow(() -> new TeamTagNotFoundException()))
                 .toList();
+    }
+
+    public TeamTagResponse getTeamTagList() {
+
+        List<TeamTagDTO> teamTagList = teamTagRepository.findAll()
+                .stream()
+                .map(TeamTagDTO::from)
+                .toList();
+
+        return new TeamTagResponse(teamTagList);
+    }
+
+    @Transactional
+    public void addTeamTag(TeamTagRequest teamTagRequest){
+
+        teamTagRepository.save(
+                new TeamTag(
+                        teamTagRequest.teamTagName(),
+                        teamTagRequest.teamTagAttribute())
+        );
+    }
+
+    @Transactional
+    public void deleteTeamTag(Long teamTagId){
+
+        TeamTag teamTag = teamTagRepository.findById(teamTagId)
+                .orElseThrow(() -> new TeamTagNotFoundException());
+
+        teamTagRepository.delete(teamTag);
     }
 
 }

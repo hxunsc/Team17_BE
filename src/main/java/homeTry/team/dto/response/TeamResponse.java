@@ -1,6 +1,6 @@
 package homeTry.team.dto.response;
 
-import homeTry.tag.dto.TeamTagDTO;
+import homeTry.tag.teamTag.dto.TeamTagDTO;
 import homeTry.team.model.entity.Team;
 
 import java.util.List;

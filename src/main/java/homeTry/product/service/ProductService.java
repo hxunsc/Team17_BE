@@ -5,7 +5,7 @@ import homeTry.product.dto.response.ProductResponse;
 import homeTry.product.exception.badRequestException.InvalidMemberException;
 import homeTry.product.model.entity.Product;
 import homeTry.product.repository.ProductRepository;
-import homeTry.tag.service.ProductTagService;
+import homeTry.tag.productTag.service.ProductTagService;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
