@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+// TODO : 관리자 권한 확인 로직 추가
 @RestController
 @RequestMapping("/api/admin/product")
 public class AdminProductController {
@@ -26,6 +27,7 @@ public class AdminProductController {
         this.adminProductService = adminProductService;
     }
 
+    //
     // 상품 추가
     @PostMapping
     public ResponseEntity<Void> createProduct(@RequestBody @Valid ProductRequest productRequest) {
