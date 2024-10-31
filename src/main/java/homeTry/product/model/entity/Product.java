@@ -41,6 +41,9 @@ public class Product extends BaseEntity {
     @AttributeOverride(name = "value", column = @Column(name = "store_name"))
     private StoreName storeName;
 
+    @Column(nullable = false)
+    private Long viewCount = 0L;
+
     protected Product() {
 
     }
@@ -51,6 +54,7 @@ public class Product extends BaseEntity {
         this.name = new ProductName(name);
         this.price = new ProductPrice(price);
         this.storeName = new StoreName(storeName);
+        this.viewCount = 0L;
     }
 
     public Long getId() {
@@ -76,4 +80,13 @@ public class Product extends BaseEntity {
     public String getStoreName() {
         return storeName.value();
     }
+
+    public Long getViewCount() {
+        return viewCount;
+    }
+
+    public void incrementViewCount() {
+        this.viewCount++;
+    }
+
 }
