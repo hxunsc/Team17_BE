@@ -56,9 +56,6 @@ public class ChattingController {
         //세션에 member 꺼내오기 (Http 컨트롤러의 ArgumentResolver랑 비슷한 역할)
         MemberDTO memberDTO = (MemberDTO) accessor.getSessionAttributes().get("member");
 
-        System.out.println("sub accessor.getSessionId() = " + accessor.getSessionId());
-
-
         //db에 저장 & 저장한 채팅 메세지 DTO 클라이언트에게 보내기
         return chattingService.saveChattingMessage(teamId, chattingMessageRequest, memberDTO);
     }
