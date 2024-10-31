@@ -23,7 +23,6 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -241,7 +240,7 @@ public class TeamService {
         return memberList
                 .stream()
                 .map(member -> {
-                    Duration totalExerciseTime = exerciseTimeService.getExerciseTimesForToday(member.getId());
+                    Long totalExerciseTime = exerciseTimeService.getExerciseTimesForToday(member.getId());
                     return RankingDTO.of(member.getNickname(), DEFAULT_RANKING, totalExerciseTime);
                 })
                 .toList();
@@ -252,7 +251,7 @@ public class TeamService {
         return memberList
                 .stream()
                 .map(member -> {
-                    Duration totalExerciseTime = exerciseHistoryService.getExerciseHistoriesForDay(member.getId(), date);
+                    Long totalExerciseTime = exerciseHistoryService.getExerciseHistoriesForDay(member.getId(), date);
                     return RankingDTO.of(member.getNickname(), DEFAULT_RANKING, totalExerciseTime);
                 })
                 .toList();

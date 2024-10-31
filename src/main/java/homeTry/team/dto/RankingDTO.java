@@ -1,13 +1,11 @@
 package homeTry.team.dto;
 
-import java.time.Duration;
-
 public record RankingDTO(
         String name,
         int ranking,
-        Duration totalExerciseTime
+        Long totalExerciseTime
 ) {
-    public static RankingDTO of(String name, int ranking, Duration totalExerciseTime) {
+    public static RankingDTO of(String name, int ranking, Long totalExerciseTime) {
         return new RankingDTO(name, ranking, totalExerciseTime);
     }
 }
