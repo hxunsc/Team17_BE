@@ -7,6 +7,13 @@ import jakarta.persistence.*;
 import java.time.Duration;
 
 @Entity
+@Table(
+    name = "exercise_history",
+    indexes = {
+        @Index(name = "idx_exercise_id", columnList = "exercise_id"),
+        @Index(name = "idx_created_at", columnList = "created_at")
+    }
+)
 public class ExerciseHistory extends BaseEntity {
 
     @Id
