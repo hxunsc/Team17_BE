@@ -1,5 +1,6 @@
-package homeTry.chatting.exception;
+package homeTry.chatting.exception.handler;
 
+import homeTry.chatting.exception.ChattingErrorType;
 import homeTry.common.exception.BadRequestException;
 import homeTry.common.exception.dto.response.ErrorResponse;
 import java.util.Timer;
@@ -76,7 +77,7 @@ public class ChattingExceptionHandler {
     @MessageExceptionHandler(Exception.class)
     @SendToUser(ERROR_DESTINATION)
     public ErrorResponse handleException(Exception e, SimpMessageHeaderAccessor accessor) {
-        logger.error("예상치 못한 에러 발생 : {}", e.getMessage());
+        logger.error("채팅 예외 핸들러에서 예상치 못한 에러 발생 : {}", e.getMessage());
 
         ChattingErrorType chattingErrorType = ChattingErrorType.UNKNOWN_CHATTING_EXCEPTION;
 
