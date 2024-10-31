@@ -5,22 +5,22 @@ import homeTry.product.dto.response.ProductResponse;
 import homeTry.product.exception.badRequestException.InvalidMemberException;
 import homeTry.product.model.entity.Product;
 import homeTry.product.repository.ProductRepository;
-import homeTry.tag.productTag.service.ProductTagService;
-import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final ProductTagService productTagService;
+    private final ProductTagMappingService productTagMappingService;
 
     public ProductService(ProductRepository productRepository,
-        ProductTagService productTagService) {
+        ProductTagMappingService productTagMappingService) {
         this.productRepository = productRepository;
-        this.productTagService = productTagService;
+        this.productTagMappingService = productTagMappingService;
     }
 
     public Slice<ProductResponse> getProducts(List<Long> tagIds, MemberDTO memberDTO,
@@ -40,7 +40,7 @@ public class ProductService {
     }
 
     private Slice<Product> getProductsByTagIds(List<Long> tagIds, Pageable pageable) {
-        List<Long> productIds = productTagService.getProductIdsByTagIds(tagIds);
+        List<Long> productIds = productTagMappingService.getProductIdsByTagIds(tagIds);
 
         return productRepository.findByIdInOrderByPriceAsc(productIds, pageable);
     }
