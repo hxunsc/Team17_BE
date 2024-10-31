@@ -4,9 +4,8 @@ import homeTry.member.dto.MemberDTO;
 import homeTry.product.dto.response.ProductResponse;
 import homeTry.product.exception.badRequestException.InvalidMemberException;
 import homeTry.product.model.entity.Product;
-import homeTry.product.model.entity.ProductTagMapping;
 import homeTry.product.repository.ProductRepository;
-import homeTry.product.repository.ProductTagMappingRepository;
+import homeTry.tag.service.ProductTagService;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -16,12 +15,12 @@ import org.springframework.stereotype.Service;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final ProductTagMappingRepository productTagMappingRepository;
+    private final ProductTagService productTagService;
 
     public ProductService(ProductRepository productRepository,
-        ProductTagMappingRepository productTagMappingRepository) {
+        ProductTagService productTagService) {
         this.productRepository = productRepository;
-        this.productTagMappingRepository = productTagMappingRepository;
+        this.productTagService = productTagService;
     }
 
     public Slice<ProductResponse> getProducts(List<Long> tagIds, MemberDTO memberDTO,
@@ -30,7 +29,7 @@ public class ProductService {
         if (memberDTO == null) {
             throw new InvalidMemberException();
         }
-        
+
         // tag O -> 해당 태그에 맞는 상품들을 가격순으로 정렬
         // tag X -> 전체 상품을 가격순으로 정렬
         Slice<Product> products = (tagIds != null && !tagIds.isEmpty())
@@ -41,11 +40,7 @@ public class ProductService {
     }
 
     private Slice<Product> getProductsByTagIds(List<Long> tagIds, Pageable pageable) {
-        List<ProductTagMapping> mappings = productTagMappingRepository.findByProductTagIdIn(tagIds);
-
-        List<Long> productIds = mappings.stream()
-            .map(ProductTagMapping::getProductId)
-            .toList();
+        List<Long> productIds = productTagService.getProductIdsByTagIds(tagIds);
 
         return productRepository.findByIdInOrderByPriceAsc(productIds, pageable);
     }
