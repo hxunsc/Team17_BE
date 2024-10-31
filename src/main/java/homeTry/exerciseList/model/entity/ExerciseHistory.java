@@ -1,5 +1,6 @@
 package homeTry.exerciseList.model.entity;
 
+import homeTry.common.converter.DurationToLongConverter;
 import homeTry.common.entity.BaseEntity;
 import jakarta.persistence.*;
 
@@ -17,6 +18,7 @@ public class ExerciseHistory extends BaseEntity {
     private Exercise exercise;
 
     @Column(nullable = false)
+    @Convert(converter = DurationToLongConverter.class)
     private Duration exerciseHistoryTime;
 
     protected ExerciseHistory() {
