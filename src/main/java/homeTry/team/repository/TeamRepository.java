@@ -1,7 +1,7 @@
 package homeTry.team.repository;
 
 import homeTry.member.model.entity.Member;
-import homeTry.tag.model.entity.TeamTag;
+import homeTry.tag.teamTag.model.entity.TeamTag;
 import homeTry.team.model.entity.Team;
 import homeTry.team.model.vo.Name;
 import org.springframework.data.domain.Pageable;

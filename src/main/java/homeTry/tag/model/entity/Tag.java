@@ -1,6 +1,6 @@
 package homeTry.tag.model.entity;
 
-import homeTry.team.model.vo.Name;
+import homeTry.tag.model.vo.TagName;
 import jakarta.persistence.*;
 
 @MappedSuperclass
@@ -12,16 +12,16 @@ public abstract class Tag {
 
     @Embedded
     @AttributeOverride(name = "value", column = @Column(name = "tag_name", nullable = false, length = 15))
-    private Name tagName;
+    private TagName tagName;
 
     protected Tag() {
     }
 
-    public Tag(Name tagName) {
+    public Tag(TagName tagName) {
         this.tagName = tagName;
     }
 
-    public Name getTagName() {
+    public TagName getTagName() {
         return tagName;
     }
 
@@ -30,6 +30,6 @@ public abstract class Tag {
     }
 
     public void updateTagName(String tagName) {
-        this.tagName = new Name(tagName);
+        this.tagName = new TagName(tagName);
     }
 }
