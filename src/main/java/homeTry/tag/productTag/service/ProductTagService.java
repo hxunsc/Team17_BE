@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ProductTagService {
 
-    private ProductTagMappingRepository productTagMappingRepository;
+    private final ProductTagMappingRepository productTagMappingRepository;
     private final ProductTagRepository productTagRepository;
 
     public ProductTagService(ProductTagMappingRepository productTagMappingRepository, ProductTagRepository productTagRepository) {
@@ -43,10 +43,7 @@ public class ProductTagService {
         return new ProductTagResponse(productTagList);
     }
 
-    public ProductTagService(ProductTagRepository productTagRepository) {
-        this.productTagRepository = productTagRepository;
-    }
-
+    @Transactional
     public void addProductTag(ProductTagRequest productTagRequest) {
 
         productTagRepository.save(
@@ -55,6 +52,7 @@ public class ProductTagService {
         );
     }
 
+    @Transactional
     public void deleteProductTag(Long productTagId) {
 
         ProductTag productTag = productTagRepository.findById(productTagId)

@@ -64,6 +64,7 @@ public class TeamTagService {
         return new TeamTagResponse(teamTagList);
     }
 
+    @Transactional
     public void addTeamTag(TeamTagRequest teamTagRequest){
 
         teamTagRepository.save(
@@ -73,6 +74,7 @@ public class TeamTagService {
         );
     }
 
+    @Transactional
     public void deleteTeamTag(Long teamTagId){
 
         TeamTag teamTag = teamTagRepository.findById(teamTagId)
