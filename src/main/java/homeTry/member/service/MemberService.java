@@ -76,8 +76,8 @@ public class MemberService {
     public MyPageResponse getMemberInfo(MemberDTO memberDTO) {
         Long id = memberDTO.id();
 
-        Duration weeklyTotal = exerciseHistoryService.getWeeklyTotalExercise(id);
-        Duration monthlyTotal = exerciseHistoryService.getMonthlyTotalExercise(id);
+        Long weeklyTotal = exerciseHistoryService.getWeeklyTotalExercise(id);
+        Long monthlyTotal = exerciseHistoryService.getMonthlyTotalExercise(id);
 
         return new MyPageResponse(memberDTO.nickname(), memberDTO.email(),
                 getMemberEntity(id).getExerciseAttendanceDate(), weeklyTotal, monthlyTotal);
