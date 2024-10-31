@@ -6,8 +6,8 @@ public record MyPageResponse(
     String nickname,
     String email,
     Integer attendance,
-    Duration weeklyTotal,
-    Duration monthlyTotal
+    Long weeklyTotal,
+    Long monthlyTotal
 ) {
 
 }
