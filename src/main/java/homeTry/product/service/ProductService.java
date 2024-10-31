@@ -3,6 +3,7 @@ package homeTry.product.service;
 import homeTry.member.dto.MemberDTO;
 import homeTry.product.dto.response.ProductResponse;
 import homeTry.product.exception.badRequestException.InvalidMemberException;
+import homeTry.product.exception.badRequestException.ProductNotFoundException;
 import homeTry.product.model.entity.Product;
 import homeTry.product.repository.ProductRepository;
 import org.springframework.data.domain.Pageable;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {
@@ -23,6 +25,7 @@ public class ProductService {
         this.productTagMappingService = productTagMappingService;
     }
 
+    @Transactional(readOnly = true)
     public Slice<ProductResponse> getProducts(List<Long> tagIds, MemberDTO memberDTO,
         Pageable pageable) {
 
@@ -42,6 +45,20 @@ public class ProductService {
     private Slice<Product> getProductsByTagIds(List<Long> tagIds, Pageable pageable) {
         List<Long> productIds = productTagMappingService.getProductIdsByTagIds(tagIds);
         return productRepository.findByIdInOrderByViewCountDescPriceAsc(productIds, pageable);
+    }
+
+    // 특정 상품 선택 시 해당 상품 URL 반환
+    @Transactional
+    public String incrementViewCountAndGetUrl(Long productId, MemberDTO memberDTO) {
+        if (memberDTO == null) {
+            throw new InvalidMemberException();
+        }
+
+        Product product = productRepository.findById(productId)
+            .orElseThrow(ProductNotFoundException::new);
+
+        product.incrementViewCount(); // 조회수 증가
+        return product.getProductUrl(); // 상품 URL 반환
     }
 
 }
