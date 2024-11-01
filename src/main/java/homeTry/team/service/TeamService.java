@@ -128,15 +128,72 @@ public class TeamService {
         }
     }
 
-
-    //전체 팀 조회 (페이징 적용)
+    //팀 조회 기능
     @Transactional(readOnly = true)
-    public Slice<TeamResponse> getTotalTeamSlice(MemberDTO memberDTO, Pageable pageable) {
+    public Slice<TeamResponse> getSearchedTeamList(Pageable pageable, List<Long> tagIdList, String teamName, MemberDTO memberDTO) {
+
         Member member = memberService.getMemberEntity(memberDTO.id());
+
+        // 팀 이름과 태그 리스트가 주어진 경우
+        if (tagIdList != null && teamName != null)
+            return getTeamsByTagsAndName(pageable, member, tagIdList, teamName);
+
+        //태그 리스트만 주어진 경우
+        if (tagIdList != null)
+            return getTeamsByTags(pageable, member, tagIdList);
+
+        // 팀 이름만 주어진 경우
+        if (teamName != null)
+            return getTeamsByName(pageable, member, teamName);
+
+        //그룹 화면 최초 접속인 경우
+        return getTeams(pageable, member);
+
+    }
+
+    //팀 이름과 태그 리스트가 적용된 팀을 조회하는 기능
+    private Slice<TeamResponse> getTeamsByTagsAndName(Pageable pageable, Member member, List<Long> tagIdList, String teamName) {
+
+        List<TeamTag> tagList = teamTagService.getTeamTagList(tagIdList);
+
+        long tagListSize = tagList.size();
+
+        Slice<Team> teamListSlice = teamRepository.findByTeamNameAndTagListExcludingMember(tagList, tagListSize, member, pageable, teamName);
+
+        List<TeamResponse> teamResponseList = getTeamResponseList(teamListSlice.getContent());
+
+        return new SliceImpl<>(teamResponseList, pageable, teamListSlice.hasNext());
+    }
+
+    // 태그 리스트가 적용된 팀을 조회하는 기능
+    private Slice<TeamResponse> getTeamsByTags(Pageable pageable, Member member, List<Long> tagIdList) {
+
+        List<TeamTag> tagList = teamTagService.getTeamTagList(tagIdList);
+
+        long tagListSize = tagList.size();
+
+        Slice<Team> teamListSlice = teamRepository.findTaggedTeamExcludingMember(tagList, tagListSize, member, pageable);
+
+        List<TeamResponse> teamResponseList = getTeamResponseList(teamListSlice.getContent());
+
+        return new SliceImpl<>(teamResponseList, pageable, teamListSlice.hasNext());
+    }
+
+    //팀 이름으로 팀을 조회하는 기능
+    private Slice<TeamResponse> getTeamsByName(Pageable pageable, Member member, String teamName) {
+
+        Slice<Team> teamListSlice = teamRepository.findByTeamNameExcludingMember(teamName, member, pageable);
+
+        List<TeamResponse> teamResponseList = getTeamResponseList(teamListSlice.getContent());
+
+        return new SliceImpl<>(teamResponseList, pageable, teamListSlice.hasNext());
+    }
+
+    //그룹 화면 최초 접속인 경우
+    private Slice<TeamResponse> getTeams(Pageable pageable, Member member) {
 
         Slice<Team> teamListSlice = teamRepository.findTeamExcludingMember(member, pageable);
 
-        //TeamResponse 로 변환
         List<TeamResponse> teamResponseList = getTeamResponseList(teamListSlice.getContent());
 
         return new SliceImpl<>(teamResponseList, pageable, teamListSlice.hasNext());
@@ -154,7 +211,6 @@ public class TeamService {
     private TeamResponse convertToTeamResponse(Team team) {
         List<TeamTagDTO> tagList = teamTagService.getTeamTagsOfTeam(team);
         return TeamResponse.of(team, tagList);
-
     }
 
     //새로운 팀 생성에 필요한 정보 조회
@@ -162,22 +218,6 @@ public class TeamService {
     public NewTeamFromResponse getNewTeamForm() {
         List<TeamTagDTO> teamTagDTOList = teamTagService.getAllTeamTagList();
         return new NewTeamFromResponse(teamTagDTOList);
-    }
-
-    //태그 처리 된 팀 리스트 조회 기능(페이징 적용)
-    @Transactional(readOnly = true)
-    public Slice<TeamResponse> getTaggedTeamList(Pageable pageable, MemberDTO memberDTO, List<Long> tagIdList) {
-        Member member = memberService.getMemberEntity(memberDTO.id());
-
-        List<TeamTag> tagList = teamTagService.getTeamTagList(tagIdList);
-
-        long tagListSize = tagList.size();
-
-        Slice<Team> teamListSlice = teamRepository.findTaggedTeamExcludingMember(tagList, tagListSize, member, pageable);
-
-        List<TeamResponse> teamResponseList = getTeamResponseList(teamListSlice.getContent());
-
-        return new SliceImpl<>(teamResponseList, pageable, teamListSlice.hasNext());
     }
 
     //팀 랭킹 조회 기능(페이징 적용)
