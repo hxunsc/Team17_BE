@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class DiaryService {
@@ -35,10 +34,8 @@ public class DiaryService {
         LocalDateTime startOfDay = DateTimeUtil.getStartOfDay(date);
         LocalDateTime endOfDay = DateTimeUtil.getEndOfDay(date);
 
-        // 기본 크기의 Pageable 생성 (예: 10)
         Pageable pageable = PageRequest.of(0, 5, Sort.by("createdAt").descending());
 
-        // Slice 조회
         Slice<Diary> diaries = diaryRepository.findByCreatedAtBetweenAndMemberOrderByCreatedAtDesc(
                 startOfDay, endOfDay, memberService.getMemberEntity(memberId), pageable);
 
