@@ -7,6 +7,10 @@ import homeTry.diary.exception.BadRequestException.DiaryNotFoundException;
 import homeTry.diary.model.entity.Diary;
 import homeTry.diary.repository.DiaryRepository;
 import homeTry.member.service.MemberService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,20 +30,21 @@ public class DiaryService {
     }
 
     @Transactional(readOnly = true)
-    public List<DiaryDto> getDiaryByDate(LocalDate date, Long memberId) {
+    public Slice<DiaryDto> getDiaryByDate(LocalDate date, Long memberId) {
 
         LocalDateTime startOfDay = DateTimeUtil.getStartOfDay(date);
         LocalDateTime endOfDay = DateTimeUtil.getEndOfDay(date);
 
-        List<Diary> diaries = diaryRepository.findByCreatedAtBetweenAndMember(startOfDay, endOfDay,
-                memberService.getMemberEntity(memberId));
+        // 기본 크기의 Pageable 생성 (예: 10)
+        Pageable pageable = PageRequest.of(0, 5, Sort.by("createdAt").descending());
 
-        return diaries
-                .stream()
-                .map(DiaryDto::from)
-                .toList();
+        // Slice 조회
+        Slice<Diary> diaries = diaryRepository.findByCreatedAtBetweenAndMemberOrderByCreatedAtDesc(
+                startOfDay, endOfDay, memberService.getMemberEntity(memberId), pageable);
 
+        return diaries.map(DiaryDto::from);
     }
+
 
     @Transactional
     public void createDiary(DiaryRequest diaryRequest, Long memberId) {
