@@ -1,4 +1,4 @@
-insert into tag (tag_name, tag_attribute)
+insert into team_tag (tag_name, tag_attribute)
 values ('성별', '여성'),
        ('성별', '남성'),
        ('성별', '무관'),
@@ -13,17 +13,23 @@ values ('성별', '여성'),
        ('운동강도', '약'),
        ('운동강도', '자유');
 
-insert into member (email, nickname, created_at)
-values ('test1@naver.com', 'test1', '2024-10-04T12:30:00'),
-       ('test2@naver.com', 'test2', '2024-10-04T12:40:00');
+insert into member (email, nickname, exercise_attendance_date, created_at)
+values ('test1@naver.com', 'test1', '0','2024-10-04T12:30:00'),
+       ('test2@naver.com', 'test2', '0','2024-10-04T12:40:00');
 
 insert into team (team_name, team_description, leader_member_id, max_participants, current_participants, password)
-values ('test1 team', 'test1 team description', 1, 8, 2, null);
+values ('test1 team', 'test1 team description', 1, 8, 2, null),
+       ('test2 team', 'test2 team description', 1, 8, 2, '1234');
 
 insert into team_member (member_member_id, team_id)
 values (1, 1),
        (2, 1);
 
+insert into team_tag_mapping (team_tag_id, team_id)
+values (1, 1),
+       (4, 1),
+       (2, 2),
+       (5, 2);
 
 insert into exercise (exercise_name, is_deprecated, member_member_id)
 values ('test1 User exercise1', false, 1),

@@ -7,7 +7,7 @@ import java.time.Duration;
 import java.util.List;
 
 public record MainPageResponse(
-        Duration totalTime,
+        Long totalTime,
         List<ExerciseResponse> exerciseList,
         List<DiaryDto> diaries) {
 
