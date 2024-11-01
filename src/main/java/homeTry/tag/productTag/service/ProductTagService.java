@@ -37,7 +37,7 @@ public class ProductTagService {
 
         productTagRepository.save(
                 new ProductTag(
-                        productTagRequest.teamTagName())
+                        productTagRequest.productTagName())
         );
     }
 
