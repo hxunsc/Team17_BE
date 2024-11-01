@@ -16,21 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ProductTagService {
 
-    private final ProductTagMappingRepository productTagMappingRepository;
     private final ProductTagRepository productTagRepository;
 
-    public ProductTagService(ProductTagMappingRepository productTagMappingRepository, ProductTagRepository productTagRepository) {
-        this.productTagMappingRepository = productTagMappingRepository;
+    public ProductTagService(ProductTagRepository productTagRepository) {
         this.productTagRepository = productTagRepository;
-    }
-
-    @Transactional(readOnly = true)
-    public List<Long> getProductIdsByTagIds(List<Long> tagIds) {
-        List<ProductTagMapping> mappings = productTagMappingRepository.findByProductTagIdIn(tagIds);
-
-        return mappings.stream()
-            .map(ProductTagMapping::getProductId)
-            .toList();
     }
 
     public ProductTagResponse getProductTagList() {
@@ -48,7 +37,7 @@ public class ProductTagService {
 
         productTagRepository.save(
                 new ProductTag(
-                        productTagRequest.teamTagName())
+                        productTagRequest.productTagName())
         );
     }
 

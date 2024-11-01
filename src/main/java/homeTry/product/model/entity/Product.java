@@ -1,11 +1,7 @@
 package homeTry.product.model.entity;
 
 import homeTry.common.entity.BaseEntity;
-import homeTry.product.model.vo.ProductImageUrl;
-import homeTry.product.model.vo.ProductName;
-import homeTry.product.model.vo.ProductPrice;
-import homeTry.product.model.vo.ProductUrl;
-import homeTry.product.model.vo.StoreName;
+import homeTry.product.model.vo.*;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -13,8 +9,16 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(
+    indexes = {
+        @Index(name = "idx_view_count", columnList = "view_count"),
+        @Index(name = "idx_price", columnList = "price")
+    }
+)
 public class Product extends BaseEntity {
 
     @Id
@@ -26,7 +30,7 @@ public class Product extends BaseEntity {
     private ProductImageUrl imageUrl;
 
     @Embedded
-    @AttributeOverride(name = "value", column = @Column(name = "product_url"))
+    @AttributeOverride(name = "value", column = @Column(name = "product_url", columnDefinition = "TEXT"))
     private ProductUrl productUrl;
 
     @Embedded
@@ -41,6 +45,9 @@ public class Product extends BaseEntity {
     @AttributeOverride(name = "value", column = @Column(name = "store_name"))
     private StoreName storeName;
 
+    @Column(nullable = false)
+    private Long viewCount = 0L;
+
     protected Product() {
 
     }
@@ -51,6 +58,7 @@ public class Product extends BaseEntity {
         this.name = new ProductName(name);
         this.price = new ProductPrice(price);
         this.storeName = new StoreName(storeName);
+        this.viewCount = 0L;
     }
 
     public Long getId() {
@@ -76,4 +84,13 @@ public class Product extends BaseEntity {
     public String getStoreName() {
         return storeName.value();
     }
+
+    public Long getViewCount() {
+        return viewCount;
+    }
+
+    public void incrementViewCount() {
+        this.viewCount++;
+    }
+
 }
