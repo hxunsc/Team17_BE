@@ -5,6 +5,7 @@ import homeTry.product.dto.response.ProductResponse;
 import homeTry.product.exception.badRequestException.ProductNotFoundException;
 import homeTry.product.model.entity.Product;
 import homeTry.product.repository.ProductRepository;
+import homeTry.tag.productTag.dto.ProductTagDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,9 +14,11 @@ import org.springframework.stereotype.Service;
 public class AdminProductService {
 
     private final ProductRepository productRepository;
+    private final ProductTagMappingService productTagMappingService;
 
-    public AdminProductService(ProductRepository productRepository) {
+    public AdminProductService(ProductRepository productRepository, ProductTagMappingService productTagMappingService) {
         this.productRepository = productRepository;
+        this.productTagMappingService = productTagMappingService;
     }
 
     // 상품 추가
@@ -41,7 +44,10 @@ public class AdminProductService {
     // 상품 조회
     public Page<ProductResponse> getProducts(Pageable pageable) {
         return productRepository.findAllByOrderByIdAsc(pageable)
-            .map(ProductResponse::from);
+            .map(product -> {
+                ProductTagDto tagDto = productTagMappingService.getTagForProduct(product.getId());
+                return ProductResponse.from(product, tagDto);
+            });
     }
 
 

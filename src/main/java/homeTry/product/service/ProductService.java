@@ -6,12 +6,13 @@ import homeTry.product.exception.badRequestException.InvalidMemberException;
 import homeTry.product.exception.badRequestException.ProductNotFoundException;
 import homeTry.product.model.entity.Product;
 import homeTry.product.repository.ProductRepository;
+import homeTry.tag.productTag.dto.ProductTagDto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {
@@ -39,7 +40,10 @@ public class ProductService {
             ? getProductsByTagIds(tagIds, pageable)
             : productRepository.findAllByOrderByViewCountDescPriceAsc(pageable);
 
-        return products.map(ProductResponse::from);
+        return products.map(product -> {
+            ProductTagDto tagDto = productTagMappingService.getTagForProduct(product.getId());
+            return ProductResponse.from(product, tagDto);
+        });
     }
 
     private Slice<Product> getProductsByTagIds(List<Long> tagIds, Pageable pageable) {
