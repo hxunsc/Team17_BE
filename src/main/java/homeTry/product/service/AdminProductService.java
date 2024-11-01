@@ -16,7 +16,8 @@ public class AdminProductService {
     private final ProductRepository productRepository;
     private final ProductTagMappingService productTagMappingService;
 
-    public AdminProductService(ProductRepository productRepository, ProductTagMappingService productTagMappingService) {
+    public AdminProductService(ProductRepository productRepository,
+        ProductTagMappingService productTagMappingService) {
         this.productRepository = productRepository;
         this.productTagMappingService = productTagMappingService;
     }
