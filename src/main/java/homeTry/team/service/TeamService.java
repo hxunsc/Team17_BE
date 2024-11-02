@@ -11,8 +11,8 @@ import homeTry.tag.service.TeamTagService;
 import homeTry.team.dto.RankingDTO;
 import homeTry.team.dto.request.CheckingPasswordRequest;
 import homeTry.team.dto.request.TeamCreateRequest;
-import homeTry.team.dto.response.NewTeamFromResponse;
 import homeTry.team.dto.response.RankingResponse;
+import homeTry.team.dto.response.TagListResponse;
 import homeTry.team.dto.response.TeamResponse;
 import homeTry.team.exception.*;
 import homeTry.team.model.entity.Team;
@@ -42,6 +42,10 @@ public class TeamService {
     private final TeamMemberService teamMemberService;
     private final ExerciseHistoryService exerciseHistoryService;
     private final ExerciseTimeService exerciseTimeService;
+    private static final String GENDER = "성별";
+    private static final String AGE = "나이";
+    private static final String EXERCISE_INTENSITY = "운동강도";
+
 
     public TeamService(TeamRepository teamRepository,
                        MemberService memberService,
@@ -213,11 +217,22 @@ public class TeamService {
         return TeamResponse.of(team, tagList);
     }
 
-    //새로운 팀 생성에 필요한 정보 조회
+    //모든 팀 태그를 조회
     @Transactional(readOnly = true)
-    public NewTeamFromResponse getNewTeamForm() {
+    public TagListResponse getAllTeamTagList(MemberDTO memberDTO) {
         List<TeamTagDTO> teamTagDTOList = teamTagService.getAllTeamTagList();
-        return new NewTeamFromResponse(teamTagDTOList);
+
+        List<TeamTagDTO> genderTagList = teamTagFilter(teamTagDTOList, GENDER);
+        List<TeamTagDTO> ageTagList = teamTagFilter(teamTagDTOList, AGE);
+        List<TeamTagDTO> exerciseIntensityTagList = teamTagFilter(teamTagDTOList, EXERCISE_INTENSITY);
+
+        return new TagListResponse(genderTagList, ageTagList, exerciseIntensityTagList);
+    }
+
+    private List<TeamTagDTO> teamTagFilter(List<TeamTagDTO> teamTagDTOList, String tagAttribute) {
+        return teamTagDTOList.stream()
+                .filter(teamTagDTO -> teamTagDTO.tagAttribute().equals(tagAttribute))
+                .toList();
     }
 
     //팀 랭킹 조회 기능(페이징 적용)
