@@ -49,7 +49,7 @@ public class ChattingService {
         TeamMemberMapping teamMemberMapping;
 
         try {
-            teamMemberMapping = teamMemberMappingService.getTeamMember(team, member);
+            teamMemberMapping = teamMemberMappingService.getTeamMemberMapping(team, member);
         } catch (TeamMemberNotFoundException e) {
             throw new InvalidTeamIdException();
         }
@@ -67,7 +67,7 @@ public class ChattingService {
 
         //잘못된 teamId 방지
         try {
-            teamMemberMappingService.getTeamMember(team, member);
+            teamMemberMappingService.getTeamMemberMapping(team, member);
         } catch (TeamMemberNotFoundException e) {
             throw new InvalidTeamIdException();
         }
