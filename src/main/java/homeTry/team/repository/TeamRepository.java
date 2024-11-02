@@ -20,7 +20,7 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
     @Query("SELECT DISTINCT t " +
             "FROM Team t " +
             "WHERE t.id NOT IN (SELECT tm.team.id " +
-            "                   FROM TeamMember tm " +
+            "                   FROM TeamMemberMapping tm " +
             "                   WHERE tm.member = :member) " +
             "AND t IN (SELECT tt.team " +
             "          FROM TeamTagMapping tt " +
@@ -33,7 +33,7 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
     @Query("SELECT DISTINCT t " +
             "FROM Team t " +
             "WHERE t.id NOT IN (SELECT tm.team.id " +
-            "                   FROM TeamMember tm " +
+            "                   FROM TeamMemberMapping tm " +
             "                   WHERE tm.member = :member) " +
             "AND t IN (SELECT tt.team " +
             "          FROM TeamTagMapping tt " +
@@ -47,7 +47,7 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
     @Query("SELECT DISTINCT t " +
             "FROM Team t " +
             "WHERE t.id NOT IN (SELECT tm.team.id " +
-            "                   FROM TeamMember tm " +
+            "                   FROM TeamMemberMapping tm " +
             "                   WHERE tm.member = :member) " +
             "AND t.teamName.value LIKE :teamName% "
     )
@@ -56,7 +56,7 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
     @Query("SELECT DISTINCT t " +
             "FROM Team t " +
             "WHERE t.id NOT IN (SELECT tm.team.id " +
-            "                   FROM TeamMember tm " +
+            "                   FROM TeamMemberMapping tm " +
             "                   WHERE tm.member = :member) "
     )
     Slice<Team> findTeamExcludingMember(@Param("member") Member member, Pageable pageable);

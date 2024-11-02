@@ -16,7 +16,7 @@ import homeTry.team.dto.response.TagListResponse;
 import homeTry.team.dto.response.TeamResponse;
 import homeTry.team.exception.*;
 import homeTry.team.model.entity.Team;
-import homeTry.team.model.entity.TeamMember;
+import homeTry.team.model.entity.TeamMemberMapping;
 import homeTry.team.model.vo.Name;
 import homeTry.team.repository.TeamRepository;
 import org.springframework.data.domain.*;
@@ -264,11 +264,11 @@ public class TeamService {
 
     //팀의 멤버를 찾아와주는 기능
     private List<Member> getMemberList(Team team) {
-        List<TeamMember> teamMemberList = teamMemberService.getTeamMember(team);
+        List<TeamMemberMapping> teamMemberMappingList = teamMemberService.getTeamMember(team);
 
-        return teamMemberList // 해당 팀의 멤버 리스트를 받음
+        return teamMemberMappingList // 해당 팀의 멤버 리스트를 받음
                 .stream()
-                .map(TeamMember::getMember)
+                .map(TeamMemberMapping::getMember)
                 .toList();
     }
 

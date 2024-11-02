@@ -24,7 +24,7 @@ values ('test1 team', 'test1 team description', 1, 8, 2, null),
        ('test3 team', 'test3 team description', 3, 8, 2, '1234'),
        ('test4 team', 'test4 team description', 3, 8, 1, '1234');
 
-insert into team_member (member_member_id, team_id)
+insert into team_member_mapping (member_member_id, team_id)
 values (1, 1),
        (2, 1),
        (1, 3);

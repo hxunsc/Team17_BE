@@ -5,7 +5,7 @@ import homeTry.member.model.entity.Member;
 import jakarta.persistence.*;
 
 @Entity
-public class TeamMember extends BaseEntity {
+public class TeamMemberMapping extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,10 +19,10 @@ public class TeamMember extends BaseEntity {
     @JoinColumn
     private Member member;
 
-    protected TeamMember() {
+    protected TeamMemberMapping() {
     }
 
-    public TeamMember(Member member, Team team) {
+    public TeamMemberMapping(Member member, Team team) {
         this.member = member;
         this.team = team;
     }
