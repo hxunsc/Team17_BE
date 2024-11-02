@@ -47,4 +47,10 @@ public class TeamMemberMappingService {
         return teamMemberMappingRepository.findByTeam(team);
     }
 
+    //특정 TeamMemberMapping 을 반환
+    public TeamMemberMapping getTeamMember(Team team, Member member) {
+        return teamMemberMappingRepository.findByTeamAndMember(team, member)
+                .orElseThrow(() -> new TeamMemberNotFoundException());
+    }
+
 }
