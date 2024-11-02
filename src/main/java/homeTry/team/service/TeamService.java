@@ -39,7 +39,7 @@ public class TeamService {
     private final MemberService memberService;
     private final TeamTagService teamTagService;
     private final TeamTagMappingService teamTagMappingService;
-    private final TeamMemberService teamMemberService;
+    private final TeamMemberMappingService teamMemberMappingService;
     private final ExerciseHistoryService exerciseHistoryService;
     private final ExerciseTimeService exerciseTimeService;
     private static final String GENDER = "성별";
@@ -51,14 +51,14 @@ public class TeamService {
                        MemberService memberService,
                        TeamTagService teamTagService,
                        TeamTagMappingService teamTagMappingService,
-                       TeamMemberService teamMemberService,
+                       TeamMemberMappingService teamMemberMappingService,
                        ExerciseHistoryService exerciseHistoryService,
                        ExerciseTimeService exerciseTimeService) {
         this.teamRepository = teamRepository;
         this.memberService = memberService;
         this.teamTagService = teamTagService;
         this.teamTagMappingService = teamTagMappingService;
-        this.teamMemberService = teamMemberService;
+        this.teamMemberMappingService = teamMemberMappingService;
         this.exerciseHistoryService = exerciseHistoryService;
         this.exerciseTimeService = exerciseTimeService;
     }
@@ -72,7 +72,7 @@ public class TeamService {
 
         Team team = teamRepository.save(createTeam(teamCreateRequest, leader)); //팀 저장
 
-        teamMemberService.addTeamMember(team, leader); //리더를 TeamMember 엔티티에 추가
+        teamMemberMappingService.addTeamMember(team, leader); //리더를 TeamMember 엔티티에 추가
 
         addTagsToTeam(teamCreateRequest.tagIdList(), team); //팀에 태그 정보 추가
     }
@@ -118,7 +118,7 @@ public class TeamService {
 
         validateIsLeader(team.getLeader(), member); //팀 리더인지 체크
 
-        teamMemberService.deleteAllTeamMemberFromTeam(team); // 해당 팀에 대한 TeamMember 데이터 삭제
+        teamMemberMappingService.deleteAllTeamMemberFromTeam(team); // 해당 팀에 대한 TeamMember 데이터 삭제
 
         teamTagMappingService.deleteAllTeamTagMappingFromTeam(team); //해당 팀에 대한 TeamTag 데이터 삭제
 
@@ -264,7 +264,7 @@ public class TeamService {
 
     //팀의 멤버를 찾아와주는 기능
     private List<Member> getMemberList(Team team) {
-        List<TeamMemberMapping> teamMemberMappingList = teamMemberService.getTeamMember(team);
+        List<TeamMemberMapping> teamMemberMappingList = teamMemberMappingService.getTeamMember(team);
 
         return teamMemberMappingList // 해당 팀의 멤버 리스트를 받음
                 .stream()
@@ -321,7 +321,7 @@ public class TeamService {
 
         Member member = memberService.getMemberEntity(memberDTO.id());
 
-        teamMemberService.addTeamMember(team, member); // 팀에 가입
+        teamMemberMappingService.addTeamMember(team, member); // 팀에 가입
     }
 
     //멤버가 팀에서 탈퇴
@@ -332,7 +332,7 @@ public class TeamService {
 
         Member member = memberService.getMemberEntity(memberDTO.id());
 
-        teamMemberService.deleteTeamMember(team, member);
+        teamMemberMappingService.deleteTeamMember(team, member);
     }
 
     //팀 비밀번호 검사
