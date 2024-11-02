@@ -1,4 +1,4 @@
-insert into team_tag (tag_name, tag_attribute)
+insert into team_tag (tag_attribute, tag_name)
 values ('성별', '여성'),
        ('성별', '남성'),
        ('성별', '무관'),
