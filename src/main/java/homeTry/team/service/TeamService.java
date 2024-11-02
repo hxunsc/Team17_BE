@@ -72,7 +72,7 @@ public class TeamService {
 
         Team team = teamRepository.save(createTeam(teamCreateRequest, leader)); //팀 저장
 
-        teamMemberMappingService.addTeamMember(team, leader); //리더를 TeamMember 엔티티에 추가
+        teamMemberMappingService.addTeamMember(team, leader); //리더를 TeamMemberMapping 엔티티에 추가
 
         addTagsToTeam(teamCreateRequest.tagIdList(), team); //팀에 태그 정보 추가
     }
@@ -118,9 +118,9 @@ public class TeamService {
 
         validateIsLeader(team.getLeader(), member); //팀 리더인지 체크
 
-        teamMemberMappingService.deleteAllTeamMemberFromTeam(team); // 해당 팀에 대한 TeamMember 데이터 삭제
+        teamMemberMappingService.deleteAllTeamMemberFromTeam(team); // 해당 팀에 대한 TeamMemberMapping 데이터 삭제
 
-        teamTagMappingService.deleteAllTeamTagMappingFromTeam(team); //해당 팀에 대한 TeamTag 데이터 삭제
+        teamTagMappingService.deleteAllTeamTagMappingFromTeam(team); //해당 팀에 대한 TeamTagMapping 데이터 삭제
 
         teamRepository.delete(team); //Team 삭제
     }
