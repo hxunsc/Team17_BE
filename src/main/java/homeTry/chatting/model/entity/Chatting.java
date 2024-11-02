@@ -25,7 +25,8 @@ public class Chatting extends BaseEntity {
     @Column(nullable = false)
     private String message;
 
-    protected Chatting() { }
+    protected Chatting() {
+    }
 
     public Chatting(TeamMember teamMember, String message) {
         this.teamMember = teamMember;

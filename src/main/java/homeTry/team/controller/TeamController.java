@@ -5,8 +5,8 @@ import homeTry.common.annotation.LoginMember;
 import homeTry.member.dto.MemberDTO;
 import homeTry.team.dto.request.TeamCreateRequest;
 import homeTry.team.dto.request.CheckingPasswordRequest;
-import homeTry.team.dto.response.NewTeamFromResponse;
 import homeTry.team.dto.response.RankingResponse;
+import homeTry.team.dto.response.TagListResponse;
 import homeTry.team.dto.response.TeamResponse;
 import homeTry.team.service.TeamService;
 import jakarta.validation.Valid;
@@ -48,30 +48,23 @@ public class TeamController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    //모든 팀 조회 api (페이징 적용)
+    //팀 검색 api (페이징 적용)
     @GetMapping
-    public ResponseEntity<Slice<TeamResponse>> getTotalTeamList(
+    public ResponseEntity<Slice<TeamResponse>> searchingTeam(
             @PageableDefault(size = 8, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
+            @RequestParam(name = "tagIdList", required = false) List<Long> tagIdList,
+            @RequestParam(name = "teamName", required = false) String teamName,
             @LoginMember MemberDTO memberDTO) {
-        Slice<TeamResponse> totalTeamSlice = teamService.getTotalTeamSlice(memberDTO, pageable);
-        return ResponseEntity.ok(totalTeamSlice);
+        Slice<TeamResponse> searchedTeamList = teamService.getSearchedTeamList(pageable, tagIdList, teamName, memberDTO);
+        return ResponseEntity.ok(searchedTeamList);
     }
 
-    //팀 생성 페이지에 필요한 정보 조회 api
-    @GetMapping("/form")
-    public ResponseEntity<NewTeamFromResponse> getNewTeamForm() {
-        NewTeamFromResponse newTeamFromResponse = teamService.getNewTeamForm();
-        return ResponseEntity.ok(newTeamFromResponse);
-    }
-
-    //태그를 통한 일부팀 조회 api (페이징 적용)
-    @GetMapping("/tagged")
-    public ResponseEntity<Slice<TeamResponse>> getTaggedTeamList(
-            @PageableDefault(size = 8, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
-            @RequestParam(name = "tagIdList") List<Long> tagIdList,
+    //그룹 검색 화면에 태그들을 보여주는 api
+    @GetMapping("/teamTags")
+    public ResponseEntity<TagListResponse> getTeamTagList(
             @LoginMember MemberDTO memberDTO) {
-        Slice<TeamResponse> taggedTeamSlice = teamService.getTaggedTeamList(pageable, memberDTO, tagIdList);
-        return ResponseEntity.ok(taggedTeamSlice);
+        TagListResponse response = teamService.getAllTeamTagList(memberDTO);
+        return ResponseEntity.ok(response);
     }
 
     //팀 내 랭킹을 조회하는 api (페이징 적용)
@@ -112,6 +105,4 @@ public class TeamController {
         teamService.checkPassword(teamId, checkingPasswordRequest);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
-
-
 }
