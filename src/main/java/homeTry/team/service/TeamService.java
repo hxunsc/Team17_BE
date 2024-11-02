@@ -114,9 +114,9 @@ public class TeamService {
         Member member = memberService.getMemberEntity(memberDTO.id());
 
         Team team = teamRepository.findById(teamId)
-                .orElseThrow(() -> new TeamNotFoundException());
+                .orElseThrow(TeamNotFoundException::new);
 
-        validateIsLeader(team.getLeader(), member); //팀 리더인지 체크
+        validateIsLeader(team.getLeaderId(), member.getId()); //팀 리더인지 체크
 
         teamMemberMappingService.deleteAllTeamMemberFromTeam(team); // 해당 팀에 대한 TeamMemberMapping 데이터 삭제
 
@@ -126,8 +126,8 @@ public class TeamService {
     }
 
     //팀 리더인지 체크
-    private void validateIsLeader(Member leader, Member member) {
-        if (leader != member) {
+    private void validateIsLeader(long leaderId, long memberId) {
+        if (leaderId != memberId) {
             throw new NotTeamLeaderException();
         }
     }
@@ -214,7 +214,8 @@ public class TeamService {
     //개별 팀에 대해서 응답을 위한 TeamResponse 로 변환
     private TeamResponse convertToTeamResponse(Team team) {
         List<TeamTagDTO> tagList = teamTagService.getTeamTagsOfTeam(team);
-        return TeamResponse.of(team, tagList);
+        Member leader = memberService.getMemberEntity(team.getLeaderId());
+        return TeamResponse.of(team, tagList, leader.getNickname());
     }
 
     //모든 팀 태그를 조회
