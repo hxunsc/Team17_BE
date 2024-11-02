@@ -28,13 +28,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 
 public class TeamService {
 
     private static final int DEFAULT_PARTICIPANTS = 1;
-    private static final int DEFAULT_RANKING = -1;
+    private static final int DEFAULT_RANKING = 0;
     private final TeamRepository teamRepository;
     private final MemberService memberService;
     private final TeamTagService teamTagService;
@@ -45,6 +46,7 @@ public class TeamService {
     private static final String GENDER = "성별";
     private static final String AGE = "나이";
     private static final String EXERCISE_INTENSITY = "운동강도";
+    private static final int FIRST = 1;
 
 
     public TeamService(TeamRepository teamRepository,
@@ -281,15 +283,17 @@ public class TeamService {
         if (!date.isEqual(LocalDate.now())) // 과거 조회인경우
             totalExerciseTimeList = getTotalExerciseTimeListOfHistory(memberList, date);
 
+        AtomicInteger rankCounter = new AtomicInteger(FIRST);
+
         return totalExerciseTimeList //멤버들 랭킹 구함
                 .stream()
                 .sorted(Comparator.comparing(RankingDTO::totalExerciseTime).reversed())
-                .map(this::autoIncrementRankig)
+                .map(rankingDTO -> new RankingDTO(
+                        rankingDTO.name(),
+                        rankCounter.getAndIncrement(),
+                        rankingDTO.totalExerciseTime()
+                ))
                 .toList();
-    }
-
-    private RankingDTO autoIncrementRankig(RankingDTO rankingDTO) {
-        return new RankingDTO(rankingDTO.name(), rankingDTO.ranking() + 1, rankingDTO.totalExerciseTime());
     }
 
     //멤버들의 오늘 totalExerciseTime 을 조회
