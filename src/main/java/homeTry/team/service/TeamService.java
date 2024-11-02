@@ -354,6 +354,12 @@ public class TeamService {
             throw new InvalidPasswordException();
         }
     }
+
+    @Transactional(readOnly = true)
+    public Team getTeamEntity(Long teamId) {
+        return teamRepository.findById(teamId)
+                .orElseThrow(() -> new TeamNotFoundException());
+    }
 }
 
 
