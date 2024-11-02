@@ -266,7 +266,7 @@ public class TeamService {
 
     //팀의 멤버를 찾아와주는 기능
     private List<Member> getMemberList(Team team) {
-        List<TeamMemberMapping> teamMemberMappingList = teamMemberMappingService.getTeamMember(team);
+        List<TeamMemberMapping> teamMemberMappingList = teamMemberMappingService.getTeamMemberMapping(team);
 
         return teamMemberMappingList // 해당 팀의 멤버 리스트를 받음
                 .stream()
