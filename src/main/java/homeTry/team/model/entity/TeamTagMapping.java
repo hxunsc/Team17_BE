@@ -1,7 +1,7 @@
 package homeTry.team.model.entity;
 
 import homeTry.common.entity.BaseEntity;
-import homeTry.tag.model.entity.TeamTag;
+import homeTry.tag.teamTag.model.entity.TeamTag;
 import jakarta.persistence.*;
 
 @Entity

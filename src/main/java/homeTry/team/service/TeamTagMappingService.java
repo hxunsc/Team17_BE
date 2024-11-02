@@ -1,7 +1,6 @@
 package homeTry.team.service;
 
-import homeTry.tag.model.entity.Tag;
-import homeTry.tag.model.entity.TeamTag;
+import homeTry.tag.teamTag.model.entity.TeamTag;
 import homeTry.team.model.entity.Team;
 import homeTry.team.model.entity.TeamTagMapping;
 import homeTry.team.repository.TeamTagMappingRepository;

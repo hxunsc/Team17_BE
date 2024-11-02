@@ -5,9 +5,9 @@ import homeTry.exerciseList.service.ExerciseTimeService;
 import homeTry.member.dto.MemberDTO;
 import homeTry.member.model.entity.Member;
 import homeTry.member.service.MemberService;
-import homeTry.tag.dto.TeamTagDTO;
-import homeTry.tag.model.entity.TeamTag;
-import homeTry.tag.service.TeamTagService;
+import homeTry.tag.teamTag.dto.TeamTagDTO;
+import homeTry.tag.teamTag.model.entity.TeamTag;
+import homeTry.tag.teamTag.service.TeamTagService;
 import homeTry.team.dto.RankingDTO;
 import homeTry.team.dto.request.CheckingPasswordRequest;
 import homeTry.team.dto.request.TeamCreateRequest;
@@ -23,7 +23,6 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -234,7 +233,7 @@ public class TeamService {
 
     private List<TeamTagDTO> teamTagFilter(List<TeamTagDTO> teamTagDTOList, String tagAttribute) {
         return teamTagDTOList.stream()
-                .filter(teamTagDTO -> teamTagDTO.tagAttribute().equals(tagAttribute))
+                .filter(teamTagDTO -> teamTagDTO.teamTagAttribute().equals(tagAttribute))
                 .toList();
     }
 
@@ -301,7 +300,7 @@ public class TeamService {
         return memberList
                 .stream()
                 .map(member -> {
-                    Duration totalExerciseTime = exerciseTimeService.getExerciseTimesForToday(member.getId());
+                    Long totalExerciseTime = exerciseTimeService.getExerciseTimesForToday(member.getId());
                     return RankingDTO.of(member.getNickname(), DEFAULT_RANKING, totalExerciseTime);
                 })
                 .toList();
@@ -312,7 +311,7 @@ public class TeamService {
         return memberList
                 .stream()
                 .map(member -> {
-                    Duration totalExerciseTime = exerciseHistoryService.getExerciseHistoriesForDay(member.getId(), date);
+                    Long totalExerciseTime = exerciseHistoryService.getExerciseHistoriesForDay(member.getId(), date);
                     return RankingDTO.of(member.getNickname(), DEFAULT_RANKING, totalExerciseTime);
                 })
                 .toList();
