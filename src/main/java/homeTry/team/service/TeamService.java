@@ -239,7 +239,7 @@ public class TeamService {
     @Transactional(readOnly = true)
     public RankingResponse getTeamRanking(MemberDTO memberDTO, Long teamId, Pageable pageable, LocalDate date) {
         Team team = teamRepository.findById(teamId)
-                .orElseThrow(() -> new TeamNotFoundException());
+                .orElseThrow(TeamNotFoundException::new);
 
         List<Member> memberList = getMemberList(team); //팀의 멤버들을 조회해옴
 
@@ -249,7 +249,7 @@ public class TeamService {
                 .stream()
                 .filter(rankingDTO -> memberDTO.nickname().equals(rankingDTO.name()))
                 .findFirst()
-                .orElseThrow(() -> new MyRankingNotFoundException());
+                .orElseThrow(MyRankingNotFoundException::new);
 
         int start = (int) pageable.getOffset();
         int end = Math.min(start + pageable.getPageSize(), rankingList.size());
@@ -317,7 +317,7 @@ public class TeamService {
     @Transactional
     public void joinTeam(MemberDTO memberDTO, Long teamId) {
         Team team = teamRepository.findById(teamId)
-                .orElseThrow(() -> new TeamNotFoundException());
+                .orElseThrow(TeamNotFoundException::new);
 
         Member member = memberService.getMemberEntity(memberDTO.id());
 
@@ -328,7 +328,7 @@ public class TeamService {
     @Transactional
     public void withDrawTeam(MemberDTO memberDTO, Long teamId) {
         Team team = teamRepository.findById(teamId)
-                .orElseThrow(() -> new TeamNotFoundException());
+                .orElseThrow(TeamNotFoundException::new);
 
         Member member = memberService.getMemberEntity(memberDTO.id());
 
@@ -339,7 +339,7 @@ public class TeamService {
     @Transactional(readOnly = true)
     public void checkPassword(Long teamId, CheckingPasswordRequest checkingPasswordRequest) {
         Team team = teamRepository.findById(teamId)
-                .orElseThrow(() -> new TeamNotFoundException());
+                .orElseThrow(TeamNotFoundException::new);
 
         verifyPassword(team, checkingPasswordRequest);
     }
@@ -348,7 +348,7 @@ public class TeamService {
     private void verifyPassword(Team team, CheckingPasswordRequest checkingPasswordRequest) {
         boolean result = team.getPassword()
                 .map(password -> password.getValue().equals(checkingPasswordRequest.password()))
-                .orElseThrow(() -> new TeamHasNotPasswordException());
+                .orElseThrow(TeamHasNotPasswordException::new);
 
         if (!result) {
             throw new InvalidPasswordException();
@@ -358,7 +358,7 @@ public class TeamService {
     @Transactional(readOnly = true)
     public Team getTeamEntity(Long teamId) {
         return teamRepository.findById(teamId)
-                .orElseThrow(() -> new TeamNotFoundException());
+                .orElseThrow(TeamNotFoundException::new);
     }
 }
 

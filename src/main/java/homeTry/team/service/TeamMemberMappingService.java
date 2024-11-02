@@ -32,7 +32,7 @@ public class TeamMemberMappingService {
     //TeamMemberMapping 엔티티 삭제 (멤버가 팀에서 나갈 시)
     public void deleteTeamMember(Team team, Member member) {
         TeamMemberMapping teamMemberMapping = teamMemberMappingRepository.findByTeamAndMember(team, member)
-                .orElseThrow(() -> new TeamMemberNotFoundException());
+                .orElseThrow(TeamMemberNotFoundException::new);
 
         teamMemberMappingRepository.delete(teamMemberMapping);
     }
@@ -50,7 +50,7 @@ public class TeamMemberMappingService {
     //특정 TeamMemberMapping 을 반환
     public TeamMemberMapping getTeamMember(Team team, Member member) {
         return teamMemberMappingRepository.findByTeamAndMember(team, member)
-                .orElseThrow(() -> new TeamMemberNotFoundException());
+                .orElseThrow(TeamMemberNotFoundException::new);
     }
 
 }
