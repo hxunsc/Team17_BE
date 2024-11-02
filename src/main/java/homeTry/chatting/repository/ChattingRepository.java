@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ChattingRepository extends JpaRepository<Chatting, Long> {
-    Slice<Chatting> findByTeamMemberTeam(Team team, Pageable pageable);
+    Slice<Chatting> findByTeamMemberMappingTeam(Team team, Pageable pageable);
 }
