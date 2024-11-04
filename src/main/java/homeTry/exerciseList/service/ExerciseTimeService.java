@@ -3,7 +3,9 @@ package homeTry.exerciseList.service;
 import homeTry.common.constants.DateTimeUtil;
 import homeTry.exerciseList.dto.response.ExerciseResponse;
 import homeTry.exerciseList.exception.badRequestException.DailyExerciseTimeLimitExceededException;
+import homeTry.exerciseList.exception.badRequestException.ExerciseAlreadyStartedException;
 import homeTry.exerciseList.exception.badRequestException.ExerciseTimeLimitExceededException;
+import homeTry.exerciseList.model.entity.Exercise;
 import homeTry.exerciseList.model.entity.ExerciseTime;
 import homeTry.exerciseList.repository.ExerciseTimeRepository;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,21 @@ public class ExerciseTimeService {
 
     public ExerciseTimeService(ExerciseTimeRepository exerciseTimeRepository) {
         this.exerciseTimeRepository = exerciseTimeRepository;
+    }
+
+    @Transactional
+    public void startExerciseTime(Exercise exercise) {
+        // 실행 중인 운동이 있는지
+        long activeExerciseCount = exerciseTimeRepository.countActiveExercisesByMemberId(
+            exercise.getMember().getId());
+        if (activeExerciseCount > 0) {
+            throw new ExerciseAlreadyStartedException();
+        }
+
+        // 현재 운동 상태 확인
+        ExerciseTime currentExerciseTime = getExerciseTime(exercise.getExerciseId());
+        currentExerciseTime.startExercise();
+        saveExerciseTime(currentExerciseTime);
     }
 
     @Transactional

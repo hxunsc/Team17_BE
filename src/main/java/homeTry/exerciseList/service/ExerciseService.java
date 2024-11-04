@@ -69,19 +69,7 @@ public class ExerciseService {
             throw new ExerciseDeprecatedException();
         }
 
-        // 실행 중인 운동이 있는지
-        long activeExerciseCount = exerciseRepository.countActiveExercisesByMemberId(
-                memberDTO.id());
-        if (activeExerciseCount > 0) {
-            throw new ExerciseAlreadyStartedException();
-        }
-
-        // 현재 운동의 상태 확인
-        ExerciseTime currentExerciseTime = exerciseTimeService.getExerciseTime(
-                exercise.getExerciseId());
-
-        currentExerciseTime.startExercise();
-        exerciseTimeService.saveExerciseTime(currentExerciseTime);
+        exerciseTimeService.startExerciseTime(exercise);
     }
 
     @Transactional

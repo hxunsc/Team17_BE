@@ -30,4 +30,8 @@ public interface ExerciseTimeRepository extends JpaRepository<ExerciseTime, Long
 
     Optional<ExerciseTime> findByExerciseId(Long exerciseId);
 
+    @Query("SELECT COUNT(et) FROM ExerciseTime et " +
+            "JOIN et.exercise e " +
+            "WHERE e.member.id = :memberId AND et.isActive = true")
+    long countActiveExercisesByMemberId(@Param("memberId") Long memberId);
 }
