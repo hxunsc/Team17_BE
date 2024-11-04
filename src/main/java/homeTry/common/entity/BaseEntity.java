@@ -30,4 +30,12 @@ public abstract class BaseEntity {
         return updatedAt;
     }
 
+    public boolean isDeprecated() {
+        return isDeprecated;
+    }
+
+    public void markAsDeprecated() {
+        this.isDeprecated = true;
+    }
+
 }
