@@ -24,7 +24,7 @@ public class ChattingConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/api/chatting/websocket")
-                .setAllowedOrigins("http://localhost:63342", "http://localhost:3000", "https://localhost:3000")
+                .setAllowedOriginPatterns("http://localhost:*", "https://localhost:*")
                 .withSockJS()
                 .setWebSocketEnabled(true)
                 .setSessionCookieNeeded(false);
@@ -34,7 +34,6 @@ public class ChattingConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-
         registry.setApplicationDestinationPrefixes("/pub")
                 .setUserDestinationPrefix("/user")
                 .enableSimpleBroker("/sub", "/queue");
