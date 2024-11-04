@@ -48,7 +48,7 @@ public class StompInterceptorErrorHandler extends StompSubProtocolErrorHandler {
         /*
         * Java 13 : yield 키워드 == return + break
         * Java 17 : Switch 패턴 매칭
-         */
+        */
         return switch (cause) {
             case InvalidChattingTokenException e ->
                     createErrorMessage(handleError(e.getErrorType()));
