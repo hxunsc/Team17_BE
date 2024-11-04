@@ -29,12 +29,10 @@ public class DiaryService {
     }
 
     @Transactional(readOnly = true)
-    public Slice<DiaryDto> getDiaryByDate(LocalDate date, Long memberId) {
+    public Slice<DiaryDto> getDiaryByDate(LocalDate date, Long memberId, Pageable pageable) {
 
         LocalDateTime startOfDay = DateTimeUtil.getStartOfDay(date);
         LocalDateTime endOfDay = DateTimeUtil.getEndOfDay(date);
-
-        Pageable pageable = PageRequest.of(0, 5, Sort.by("createdAt").descending());
 
         Slice<Diary> diaries = diaryRepository.findByCreatedAtBetweenAndMemberOrderByCreatedAtDesc(
                 startOfDay, endOfDay, memberService.getMemberEntity(memberId), pageable);
