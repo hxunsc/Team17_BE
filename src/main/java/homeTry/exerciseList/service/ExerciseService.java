@@ -1,6 +1,7 @@
 package homeTry.exerciseList.service;
 
 import homeTry.exerciseList.dto.request.ExerciseRequest;
+import homeTry.exerciseList.event.ExerciseEventPublisher;
 import homeTry.exerciseList.exception.badRequestException.*;
 import homeTry.exerciseList.model.entity.Exercise;
 import homeTry.exerciseList.model.entity.ExerciseTime;
@@ -17,12 +18,15 @@ import java.util.List;
 public class ExerciseService {
 
     private final ExerciseRepository exerciseRepository;
+    private final ExerciseEventPublisher exerciseEventPublisher;
     private final ExerciseTimeService exerciseTimeService;
     private final MemberService memberService;
 
     public ExerciseService(ExerciseRepository exerciseRepository,
-                           ExerciseTimeService exerciseTimeService, MemberService memberService) {
+        ExerciseEventPublisher exerciseEventPublisher,
+        ExerciseTimeService exerciseTimeService, MemberService memberService) {
         this.exerciseRepository = exerciseRepository;
+        this.exerciseEventPublisher = exerciseEventPublisher;
         this.exerciseTimeService = exerciseTimeService;
         this.memberService = memberService;
     }
@@ -30,11 +34,11 @@ public class ExerciseService {
     @Transactional
     public void createExercise(ExerciseRequest request, MemberDTO memberDTO) {
         Member foundMember = memberService.getMemberEntity(memberDTO.id());
-        Exercise exercise = new Exercise(request.exerciseName(), foundMember);
-        ExerciseTime currentExerciseTime = new ExerciseTime(exercise);
 
+        Exercise exercise = new Exercise(request.exerciseName(), foundMember);
         exerciseRepository.save(exercise);
-        exerciseTimeService.saveExerciseTime(currentExerciseTime);
+
+        exerciseEventPublisher.publishCreationEvent(exercise);
     }
 
     @Transactional
@@ -47,7 +51,7 @@ public class ExerciseService {
         }
 
         ExerciseTime currentExerciseTime = exerciseTimeService.getExerciseTime(
-                exercise.getExerciseId());
+            exercise.getExerciseId());
         if (currentExerciseTime != null && currentExerciseTime.isActive()) {
             throw new ExerciseInProgressException();
         }
