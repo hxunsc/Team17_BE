@@ -3,21 +3,6 @@
 <head>
     <title>Team Tag List</title>
     <link rel="stylesheet" type="text/css" href="/css/styles.css">
-    <script>
-        function deleteTeamTag(id) {
-            if (confirm("Are you sure you want to delete this tag?")) {
-                fetch(`/admin/tag/team/delete/${id}`, {
-                    method: 'DELETE'
-                }).then(response => {
-                    if (response.ok) {
-                        window.location.reload(); // 삭제 후 페이지 새로고침
-                    } else {
-                        alert("Failed to delete the tag.");
-                    }
-                });
-            }
-        }
-    </script>
 </head>
 <body>
 <div class="container">
@@ -29,6 +14,7 @@
             <th>ID</th>
             <th>Tag Name</th>
             <th>Tag Attribute</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
