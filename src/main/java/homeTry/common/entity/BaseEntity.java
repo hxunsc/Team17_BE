@@ -20,6 +20,8 @@ public abstract class BaseEntity {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
+    private boolean isDeprecated;
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
