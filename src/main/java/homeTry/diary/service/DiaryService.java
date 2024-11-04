@@ -34,7 +34,7 @@ public class DiaryService {
         LocalDateTime startOfDay = DateTimeUtil.getStartOfDay(date);
         LocalDateTime endOfDay = DateTimeUtil.getEndOfDay(date);
 
-        Slice<Diary> diaries = diaryRepository.findByCreatedAtBetweenAndMemberOrderByCreatedAtDesc(
+        Slice<Diary> diaries = diaryRepository.findByCreatedAtBetweenAndMember(
                 startOfDay, endOfDay, memberService.getMemberEntity(memberId), pageable);
 
         return diaries.map(DiaryDto::from);
