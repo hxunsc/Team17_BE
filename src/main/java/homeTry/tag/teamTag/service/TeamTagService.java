@@ -2,7 +2,6 @@ package homeTry.tag.teamTag.service;
 
 import homeTry.tag.teamTag.dto.TeamTagDTO;
 import homeTry.tag.teamTag.dto.request.TeamTagRequest;
-import homeTry.tag.teamTag.dto.response.TeamTagResponse;
 import homeTry.tag.teamTag.exception.BadRequestException.TeamTagNotFoundException;
 import homeTry.tag.teamTag.model.entity.TeamTag;
 import homeTry.tag.teamTag.repository.TeamTagRepository;

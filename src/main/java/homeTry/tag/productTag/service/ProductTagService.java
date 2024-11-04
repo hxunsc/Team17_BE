@@ -1,7 +1,5 @@
 package homeTry.tag.productTag.service;
 
-import homeTry.product.model.entity.ProductTagMapping;
-import homeTry.product.repository.ProductTagMappingRepository;
 import java.util.List;
 
 import homeTry.tag.productTag.dto.ProductTagDto;
