@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Repository
 public interface DiaryRepository extends JpaRepository<Diary, Long> {
 
-    Slice<Diary> findByCreatedAtBetweenAndMemberOrderByCreatedAtDesc(
+    Slice<Diary> findByCreatedAtBetweenAndMember(
             LocalDateTime startOfDay, LocalDateTime endOfDay, Member member, Pageable pageable);
 
 }
