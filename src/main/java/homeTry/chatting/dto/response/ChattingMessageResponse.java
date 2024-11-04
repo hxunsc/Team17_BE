@@ -5,7 +5,7 @@ import homeTry.member.model.entity.Member;
 
 public record ChattingMessageResponse(Long chatId, Long memberId, String nickName, String message) {
     public static ChattingMessageResponse from(Chatting chatting) {
-        Member member = chatting.getTeamMember().getMember();
+        Member member = chatting.getTeamMemberMapping().getMember();
         return new ChattingMessageResponse(chatting.getId(), member.getId(),
                 member.getNickname(), chatting.getMessage());
     }

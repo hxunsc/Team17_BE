@@ -25,9 +25,8 @@ public class Team extends BaseEntity {
     @AttributeOverride(name = "value", column = @Column(name = "team_description", nullable = false))
     private Description teamDescription;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
-    private Member leader;
+    @Column(nullable = false)
+    private Long leaderId;
 
     @Embedded
     @AttributeOverride(name = "value", column = @Column(name = "max_participants", nullable = false))
@@ -48,7 +47,7 @@ public class Team extends BaseEntity {
                 long currentParticipants, String password) {
         this.teamName = new Name(teamName);
         this.teamDescription = new Description(teamDescription);
-        this.leader = leader;
+        this.leaderId = leader.getId();
         this.maxParticipants = new Participant(maxParticipants);
         this.currentParticipants = new Participant(currentParticipants);
         this.password = new Password(password);
@@ -66,8 +65,8 @@ public class Team extends BaseEntity {
         return teamDescription;
     }
 
-    public Member getLeader() {
-        return leader;
+    public Long getLeaderId() {
+        return leaderId;
     }
 
     public Participant getMaxParticipants() {
@@ -86,7 +85,7 @@ public class Team extends BaseEntity {
                            long maxParticipants, long currentParticipants, String password) {
         this.teamName = new Name(teamName);
         this.teamDescription = new Description(teamDescription);
-        this.leader = leader;
+        this.leaderId = leader.getId();
         this.maxParticipants = new Participant(maxParticipants);
         this.currentParticipants = new Participant(currentParticipants);
         this.password = new Password(password);

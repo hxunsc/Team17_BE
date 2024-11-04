@@ -1,8 +1,10 @@
 package homeTry.chatting.interceptor;
 
 import homeTry.chatting.exception.badRequestException.InvalidChattingTokenException;
+import homeTry.chatting.exception.internalServerException.NoSuchMemberInDbWithValidTokenException;
 import homeTry.common.auth.JwtAuth;
 import homeTry.member.dto.MemberDTO;
+import homeTry.member.exception.badRequestException.MemberNotFoundException;
 import homeTry.member.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
@@ -45,7 +47,13 @@ public class StompInterceptor implements ChannelInterceptor {
             if (!jwtAuth.validateToken(token))
                 throw new InvalidChattingTokenException();
 
-            MemberDTO memberDTO = memberService.getMember(jwtAuth.extractId(token));
+            MemberDTO memberDTO;
+
+            try {
+                memberDTO = memberService.getMember(jwtAuth.extractId(token));
+            } catch (MemberNotFoundException e) {
+                throw new NoSuchMemberInDbWithValidTokenException();
+            }
 
             //세션에 저장
             accessor.getSessionAttributes().put("member", memberDTO);

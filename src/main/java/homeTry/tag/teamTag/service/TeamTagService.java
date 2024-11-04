@@ -2,7 +2,6 @@ package homeTry.tag.teamTag.service;
 
 import homeTry.tag.teamTag.dto.TeamTagDTO;
 import homeTry.tag.teamTag.dto.request.TeamTagRequest;
-import homeTry.tag.teamTag.dto.response.TeamTagResponse;
 import homeTry.tag.teamTag.exception.BadRequestException.TeamTagNotFoundException;
 import homeTry.tag.teamTag.model.entity.TeamTag;
 import homeTry.tag.teamTag.repository.TeamTagRepository;
@@ -52,16 +51,6 @@ public class TeamTagService {
                 .map(tagId -> teamTagRepository.findById(tagId)
                         .orElseThrow(() -> new TeamTagNotFoundException()))
                 .toList();
-    }
-
-    public TeamTagResponse getTeamTagList() {
-
-        List<TeamTagDTO> teamTagList = teamTagRepository.findAll()
-                .stream()
-                .map(TeamTagDTO::from)
-                .toList();
-
-        return new TeamTagResponse(teamTagList);
     }
 
     @Transactional

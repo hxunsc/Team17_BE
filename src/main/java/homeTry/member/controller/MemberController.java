@@ -28,7 +28,7 @@ public class MemberController {
 
     @PutMapping("/profile")
     public ResponseEntity<Void> changeNickname(@LoginMember MemberDTO memberDTO,
-                                               @RequestBody ChangeNicknameRequest changeNicknameRequest) {
+            @RequestBody ChangeNicknameRequest changeNicknameRequest) {
         memberService.changeNickname(memberDTO.id(), changeNicknameRequest);
         return new ResponseEntity<>(HttpStatus.OK);
     }
