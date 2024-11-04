@@ -17,7 +17,7 @@ public class Diary extends BaseEntity {
     private Memo memo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", referencedColumnName = "member_id", nullable = false)
+    @JoinColumn
     private Member member;
 
     protected Diary() {

@@ -7,10 +7,10 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(
-    name = "exercise",
-    indexes = {
-        @Index(name = "idx_member_id", columnList = "member_member_id")
-    }
+        name = "exercise",
+        indexes = {
+                @Index(name = "idx_member_id", columnList = "member_id")
+        }
 )
 public class Exercise extends BaseEntity {
 
