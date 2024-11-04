@@ -4,6 +4,7 @@ import homeTry.common.constants.DateTimeUtil;
 import homeTry.exerciseList.dto.response.ExerciseResponse;
 import homeTry.exerciseList.exception.badRequestException.DailyExerciseTimeLimitExceededException;
 import homeTry.exerciseList.exception.badRequestException.ExerciseAlreadyStartedException;
+import homeTry.exerciseList.exception.badRequestException.ExerciseNotStartedException;
 import homeTry.exerciseList.exception.badRequestException.ExerciseTimeLimitExceededException;
 import homeTry.exerciseList.model.entity.Exercise;
 import homeTry.exerciseList.model.entity.ExerciseTime;
@@ -41,22 +42,19 @@ public class ExerciseTimeService {
     }
 
     @Transactional
-    public void saveExerciseTime(ExerciseTime exerciseTime) {
-        exerciseTimeRepository.save(exerciseTime);
+    public void stopExerciseTime(Exercise exercise) {
+        ExerciseTime currentExerciseTime = getExerciseTime(exercise.getExerciseId());
+
+        if (currentExerciseTime == null || !currentExerciseTime.isActive()) {
+            throw new ExerciseNotStartedException();
+        }
+
+        // 하루 최대 12시간, 한 번에 저장되는 최대 시간 8시간을 넘었는지 확인
+        validateExerciseDurationLimits(currentExerciseTime);
+        currentExerciseTime.stopExercise();
     }
 
-    @Transactional
-    public void resetExerciseTime(ExerciseTime exerciseTime) {
-        exerciseTime.resetExerciseTime();
-    }
-
-    @Transactional(readOnly = true)
-    public ExerciseTime getExerciseTime(Long exerciseId) {
-        return exerciseTimeRepository.findByExerciseId(exerciseId)
-                .orElse(null);
-    }
-
-    public void validateExerciseDurationLimits(ExerciseTime exerciseTime) {
+    private void validateExerciseDurationLimits(ExerciseTime exerciseTime) {
         Duration timeElapsed = Duration.between(exerciseTime.getStartTime(), LocalDateTime.now());
         Duration totalTime = exerciseTime.getExerciseTime().plus(timeElapsed);
 
@@ -71,6 +69,22 @@ public class ExerciseTimeService {
             exerciseTime.stopExerciseWithoutSavingTime();
             throw new DailyExerciseTimeLimitExceededException();
         }
+    }
+
+    @Transactional
+    public void saveExerciseTime(ExerciseTime exerciseTime) {
+        exerciseTimeRepository.save(exerciseTime);
+    }
+
+    @Transactional
+    public void resetExerciseTime(ExerciseTime exerciseTime) {
+        exerciseTime.resetExerciseTime();
+    }
+
+    @Transactional(readOnly = true)
+    public ExerciseTime getExerciseTime(Long exerciseId) {
+        return exerciseTimeRepository.findByExerciseId(exerciseId)
+                .orElse(null);
     }
 
     // 메인페이지, 팀 랭킹

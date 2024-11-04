@@ -77,17 +77,7 @@ public class ExerciseService {
         Exercise exercise = getExerciseById(exerciseId);
         validateMemberPermission(exercise, memberDTO);
 
-        ExerciseTime currentExerciseTime = exerciseTimeService.getExerciseTime(
-                exercise.getExerciseId());
-
-        if (currentExerciseTime == null || !currentExerciseTime.isActive()) {
-            throw new ExerciseNotStartedException();
-        }
-
-        // 하루 최대 12시간, 한 번에 저장되는 최대 시간 8시간을 넘었는지 확인
-        exerciseTimeService.validateExerciseDurationLimits(currentExerciseTime);
-
-        currentExerciseTime.stopExercise();
+        exerciseTimeService.stopExerciseTime(exercise);
     }
 
     private Exercise getExerciseById(Long exerciseId) {
