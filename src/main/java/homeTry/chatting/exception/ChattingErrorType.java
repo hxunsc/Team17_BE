@@ -14,7 +14,9 @@ public enum ChattingErrorType implements ErrorType {
 
 
     /*
-    * 클라이언트 에게는 UNKNOWN_CHATTING_EXCEPTION과 완전히 동일한 Error 객체를 반환( "토큰은 유효하나, 회원이 DB에 없습니다." -> 이 부분을 사용자가 알면 안되기 때문 )
+    * 클라이언트 에게는 UNKNOWN_CHATTING_EXCEPTION과 완전히 동일한 Error 객체를 반환
+    * ( "토큰은 유효하나, 회원이 DB에 없습니다." -> 이 부분을 사용자가 알면 안되기 때문 )
+    *
     * 대신 서버 로그에는 NO_SUCH_MEMBER_IN_DB_WITH_VALID_TOKEN 을 남김
     */
     NO_SUCH_MEMBER_IN_DB_WITH_VALID_TOKEN("Chatting500_002", HttpStatus.INTERNAL_SERVER_ERROR,
