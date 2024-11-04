@@ -56,7 +56,8 @@ public class ExerciseTimeService {
         }
     }
 
-    // 당일의 운동 시간 반환
+    // 메인페이지, 팀 랭킹
+    // 당일의 운동 전체 시간 반환
     @Transactional(readOnly = true)
     public Long getExerciseTimesForToday(Long memberId) {
         LocalDateTime startOfDay = DateTimeUtil.getStartOfDay(LocalDate.now());
@@ -80,7 +81,9 @@ public class ExerciseTimeService {
         LocalDateTime startOfDay = DateTimeUtil.getStartOfDay(LocalDate.now());
         LocalDateTime endOfDay = DateTimeUtil.getEndOfDay(LocalDate.now());
 
-        List<ExerciseTime> exerciseTimes = exerciseTimeRepository.findByExerciseMemberIdAndStartTimeBetween(
+
+        // 삭제된 운동 제외하고 운동 시간 가져오기
+        List<ExerciseTime> exerciseTimes = exerciseTimeRepository.findValidExerciseTimesForMemberOnDate(
                 memberId, startOfDay, endOfDay);
 
         return exerciseTimes
