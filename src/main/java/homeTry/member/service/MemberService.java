@@ -74,12 +74,13 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public MyPageResponse getMemberInfo(MemberDTO memberDTO) {
-        Long id = memberDTO.id();
+        Member member = getMemberEntity(memberDTO.id());
+        Long id = member.getId();
 
         Long weeklyTotal = exerciseHistoryService.getWeeklyTotalExercise(id);
         Long monthlyTotal = exerciseHistoryService.getMonthlyTotalExercise(id);
 
-        return new MyPageResponse(memberDTO.nickname(), memberDTO.email(),
-                getMemberEntity(id).getExerciseAttendanceDate(), weeklyTotal, monthlyTotal);
+        return new MyPageResponse(member.getId(), member.getNickname(),
+                member.getEmail(), member.getExerciseAttendanceDate(), weeklyTotal, monthlyTotal);
     }
 }
