@@ -60,13 +60,13 @@ public class TagPageController {
         return "redirect:/admin/tag/team";
     }
 
-    @DeleteMapping("/product/delete/{id}")
+    @PostMapping("/product/delete/{id}")
     public String deleteProductTag(@PathVariable Long id) {
         productTagService.deleteProductTag(id);
         return "redirect:/admin/tag/product";
     }
 
-    @DeleteMapping("/team/delete/{id}")
+    @PostMapping("/team/delete/{id}")
     public String deleteTeamTag(@PathVariable Long id) {
         teamTagService.deleteTeamTag(id);
         return "redirect:/admin/tag/team";
