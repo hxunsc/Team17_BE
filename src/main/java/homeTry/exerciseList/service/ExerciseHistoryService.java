@@ -40,7 +40,7 @@ public class ExerciseHistoryService {
         LocalDateTime endOfDay = DateTimeUtil.getEndOfDay(date);
 
         List<ExerciseHistory> exercises = exerciseHistoryRepository.findByExerciseMemberIdAndCreatedAtBetween(
-                memberId, startOfDay, endOfDay);
+            memberId, startOfDay, endOfDay);
 
         return sumExerciseTime(exercises);
     }
@@ -53,7 +53,7 @@ public class ExerciseHistoryService {
         LocalDateTime endOfWeekWith3AM = DateTimeUtil.getEndOfWeek(LocalDate.now());
 
         List<ExerciseHistory> weeklyExercises = exerciseHistoryRepository.findByExerciseMemberIdAndCreatedAtBetween(
-                memberId, startOfWeekWith3AM, endOfWeekWith3AM);
+            memberId, startOfWeekWith3AM, endOfWeekWith3AM);
 
         return sumExerciseTime(weeklyExercises);
     }
@@ -66,7 +66,7 @@ public class ExerciseHistoryService {
         LocalDateTime endOfMonthWith3AM = DateTimeUtil.getEndOfMonth(LocalDate.now());
 
         List<ExerciseHistory> monthlyExercises = exerciseHistoryRepository.findByExerciseMemberIdAndCreatedAtBetween(
-                memberId, startOfMonthWith3AM, endOfMonthWith3AM);
+            memberId, startOfMonthWith3AM, endOfMonthWith3AM);
 
         return sumExerciseTime(monthlyExercises);
     }
@@ -74,10 +74,10 @@ public class ExerciseHistoryService {
     // 운동 시간 합
     private Long sumExerciseTime(List<ExerciseHistory> exercises) {
         return exercises
-                .stream()
-                .map(ExerciseHistory::getExerciseHistoryTime)
-                .reduce(Duration.ZERO, Duration::plus)
-                .toMillis();
+            .stream()
+            .map(ExerciseHistory::getExerciseHistoryTime)
+            .reduce(Duration.ZERO, Duration::plus)
+            .toMillis();
     }
 
     // 메인페이지 조회 시 사용
@@ -88,11 +88,11 @@ public class ExerciseHistoryService {
         LocalDateTime endOfDay = DateTimeUtil.getEndOfDay(date);
 
         List<ExerciseHistory> exerciseHistories = exerciseHistoryRepository.findValidExerciseHistoriesForMemberOnDate(
-                memberId, startOfDay, endOfDay);
+            memberId, startOfDay, endOfDay);
 
         return exerciseHistories
-                .stream()
-                .map(ExerciseResponse::from)
-                .toList();
+            .stream()
+            .map(ExerciseResponse::from)
+            .toList();
     }
 }

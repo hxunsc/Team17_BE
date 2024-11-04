@@ -82,7 +82,7 @@ public class ExerciseService {
 
     private Exercise getExerciseById(Long exerciseId) {
         return exerciseRepository.findById(exerciseId)
-                .orElseThrow(ExerciseNotFoundException::new);
+            .orElseThrow(ExerciseNotFoundException::new);
     }
 
     // 해당 운동이 해당 회원의 것인지 검증

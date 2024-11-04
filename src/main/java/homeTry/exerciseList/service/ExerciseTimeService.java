@@ -84,7 +84,7 @@ public class ExerciseTimeService {
     @Transactional(readOnly = true)
     public ExerciseTime getExerciseTime(Long exerciseId) {
         return exerciseTimeRepository.findByExerciseId(exerciseId)
-                .orElse(null);
+            .orElse(null);
     }
 
     // 메인페이지, 팀 랭킹
@@ -96,14 +96,14 @@ public class ExerciseTimeService {
 
         // 해당 멤버의 당일 운동 시간 목록 조회
         List<ExerciseTime> exerciseTimes = exerciseTimeRepository.findByExerciseMemberIdAndStartTimeBetween(
-                memberId, startOfDay, endOfDay);
+            memberId, startOfDay, endOfDay);
 
         // 운동 시간 총 합
         return exerciseTimes
-                .stream()
-                .map(ExerciseTime::getExerciseTime)
-                .reduce(Duration.ZERO, Duration::plus)
-                .toMillis();
+            .stream()
+            .map(ExerciseTime::getExerciseTime)
+            .reduce(Duration.ZERO, Duration::plus)
+            .toMillis();
     }
 
     // 메인 페이지 운동 리스트 반환
@@ -112,15 +112,14 @@ public class ExerciseTimeService {
         LocalDateTime startOfDay = DateTimeUtil.getStartOfDay(LocalDate.now());
         LocalDateTime endOfDay = DateTimeUtil.getEndOfDay(LocalDate.now());
 
-
         // 삭제된 운동 제외하고 운동 시간 가져오기
         List<ExerciseTime> exerciseTimes = exerciseTimeRepository.findValidExerciseTimesForMemberOnDate(
-                memberId, startOfDay, endOfDay);
+            memberId, startOfDay, endOfDay);
 
         return exerciseTimes
-                .stream()
-                .map(ExerciseResponse::from)
-                .toList();
+            .stream()
+            .map(ExerciseResponse::from)
+            .toList();
     }
 
 }
