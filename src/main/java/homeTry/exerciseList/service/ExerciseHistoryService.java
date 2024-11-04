@@ -32,6 +32,7 @@ public class ExerciseHistoryService {
         }
     }
 
+    // 메인페이지, 팀 랭킹
     // 특정 날에 대한 운동 전체 시간 반환
     @Transactional(readOnly = true)
     public Long getExerciseHistoriesForDay(Long memberId, LocalDate date) {
@@ -86,7 +87,7 @@ public class ExerciseHistoryService {
         LocalDateTime startOfDay = DateTimeUtil.getStartOfDay(date);
         LocalDateTime endOfDay = DateTimeUtil.getEndOfDay(date);
 
-        List<ExerciseHistory> exerciseHistories = exerciseHistoryRepository.findByExerciseMemberIdAndCreatedAtBetween(
+        List<ExerciseHistory> exerciseHistories = exerciseHistoryRepository.findValidExerciseHistoriesForMemberOnDate(
                 memberId, startOfDay, endOfDay);
 
         return exerciseHistories
