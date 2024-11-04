@@ -31,7 +31,7 @@ public class ExerciseSchedulerService {
     }
 
     // 매일 새벽 3시에 실행
-    @Scheduled(cron = "0 0 3 * * *")
+    @Scheduled(cron = "0 0 3 * * *", zone = "Asia/Seoul")
     @Transactional
     public void saveAllExerciseHistoryAt3AM() {
         List<Exercise> allExercises = exerciseService.findAllExercises();
