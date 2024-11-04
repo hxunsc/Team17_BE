@@ -3,10 +3,28 @@
 <head>
     <title>Product Tag List</title>
     <link rel="stylesheet" type="text/css">
+    <script>
+        function deleteProductTag(id) {
+            if (confirm("Are you sure you want to delete this tag?")) {
+                fetch(`/admin/tag/product/delete/${id}`, {
+                    method: 'DELETE'
+                }).then(response => {
+                    if (response.ok) {
+                        window.location.reload(); // 삭제 후 페이지 새로고침
+                    } else {
+                        alert("Failed to delete the tag.");
+                    }
+                });
+            }
+        }
+    </script>
 </head>
 <body>
 <div class="container">
     <h1>Product Tag List</h1>
+
+    <button onclick="location.href='/admin/tag/product/add'">Add New Product Tag</button>
+
     <table>
         <thead>
         <tr>
@@ -18,6 +36,9 @@
         <tr th:each="tag : ${productTags}">
             <td th:text="${tag.tagId}">1</td>
             <td th:text="${tag.productTagName}">Tag Name</td>
+            <td>
+                <button onclick="deleteProductTag([[${tag.tagId}]])">Delete</button>
+            </td>
         </tr>
         </tbody>
     </table>

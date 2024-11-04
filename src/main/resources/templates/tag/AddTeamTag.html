@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Team Tag</title>
+    <link rel="stylesheet" type="text/css">
+</head>
+<body>
+<div class="container">
+    <h1>Add New Team Tag</h1>
+    <form action="/admin/tag/team/save" method="post">
+        <label for="tagName">Tag Name:</label>
+        <input type="text" id="tagName" name="tagName" required>
+        <label for="tagAttribute">Tag Attribute:</label>
+        <input type="text" id="tagAttribute" name="tagAttribute" required>
+        <button type="submit">Save Tag</button>
+    </form>
+</div>
+</body>
+</html>
