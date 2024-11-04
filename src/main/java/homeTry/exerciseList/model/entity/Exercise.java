@@ -7,10 +7,11 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(
-        name = "exercise",
-        indexes = {
-                @Index(name = "idx_member_id", columnList = "member_id")
-        }
+    name = "exercise",
+    indexes = {
+        @Index(name = "idx_exercise_member_id", columnList = "member_id"),
+        @Index(name = "idx_exercise_is_deprecated", columnList = "is_deprecated")
+    }
 )
 public class Exercise extends BaseEntity {
 
