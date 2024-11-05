@@ -1,7 +1,10 @@
 package homeTry.tag.teamTag.service;
 
+import homeTry.tag.model.vo.TagName;
+import homeTry.tag.productTag.exception.BadRequestException.ProductTagAlreadyExistsException;
 import homeTry.tag.teamTag.dto.TeamTagDTO;
 import homeTry.tag.teamTag.dto.request.TeamTagRequest;
+import homeTry.tag.teamTag.exception.BadRequestException.TeamTagAlreadyExistsException;
 import homeTry.tag.teamTag.exception.BadRequestException.TeamTagNotFoundException;
 import homeTry.tag.teamTag.model.entity.TeamTag;
 import homeTry.tag.teamTag.repository.TeamTagRepository;
@@ -27,7 +30,7 @@ public class TeamTagService {
     //모든 태그 반환
     @Transactional(readOnly = true)
     public List<TeamTagDTO> getAllTeamTagList() {
-        List<TeamTag> tagList = teamTagRepository.findAll();
+        List<TeamTag> tagList = teamTagRepository.findAllByIsDeprecatedFalse();
         return tagList
                 .stream()
                 .map(TeamTagDTO::from)
@@ -56,6 +59,10 @@ public class TeamTagService {
     @Transactional
     public void addTeamTag(TeamTagRequest teamTagRequest){
 
+        if(teamTagRepository.existsByTagName(new TagName(teamTagRequest.teamTagName()))){
+            throw new TeamTagAlreadyExistsException();
+        }
+
         teamTagRepository.save(
                 new TeamTag(
                         teamTagRequest.teamTagName(),
@@ -69,7 +76,7 @@ public class TeamTagService {
         TeamTag teamTag = teamTagRepository.findById(teamTagId)
                 .orElseThrow(() -> new TeamTagNotFoundException());
 
-        teamTagRepository.delete(teamTag);
+        teamTag.markAsDeprecated();
     }
 
 }

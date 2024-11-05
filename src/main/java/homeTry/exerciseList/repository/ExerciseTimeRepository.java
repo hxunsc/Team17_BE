@@ -19,7 +19,7 @@ public interface ExerciseTimeRepository extends JpaRepository<ExerciseTime, Long
 
     // ExerciseTime 리스트 조회 - 멤버 ID와 날짜(당일), 유효한(삭제되지 않은) 운동만
     @Query("SELECT et FROM ExerciseTime et " +
-        "JOIN et.exercise e " +
+        "JOIN FETCH et.exercise e " +
         "WHERE e.member.id = :memberId " +
         "AND et.startTime BETWEEN :startTime AND :endTime " +
         "AND e.isDeprecated = false")
