@@ -24,6 +24,7 @@ values ('test1 team', 'test1 team description', 1, 8, 2, null, false),
        ('test3 team', 'test3 team description', 3, 8, 2, '1234', false),
        ('test4 team', 'test4 team description', 3, 8, 1, '1234', false);
 
+
 insert into team_member_mapping (member_id, team_id, is_deprecated)
 values (1, 1, false),
        (2, 1, false),

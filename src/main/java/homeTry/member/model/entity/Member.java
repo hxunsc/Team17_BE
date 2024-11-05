@@ -1,6 +1,7 @@
 package homeTry.member.model.entity;
 
 import homeTry.common.entity.BaseEntity;
+import homeTry.member.model.enums.Role;
 import homeTry.member.model.vo.Email;
 import homeTry.member.model.vo.Nickname;
 import jakarta.persistence.AttributeOverride;
@@ -8,6 +9,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -36,6 +39,9 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private Integer exerciseAttendanceDate;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     protected Member() {
     }
 
@@ -48,6 +54,8 @@ public class Member extends BaseEntity {
     public void prePersist() { // null 일때 default 값으로 0을 해줌
         this.exerciseAttendanceDate =
                 (this.exerciseAttendanceDate == null) ? 0 : this.exerciseAttendanceDate;
+
+        this.role = (this.role == null) ? Role.USER : this.role;
     }
 
     public Long getId() {
@@ -66,12 +74,16 @@ public class Member extends BaseEntity {
         return kakaoAccessToken;
     }
 
+    public void setKakaoAccessToken(String kakaoAccessToken) {
+        this.kakaoAccessToken = kakaoAccessToken;
+    }
+
     public Integer getExerciseAttendanceDate() {
         return exerciseAttendanceDate;
     }
 
-    public void setKakaoAccessToken(String kakaoAccessToken) {
-        this.kakaoAccessToken = kakaoAccessToken;
+    public Role getRole() {
+        return role;
     }
 
     public void changeNickname(Nickname nickname) {
@@ -80,6 +92,14 @@ public class Member extends BaseEntity {
 
     public void incrementAttendanceDate() {
         this.exerciseAttendanceDate++;
+    }
+
+    public void promoteToAdmin() {
+        this.role = Role.ADMIN;
+    }
+
+    public void demoteToUser() {
+        this.role = Role.USER;
     }
 
 }

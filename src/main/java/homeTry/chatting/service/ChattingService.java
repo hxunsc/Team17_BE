@@ -3,7 +3,6 @@ package homeTry.chatting.service;
 import homeTry.chatting.dto.request.ChattingMessageRequest;
 import homeTry.chatting.dto.response.ChattingMessageResponse;
 import homeTry.chatting.exception.badRequestException.InvalidTeamIdException;
-import homeTry.chatting.model.entity.Chatting;
 import homeTry.chatting.repository.ChattingRepository;
 import homeTry.member.dto.MemberDTO;
 import homeTry.member.model.entity.Member;
@@ -13,10 +12,8 @@ import homeTry.team.model.entity.Team;
 import homeTry.team.model.entity.TeamMemberMapping;
 import homeTry.team.service.TeamMemberMappingService;
 import homeTry.team.service.TeamService;
-import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,17 +69,8 @@ public class ChattingService {
             throw new InvalidTeamIdException();
         }
 
-        Slice<Chatting> chattingMessageSlice = chattingRepository.findByTeamMemberMappingTeam(team,
-                pageable);
-
-        List<ChattingMessageResponse> chattingMessageResponseList = chattingMessageSlice.getContent()
-                .stream()
-                .map(ChattingMessageResponse::from)
-                .toList();
-
-        return new SliceImpl<>(chattingMessageResponseList, chattingMessageSlice.getPageable(),
-                chattingMessageSlice.hasNext());
-
+        return chattingRepository.findByTeamMemberMappingTeam(team, pageable)
+                .map(ChattingMessageResponse::from);
     }
 
 

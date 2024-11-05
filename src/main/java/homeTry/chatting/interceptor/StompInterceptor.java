@@ -2,7 +2,8 @@ package homeTry.chatting.interceptor;
 
 import homeTry.chatting.exception.badRequestException.InvalidChattingTokenException;
 import homeTry.chatting.exception.internalServerException.NoSuchMemberInDbWithValidTokenException;
-import homeTry.common.auth.JwtAuth;
+import homeTry.common.auth.jwt.JwtAuth;
+import homeTry.common.auth.jwt.JwtUtil;
 import homeTry.member.dto.MemberDTO;
 import homeTry.member.exception.badRequestException.MemberNotFoundException;
 import homeTry.member.service.MemberService;
@@ -16,12 +17,15 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class StompInterceptor implements ChannelInterceptor {
+
     private final JwtAuth jwtAuth;
+    private final JwtUtil jwtUtil;
     private final MemberService memberService;
 
     @Autowired
-    public StompInterceptor(JwtAuth jwtAuth, MemberService memberService) {
+    public StompInterceptor(JwtAuth jwtAuth, JwtUtil jwtUtil, MemberService memberService) {
         this.jwtAuth = jwtAuth;
+        this.jwtUtil = jwtUtil;
         this.memberService = memberService;
     }
 
@@ -38,14 +42,13 @@ public class StompInterceptor implements ChannelInterceptor {
 
     private void handleConnectCommand(StompHeaderAccessor accessor) {
         if (accessor.getCommand() == StompCommand.CONNECT) {
-            String token = String.valueOf(accessor.getNativeHeader("Authorization").getFirst());
-            if (token == null || !token.startsWith("Bearer "))
+            String bearerToken = String.valueOf(
+                    accessor.getNativeHeader("Authorization").getFirst());
+
+            if (!jwtUtil.isValidBearerToken(bearerToken))
                 throw new InvalidChattingTokenException();
 
-            token = token.substring(7);
-
-            if (!jwtAuth.validateToken(token))
-                throw new InvalidChattingTokenException();
+            String token = bearerToken.substring(7);
 
             MemberDTO memberDTO;
 
