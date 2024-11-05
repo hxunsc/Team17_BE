@@ -24,7 +24,7 @@ values ('test1 team', 'test1 team description', 1, 8, 2, null),
        ('test3 team', 'test3 team description', 3, 8, 2, '1234'),
        ('test4 team', 'test4 team description', 3, 8, 1, '1234');
 
-insert into team_member_mapping (member_member_id, team_id)
+insert into team_member_mapping (member_id, team_id)
 values (1, 1),
        (2, 1),
        (1, 3);
@@ -40,7 +40,7 @@ values (1, 1),
        (5, 4),
        (8, 4);
 
-insert into exercise (exercise_name, is_deprecated, member_member_id)
+insert into exercise (exercise_name, is_deprecated, member_id)
 values ('test1 User exercise1', false, 1),
        ('test1 User exercise2', false, 1),
        ('test2 User exercise1', false, 2),
