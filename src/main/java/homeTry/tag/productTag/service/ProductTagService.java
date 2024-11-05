@@ -2,9 +2,11 @@ package homeTry.tag.productTag.service;
 
 import java.util.List;
 
+import homeTry.tag.model.vo.TagName;
 import homeTry.tag.productTag.dto.ProductTagDto;
 import homeTry.tag.productTag.dto.request.ProductTagRequest;
 import homeTry.tag.productTag.dto.response.ProductTagResponse;
+import homeTry.tag.productTag.exception.BadRequestException.ProductTagAlreadyExistsException;
 import homeTry.tag.productTag.exception.BadRequestException.ProductTagNotFoundException;
 import homeTry.tag.productTag.model.entity.ProductTag;
 import homeTry.tag.productTag.repository.ProductTagRepository;
@@ -22,7 +24,7 @@ public class ProductTagService {
 
     public ProductTagResponse getProductTagList() {
 
-        List<ProductTagDto> productTagList = productTagRepository.findAll()
+        List<ProductTagDto> productTagList = productTagRepository.findAllByIsDeprecatedFalse()
                 .stream()
                 .map(ProductTagDto::from)
                 .toList();
@@ -32,6 +34,10 @@ public class ProductTagService {
 
     @Transactional
     public void addProductTag(ProductTagRequest productTagRequest) {
+
+        if(productTagRepository.existsByTagName(new TagName(productTagRequest.productTagName()))){
+            throw new ProductTagAlreadyExistsException();
+        }
 
         productTagRepository.save(
                 new ProductTag(
@@ -45,6 +51,6 @@ public class ProductTagService {
         ProductTag productTag = productTagRepository.findById(productTagId)
                 .orElseThrow(() -> new ProductTagNotFoundException());
 
-        productTagRepository.delete(productTag);
+        productTag.markAsDeprecated();
     }
 }

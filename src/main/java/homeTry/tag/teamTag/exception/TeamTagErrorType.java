@@ -6,7 +6,8 @@ import homeTry.common.exception.ErrorType;
 
 public enum TeamTagErrorType implements ErrorType {
 
-    TEAM_TAG_NOT_FOUND_EXCEPTION("TEAMTAG404_001", HttpStatus.NOT_FOUND, "존재하지 않는 팀태그입니다.");
+    TEAM_TAG_NOT_FOUND_EXCEPTION("TEAMTAG404_001", HttpStatus.NOT_FOUND, "존재하지 않는 팀태그입니다."),
+    TEAM_TAG_ALREADY_EXISTS_EXCEPTION("TEAMTAG409_001", HttpStatus.CONFLICT, "이미 동일한 이름의 팀 태그가 존재합니다.");
     
     private final String errorCode;
     private final HttpStatus httpStatus;
