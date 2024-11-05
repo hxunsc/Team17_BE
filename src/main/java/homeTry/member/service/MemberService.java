@@ -15,8 +15,6 @@ import homeTry.member.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
-
 @Service
 public class MemberService {
 
@@ -24,22 +22,24 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     public MemberService(ExerciseHistoryService exerciseHistoryService,
-                         MemberRepository memberRepository) {
+            MemberRepository memberRepository) {
         this.exerciseHistoryService = exerciseHistoryService;
         this.memberRepository = memberRepository;
     }
 
     @Transactional(readOnly = true)
     public Long login(MemberDTO memberDTO) {
-        return memberRepository.findByEmail(new Email(memberDTO.email())).orElseThrow(LoginFailedException::new).getId();
+        return memberRepository.findByEmail(new Email(memberDTO.email()))
+                .orElseThrow(LoginFailedException::new).getId();
     }
 
     @Transactional
     public Long register(MemberDTO memberDTO) {
         Member member = memberDTO.toEntity();
 
-        if (memberRepository.existsByEmail(new Email(memberDTO.email())))
+        if (memberRepository.existsByEmail(new Email(memberDTO.email()))) {
             throw new RegisterEmailConflictException();
+        }
 
         return memberRepository.save(member).getId();
     }
@@ -67,7 +67,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void incrementAttendanceDate(Long id){
+    public void incrementAttendanceDate(Long id) {
         Member member = getMemberEntity(id);
         member.incrementAttendanceDate();
     }
@@ -82,5 +82,17 @@ public class MemberService {
 
         return new MyPageResponse(member.getId(), member.getNickname(),
                 member.getEmail(), member.getExerciseAttendanceDate(), weeklyTotal, monthlyTotal);
+    }
+
+    @Transactional
+    public void promoteToAdmin(Long id) {
+        Member member = getMemberEntity(id);
+        member.promoteToAdmin();
+    }
+
+    @Transactional
+    public void demoteToUser(Long id) {
+        Member member = getMemberEntity(id);
+        member.demoteToUser();
     }
 }
