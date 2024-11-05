@@ -22,17 +22,16 @@ public class KakaoAuthService {
         MemberDTO memberDTO = kakaoClientService.getMemberInfo(accessToken);
 
         try {
-            Long id = memberService.login(memberDTO); // -> LoginFailedException을 던질 수 있음
-            MemberDTO memberDTOWithId = new MemberDTO(id, memberDTO.email(), memberDTO.nickname());
+            MemberDTO memberDTOWithActualId = memberService.login(memberDTO); // -> LoginFailedException을 던질 수 있음
 
-            memberService.setMemeberAccessToken(id, accessToken);
-            return memberDTOWithId;
+            memberService.setMemeberAccessToken(memberDTOWithActualId.id(), accessToken);
+            return memberDTOWithActualId;
         } catch (LoginFailedException e) { //유저를 못 찾으면 회원가입
-            Long id = memberService.register(memberDTO);
-            MemberDTO memberDTOWithId = new MemberDTO(id, memberDTO.email(), memberDTO.nickname());
 
-            memberService.setMemeberAccessToken(id, accessToken);
-            return memberDTOWithId;
+            MemberDTO memberDTOWithActualId =  memberService.register(memberDTO);
+
+            memberService.setMemeberAccessToken(memberDTOWithActualId.id(), accessToken);
+            return memberDTOWithActualId;
         }
     }
 }

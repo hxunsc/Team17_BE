@@ -29,20 +29,21 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public Long login(MemberDTO memberDTO) {
-        return memberRepository.findByEmail(new Email(memberDTO.email()))
-                .orElseThrow(LoginFailedException::new).getId();
+    public MemberDTO login(MemberDTO memberDTO) {
+        Member member = memberRepository.findByEmail(new Email(memberDTO.email()))
+                .orElseThrow(LoginFailedException::new);
+
+        return MemberDTO.from(member);
     }
 
     @Transactional
-    public Long register(MemberDTO memberDTO) {
+    public MemberDTO register(MemberDTO memberDTO) {
         Member member = memberDTO.toEntity();
 
-        if (memberRepository.existsByEmail(new Email(memberDTO.email()))) {
+        if (memberRepository.existsByEmail(new Email(memberDTO.email())))
             throw new RegisterEmailConflictException();
-        }
 
-        return memberRepository.save(member).getId();
+        return MemberDTO.from(memberRepository.save(member));
     }
 
     @Transactional(readOnly = true)
