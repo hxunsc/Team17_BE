@@ -102,4 +102,8 @@ public class Member extends BaseEntity {
         this.role = Role.USER;
     }
 
+    public boolean isAdmin(){
+        return (this.role == Role.ADMIN);
+    }
+
 }
