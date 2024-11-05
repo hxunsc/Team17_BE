@@ -22,7 +22,7 @@ public class ProductTagService {
 
     public ProductTagResponse getProductTagList() {
 
-        List<ProductTagDto> productTagList = productTagRepository.findAll()
+        List<ProductTagDto> productTagList = productTagRepository.findAllByIsDeprecatedFalse()
                 .stream()
                 .map(ProductTagDto::from)
                 .toList();
@@ -45,7 +45,6 @@ public class ProductTagService {
         ProductTag productTag = productTagRepository.findById(productTagId)
                 .orElseThrow(() -> new ProductTagNotFoundException());
 
-
-        productTagRepository.delete(productTag);
+        productTag.markAsDeprecated();
     }
 }

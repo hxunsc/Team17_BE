@@ -1,17 +1,17 @@
-insert into team_tag (tag_attribute, tag_name)
-values ('성별', '여성'),
-       ('성별', '남성'),
-       ('성별', '무관'),
-       ('나이', '10대'),
-       ('나이', '20대'),
-       ('나이', '30대'),
-       ('나이', '40대'),
-       ('나이', '50대'),
-       ('나이', '전연령'),
-       ('운동강도', '강'),
-       ('운동강도', '중'),
-       ('운동강도', '약'),
-       ('운동강도', '자유');
+insert into team_tag (tag_attribute, tag_name, is_deprecated)
+values ('성별', '여성', false),
+       ('성별', '남성', false),
+       ('성별', '무관', false),
+       ('나이', '10대', false),
+       ('나이', '20대', false),
+       ('나이', '30대', false),
+       ('나이', '40대', false),
+       ('나이', '50대', false),
+       ('나이', '전연령', false),
+       ('운동강도', '강', false),
+       ('운동강도', '중', false),
+       ('운동강도', '약', false),
+       ('운동강도', '자유', false);
 
 insert into member (email, nickname, exercise_attendance_date, created_at, is_deprecated)
 values ('test1@naver.com', 'test1', '0', '2024-10-04T12:30:00', false),
@@ -65,9 +65,9 @@ values (1, 'https://image10.coupangcdn.com/image/retail/images/1147911926604673-
        (6, 'https://example.com/product6.jpg', 'https://example.com/product6', '요가 밴드', 7900, 'coupang', 11, false),
        (7, 'https://example.com/product7.jpg', 'https://example.com/product7', '아몬드 브리즈 언스위트', 15550, 'coupang', 25, false);
 
-insert into product_tag (tag_name)
-values ('운동 상품'),
-       ('운동 식품');
+insert into product_tag (tag_name, is_deprecated)
+values ('운동 상품', false),
+       ('운동 식품', false);
 
 insert into product_tag_mapping (product_id, product_tag_id, is_deprecated)
 values (1, 1, false),

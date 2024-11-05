@@ -27,7 +27,7 @@ public class TeamTagService {
     //모든 태그 반환
     @Transactional(readOnly = true)
     public List<TeamTagDTO> getAllTeamTagList() {
-        List<TeamTag> tagList = teamTagRepository.findAll();
+        List<TeamTag> tagList = teamTagRepository.findAllByIsDeprecatedFalse();
         return tagList
                 .stream()
                 .map(TeamTagDTO::from)
@@ -69,7 +69,7 @@ public class TeamTagService {
         TeamTag teamTag = teamTagRepository.findById(teamTagId)
                 .orElseThrow(() -> new TeamTagNotFoundException());
 
-        teamTagRepository.delete(teamTag);
+        teamTag.markAsDeprecated();
     }
 
 }
