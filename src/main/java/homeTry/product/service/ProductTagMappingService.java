@@ -18,6 +18,10 @@ public class ProductTagMappingService {
         this.productTagMappingRepository = productTagMappingRepository;
     }
 
+    public void save(ProductTagMapping mapping) {
+        productTagMappingRepository.save(mapping);
+    }
+
     // 태그에 맞는 상품 ID 리스트 반환
     @Transactional(readOnly = true)
     public List<Long> getProductIdsByTagIds(List<Long> tagIds) {
