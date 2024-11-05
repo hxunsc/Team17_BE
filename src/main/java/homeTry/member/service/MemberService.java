@@ -9,6 +9,7 @@ import homeTry.member.exception.badRequestException.LoginFailedException;
 import homeTry.member.exception.badRequestException.MemberNotFoundException;
 import homeTry.member.exception.badRequestException.RegisterEmailConflictException;
 import homeTry.member.model.entity.Member;
+import homeTry.member.model.enums.Role;
 import homeTry.member.model.vo.Email;
 import homeTry.member.model.vo.Nickname;
 import homeTry.member.repository.MemberRepository;
@@ -94,5 +95,17 @@ public class MemberService {
     public void demoteToUser(Long id) {
         Member member = getMemberEntity(id);
         member.demoteToUser();
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isAdmin(Long id) {
+        Member member = getMemberEntity(id);
+        return member.isAdmin();
+    }
+
+    @Transactional(readOnly = true)
+    public Role getRole(Long id) {
+        Member member = getMemberEntity(id);
+        return member.getRole();
     }
 }
