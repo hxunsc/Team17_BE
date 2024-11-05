@@ -30,17 +30,17 @@ class CorsTest {
 
     @Test
     void cors() throws Exception {
-
         mockMvc.perform(
                         options("/api/member/profile")
-                                .header(HttpHeaders.ORIGIN, "Http://localhost:8080")
+                                .header(HttpHeaders.ORIGIN, "http://localhost:123123123")
                                 .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "GET")
                                 .header("Authorization", "Bearer " + jwtAuth.generateToken(memberDTO))
                 )
                 .andExpect(status().isOk())
-                .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*"))
+                .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "http://localhost:123123123"))
                 .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "GET,POST,PUT,DELETE,OPTIONS"))
                 .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.LOCATION))
                 .andDo(print());
     }
+
 }
