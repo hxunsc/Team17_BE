@@ -1,7 +1,8 @@
 package homeTry.product.service;
 
+import homeTry.member.dto.MemberDTO;
 import homeTry.product.dto.request.ProductRequest;
-import homeTry.product.dto.response.ProductResponse;
+import homeTry.product.dto.response.ProductAdminResponse;
 import homeTry.product.exception.badRequestException.ProductNotFoundException;
 import homeTry.product.model.entity.Product;
 import homeTry.product.repository.ProductRepository;
@@ -23,7 +24,7 @@ public class AdminProductService {
     }
 
     // 상품 추가
-    public void createProduct(ProductRequest request) {
+    public void createProduct(ProductRequest request, MemberDTO memberDTO) {
         Product product = new Product(
             request.imageUrl(),
             request.productUrl(),
@@ -35,7 +36,7 @@ public class AdminProductService {
     }
 
     // 상품 삭제
-    public void deleteProduct(Long productId) {
+    public void deleteProduct(Long productId, MemberDTO memberDTO) {
         if (!productRepository.existsById(productId)) {
             throw new ProductNotFoundException();
         }
@@ -43,11 +44,11 @@ public class AdminProductService {
     }
 
     // 상품 조회
-    public Page<ProductResponse> getProducts(Pageable pageable) {
-        return productRepository.findAllByOrderByIdAsc(pageable)
+    public Page<ProductAdminResponse> getProducts(Pageable pageable, MemberDTO memberDTO) {
+        return productRepository.findAllNonDeprecated(pageable)
             .map(product -> {
                 ProductTagDto tagDto = productTagMappingService.getTagForProduct(product.getId());
-                return ProductResponse.from(product, tagDto);
+                return ProductAdminResponse.from(product, tagDto);
             });
     }
 
