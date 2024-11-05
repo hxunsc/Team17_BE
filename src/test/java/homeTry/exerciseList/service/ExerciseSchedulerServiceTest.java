@@ -46,11 +46,16 @@ class ExerciseSchedulerServiceTest {
         exerciseRepository.deleteAll();
 
         Member member = memberRepository.save(new Member("test@example.com", "1234"));
+        Member member2 = memberRepository.save(new Member("test2@example.com", "5678"));
 
         Exercise exercise = new Exercise("헬스", member);
         exerciseRepository.save(exercise);
+        Exercise exercise2 = new Exercise("요가", member2);
+        exerciseRepository.save(exercise2);
 
         ExerciseTime exerciseTime = new ExerciseTime(exercise);
+        ExerciseTime exerciseTime2 = new ExerciseTime(exercise2);
+        exerciseTimeRepository.save(exerciseTime2);
         exerciseTime.startExercise();
         exerciseTimeRepository.save(exerciseTime);
     }
@@ -72,12 +77,30 @@ class ExerciseSchedulerServiceTest {
 
         // 운동 기록이 있는 멤버의 출석일이 증가하는가
         assertTrue(member.getExerciseAttendanceDate() > 0);
+    }
 
-        // ExerciseTime -> ExerciseHistory로 저장이 되는가
-        assertEquals(1, exerciseHistories.size());
+    @Test
+    @DisplayName("스케줄링 작업 - 운동 기록이 없는 멤버는 출석일이 증가하지 않음")
+    void testSaveAllExerciseHistoryAt3AM_WithNoExerciseTimeForOneMember() {
+        exerciseSchedulerService.saveAllExerciseHistoryAt3AM();
 
-        // ExerciseHistory에 저장된 운동과 원래 운동 이름이 같은가
-        assertEquals("헬스", exerciseHistories.get(0).getExercise().getExerciseName());
+        List<ExerciseTime> exerciseTimes = exerciseTimeRepository.findAll();
+        Member member2 = memberRepository.findByEmail(new Email("test2@example.com")).orElseThrow();
+        List<ExerciseHistory> exerciseHistories = exerciseHistoryRepository.findAll();
+
+        // 두 번째 멤버의 출석일이 증가하지 않았는지 확인
+        assertEquals(0, member2.getExerciseAttendanceDate());
+    }
+
+    @Test
+    @DisplayName("스케줄링 작업 - 모든 멤버의 운동 기록 저장")
+    void testSaveAllExerciseHistoryForAllMembers() {
+        exerciseSchedulerService.saveAllExerciseHistoryAt3AM();
+
+        List<ExerciseHistory> exerciseHistories = exerciseHistoryRepository.findAll();
+
+        // 운동 기록이 2개 저장되었는가
+        assertEquals(2, exerciseHistories.size());
     }
 
 }
