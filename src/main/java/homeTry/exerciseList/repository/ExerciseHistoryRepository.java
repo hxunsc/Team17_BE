@@ -18,7 +18,7 @@ public interface ExerciseHistoryRepository extends JpaRepository<ExerciseHistory
 
     // ExerciseHistory 리스트 조회 - 멤버 ID와 특정 날짜, 유효한(삭제되지 않은) 운동만
     @Query("SELECT eh FROM ExerciseHistory eh " +
-        "JOIN eh.exercise e " +
+        "JOIN FETCH eh.exercise e " +
         "WHERE e.member.id = :memberId " +
         "AND eh.createdAt BETWEEN :startOfDay AND :endOfDay " +
         "AND e.isDeprecated = false")
