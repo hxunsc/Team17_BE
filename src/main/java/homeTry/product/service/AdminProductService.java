@@ -29,7 +29,11 @@ public class AdminProductService {
     }
 
     // 상품 추가
+    @Transactional
     public void createProduct(ProductRequest request, MemberDTO memberDTO) {
+        // 관리자 권한 확인
+        verifyAdmin(memberDTO);
+
         Product product = new Product(
             request.imageUrl(),
             request.productUrl(),
@@ -58,7 +62,11 @@ public class AdminProductService {
     }
 
     // 상품 조회
+    @Transactional(readOnly = true)
     public Page<ProductAdminResponse> getProducts(Pageable pageable, MemberDTO memberDTO) {
+        // 관리자 권한 확인
+        verifyAdmin(memberDTO);
+
         return productRepository.findAllNonDeprecated(pageable)
             .map(product -> {
                 ProductTagDto tagDto = productTagMappingService.getTagForProduct(product.getId());
