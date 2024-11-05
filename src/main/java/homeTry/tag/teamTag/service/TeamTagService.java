@@ -1,7 +1,10 @@
 package homeTry.tag.teamTag.service;
 
+import homeTry.tag.model.vo.TagName;
+import homeTry.tag.productTag.exception.BadRequestException.ProductTagAlreadyExistsException;
 import homeTry.tag.teamTag.dto.TeamTagDTO;
 import homeTry.tag.teamTag.dto.request.TeamTagRequest;
+import homeTry.tag.teamTag.exception.BadRequestException.TeamTagAlreadyExistsException;
 import homeTry.tag.teamTag.exception.BadRequestException.TeamTagNotFoundException;
 import homeTry.tag.teamTag.model.entity.TeamTag;
 import homeTry.tag.teamTag.repository.TeamTagRepository;
@@ -55,6 +58,10 @@ public class TeamTagService {
 
     @Transactional
     public void addTeamTag(TeamTagRequest teamTagRequest){
+
+        if(teamTagRepository.existsByTagName(new TagName(teamTagRequest.teamTagName()))){
+            throw new TeamTagAlreadyExistsException();
+        }
 
         teamTagRepository.save(
                 new TeamTag(

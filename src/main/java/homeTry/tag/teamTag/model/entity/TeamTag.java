@@ -6,6 +6,7 @@ import homeTry.tag.teamTag.model.vo.TeamTagAttribute;
 import jakarta.persistence.*;
 
 @Entity
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = "tag_name")})
 public class TeamTag extends Tag {
 
     @Embedded
