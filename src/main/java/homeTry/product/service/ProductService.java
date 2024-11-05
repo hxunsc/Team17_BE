@@ -53,7 +53,7 @@ public class ProductService {
 
     // 특정 상품 선택 시 해당 상품 URL 반환
     @Transactional
-    public String incrementViewCountAndGetUrl(Long productId, MemberDTO memberDTO) {
+    public void incrementViewCountAndGetUrl(Long productId, MemberDTO memberDTO) {
         if (memberDTO == null) {
             throw new InvalidMemberException();
         }
@@ -62,7 +62,6 @@ public class ProductService {
             .orElseThrow(ProductNotFoundException::new);
 
         product.incrementViewCount(); // 조회수 증가
-        return product.getProductUrl(); // 상품 URL 반환
     }
 
 }
