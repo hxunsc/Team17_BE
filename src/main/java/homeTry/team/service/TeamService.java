@@ -359,6 +359,7 @@ public class TeamService {
         }
     }
 
+    //Team엔티티 반환
     @Transactional(readOnly = true)
     public Team getTeamEntity(Long teamId) {
         return teamRepository.findById(teamId)
