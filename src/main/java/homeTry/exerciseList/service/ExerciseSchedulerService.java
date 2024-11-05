@@ -21,9 +21,9 @@ public class ExerciseSchedulerService {
     private final MemberService memberService;
 
     public ExerciseSchedulerService(ExerciseService exerciseService,
-                                    ExerciseTimeService exerciseTimeService,
-                                    ExerciseHistoryService exerciseHistoryService,
-                                    MemberService memberService) {
+        ExerciseTimeService exerciseTimeService,
+        ExerciseHistoryService exerciseHistoryService,
+        MemberService memberService) {
         this.exerciseService = exerciseService;
         this.exerciseTimeService = exerciseTimeService;
         this.exerciseHistoryService = exerciseHistoryService;
@@ -31,7 +31,7 @@ public class ExerciseSchedulerService {
     }
 
     // 매일 새벽 3시에 실행
-    @Scheduled(cron = "0 0 3 * * *")
+    @Scheduled(cron = "0 0 3 * * *", zone = "Asia/Seoul")
     @Transactional
     public void saveAllExerciseHistoryAt3AM() {
         List<Exercise> allExercises = exerciseService.findAllExercises();
@@ -40,7 +40,7 @@ public class ExerciseSchedulerService {
         // 모든 운동 기록을 히스토리에 저장하고 운동 시간을 초기화
         allExercises.forEach(exercise -> {
             ExerciseTime exerciseTime = exerciseTimeService.getExerciseTime(
-                    exercise.getExerciseId());
+                exercise.getExerciseId());
 
             // exerciseTime 값이 null 이면 넘어감
             if (exerciseTime == null) {
@@ -50,7 +50,7 @@ public class ExerciseSchedulerService {
             // 3시에도 운동이 실행 중이면 강제로 멈추고 저장
             if (exerciseTime.isActive()) {
                 exerciseService.stopExercise(exercise.getExerciseId(),
-                        MemberDTO.from(exercise.getMember()));
+                    MemberDTO.from(exercise.getMember()));
                 exerciseTimeService.saveExerciseTime(exerciseTime);
             }
 
@@ -60,7 +60,7 @@ public class ExerciseSchedulerService {
             // 운동 시간이 있는 멤버 ID 저장
             membersWithExerciseTime.add(exercise.getMember().getId());
         });
-        
+
         // 운동 시간이 있는 멤버들의 출석일 증가
         membersWithExerciseTime.forEach(memberService::incrementAttendanceDate);
     }

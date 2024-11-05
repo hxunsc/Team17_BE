@@ -11,9 +11,11 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(
-    name = "exercise_time", indexes = {
-    @Index(name = "idx_exercise_time_exercise_active", columnList = "exercise_id, isActive")
-}) // 복합 인덱싱 사용
+    name = "exercise_time",
+    indexes = {
+        @Index(name = "idx_exercise_time_exercise_start_time", columnList = "exercise_id, startTime"),
+    }
+)
 public class ExerciseTime extends BaseEntity {
 
     @Id
