@@ -77,8 +77,8 @@ public class ExerciseTimeService {
     }
 
     @Transactional
-    public void resetExerciseTime(ExerciseTime exerciseTime) {
-        exerciseTime.resetExerciseTime();
+    public void resetDailyExercise(ExerciseTime exerciseTime) {
+        exerciseTime.resetDailyExercise();
     }
 
     @Transactional(readOnly = true)
