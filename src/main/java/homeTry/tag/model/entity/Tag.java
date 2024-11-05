@@ -1,10 +1,11 @@
 package homeTry.tag.model.entity;
 
+import homeTry.common.entity.BaseEntity;
 import homeTry.tag.model.vo.TagName;
 import jakarta.persistence.*;
 
 @MappedSuperclass
-public abstract class Tag {
+public abstract class Tag extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -45,6 +45,7 @@ public class ProductTagService {
         ProductTag productTag = productTagRepository.findById(productTagId)
                 .orElseThrow(() -> new ProductTagNotFoundException());
 
+
         productTagRepository.delete(productTag);
     }
 }
