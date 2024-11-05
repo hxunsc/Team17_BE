@@ -1,6 +1,6 @@
 package homeTry.common.config;
 
-import homeTry.common.auth.JwtAuth;
+import homeTry.common.auth.jwt.JwtAuth;
 import homeTry.common.auth.LoginMemberArgumentResolver;
 import homeTry.common.interceptor.JwtInterceptor;
 import homeTry.member.service.MemberService;

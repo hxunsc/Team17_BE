@@ -1,4 +1,4 @@
-package homeTry.common.auth;
+package homeTry.common.auth.jwt;
 
 import homeTry.member.dto.MemberDTO;
 import io.jsonwebtoken.JwtException;
