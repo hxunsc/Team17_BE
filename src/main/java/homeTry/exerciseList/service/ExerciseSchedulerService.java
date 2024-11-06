@@ -42,23 +42,22 @@ public class ExerciseSchedulerService {
             ExerciseTime exerciseTime = exerciseTimeService.getExerciseTime(
                 exercise.getExerciseId());
 
-            // exerciseTime 값이 null 이면 넘어감
-            if (exerciseTime == null) {
-                return;
-            }
-
-            // 3시에도 운동이 실행 중이면 강제로 멈추고 저장
+            // 3시에도 운동이 실행 중이면 강제로 멈추고 exerciseTime 저장
             if (exerciseTime.isActive()) {
                 exerciseService.stopExercise(exercise.getExerciseId(),
                     MemberDTO.from(exercise.getMember()));
                 exerciseTimeService.saveExerciseTime(exerciseTime);
             }
 
-            exerciseHistoryService.saveExerciseHistory(exerciseTime.getExercise(), exerciseTime);
-            exerciseTimeService.resetExerciseTime(exerciseTime);
-
             // 운동 시간이 있는 멤버 ID 저장
-            membersWithExerciseTime.add(exercise.getMember().getId());
+            if(!exerciseTime.getExerciseTime().isZero()) {
+                membersWithExerciseTime.add(exercise.getMember().getId());
+            }
+
+            // exerciseTime -> exerciseHistory 이동
+            exerciseHistoryService.saveExerciseHistory(exerciseTime.getExercise(), exerciseTime);
+
+            exerciseTimeService.resetDailyExercise(exerciseTime);
         });
 
         // 운동 시간이 있는 멤버들의 출석일 증가

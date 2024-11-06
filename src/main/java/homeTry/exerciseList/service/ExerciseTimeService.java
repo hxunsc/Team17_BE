@@ -59,13 +59,13 @@ public class ExerciseTimeService {
         Duration totalTime = exerciseTime.getExerciseTime().plus(timeElapsed);
 
         // 한 번 운동한 시간이 8시간을 초과한 경우
-        if (timeElapsed.toHours() > 8) {
+        if (timeElapsed.compareTo(Duration.ofHours(8)) > 0) {
             exerciseTime.stopExerciseWithoutSavingTime();  // 기록 저장 없이 강제 종료
             throw new ExerciseTimeLimitExceededException();
         }
 
         // 하루 총 운동 시간이 12시간을 초과한 경우
-        if (totalTime.toHours() > 12) {
+        if (totalTime.compareTo(Duration.ofHours(12)) > 0) {
             exerciseTime.stopExerciseWithoutSavingTime();
             throw new DailyExerciseTimeLimitExceededException();
         }
@@ -77,8 +77,8 @@ public class ExerciseTimeService {
     }
 
     @Transactional
-    public void resetExerciseTime(ExerciseTime exerciseTime) {
-        exerciseTime.resetExerciseTime();
+    public void resetDailyExercise(ExerciseTime exerciseTime) {
+        exerciseTime.resetDailyExercise();
     }
 
     @Transactional(readOnly = true)
