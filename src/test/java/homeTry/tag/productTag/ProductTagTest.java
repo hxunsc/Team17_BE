@@ -51,7 +51,7 @@ public class ProductTagTest {
 
     @Test
     @DisplayName("상품 태그 목록 조회 테스트")
-    void getProductTagList() throws Exception {
+    void getProductTagListTest() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/admin/productTag")
                         .header("Authorization", "Bearer " + token))

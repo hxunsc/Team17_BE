@@ -60,7 +60,7 @@ public class TagPageTest {
 
     @Test
     @DisplayName("상품 태그 목록 페이지 요청 테스트")
-    void showProductTagList() throws Exception {
+    void showProductTagListTest() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/tag/product")
                         .header("Authorization", "Bearer " + token))
@@ -71,7 +71,7 @@ public class TagPageTest {
 
     @Test
     @DisplayName("팀 태그 목록 페이지 요청 테스트")
-    void showTeamTagList() throws Exception {
+    void showTeamTagListTest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/tag/team")
                         .header("Authorization", "Bearer " + token))
                         .andExpect(status().isOk())
@@ -81,7 +81,7 @@ public class TagPageTest {
 
     @Test
     @DisplayName("상품 태그 추가 폼 페이지 요청 테스트")
-    void showProductTagForm() throws Exception {
+    void showProductTagFormTest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/tag/product/add")
                         .header("Authorization", "Bearer " + token))
                         .andExpect(status().isOk())
@@ -90,7 +90,7 @@ public class TagPageTest {
 
     @Test
     @DisplayName("상품 태그 저장 테스트")
-    void saveProductTag() throws Exception {
+    void saveProductTagTest() throws Exception {
         ProductTagRequest request = new ProductTagRequest("testTagName");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/admin/tag/product/save")
@@ -102,7 +102,7 @@ public class TagPageTest {
 
     @Test
     @DisplayName("팀 태그 추가 폼 페이지 요청 테스트")
-    void showTeamTagForm() throws Exception {
+    void showTeamTagFormTest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/tag/team/add")
                         .header("Authorization", "Bearer " + token))
                         .andExpect(status().isOk())
@@ -111,7 +111,7 @@ public class TagPageTest {
 
     @Test
     @DisplayName("팀 태그 저장 테스트")
-    void saveTeamTag() throws Exception {
+    void saveTeamTagTest() throws Exception {
 
         TeamTagRequest request = new TeamTagRequest("testTagName", "testAttribute");
 
@@ -124,7 +124,7 @@ public class TagPageTest {
 
     @Test
     @DisplayName("상품 태그 삭제 테스트")
-    void deleteProductTag() throws Exception {
+    void deleteProductTagTest() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.post("/admin/tag/product/delete/" + savedProductTag.getId())
                         .header("Authorization", "Bearer " + token))
@@ -134,9 +134,9 @@ public class TagPageTest {
 
     @Test
     @DisplayName("팀 태그 삭제 테스트")
-    void deleteTeamTag() throws Exception {
+    void deleteTeamTagTest() throws Exception {
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/admin/tag/team/delete/" + savedProductTag.getId())
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/tag/team/delete/" + savedTeamTag.getId())
                         .header("Authorization", "Bearer " + token))
                         .andExpect(status().is3xxRedirection())
                         .andExpect(view().name("redirect:/admin/tag/team"));

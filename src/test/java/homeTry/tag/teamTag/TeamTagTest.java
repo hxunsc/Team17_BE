@@ -49,7 +49,7 @@ public class TeamTagTest {
 
     @Test
     @DisplayName("팀 태그 목록 조회 테스트")
-    void getTeamTagList() throws Exception {
+    void getTeamTagListTest() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/admin/teamTag")
                         .header("Authorization", "Bearer " + token))
