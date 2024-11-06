@@ -2,7 +2,7 @@ insert into team_tag (tag_attribute, tag_name, is_deprecated)
 values ('성별', '여성', false),
        ('성별', '남성', false),
        ('성별', '무관', false),
-       ('나이', '10대', false),
+       ('나이', '10대', true),
        ('나이', '20대', false),
        ('나이', '30대', false),
        ('나이', '40대', false),
