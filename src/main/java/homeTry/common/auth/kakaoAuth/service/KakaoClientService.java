@@ -6,6 +6,7 @@ import homeTry.common.auth.exception.internalServerException.KakaoAuthServerExce
 import homeTry.common.auth.kakaoAuth.client.KakaoApiClient;
 import homeTry.common.auth.kakaoAuth.dto.response.KakaoErrorResponse;
 import homeTry.member.dto.MemberDTO;
+import homeTry.member.model.enums.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,7 @@ public class KakaoClientService {
             var userInfo = kakaoApiClient.getMemberInfo(kakaoAccessToken);
             var kakaoAccount = userInfo.kakaoAccount();
             var profile = kakaoAccount.profile();
-            return new MemberDTO(0L, kakaoAccount.email(), profile.nickname());
+            return new MemberDTO(0L, kakaoAccount.email(), profile.nickname(), Role.USER);
         } catch (HttpClientErrorException e) {
             handleClientError(e);
         } catch (HttpServerErrorException e) {

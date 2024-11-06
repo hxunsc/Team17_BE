@@ -1,6 +1,6 @@
 package homeTry.common.auth.kakaoAuth.controller;
 
-import homeTry.common.auth.JwtAuth;
+import homeTry.common.auth.jwt.JwtAuth;
 import homeTry.common.auth.kakaoAuth.service.KakaoAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

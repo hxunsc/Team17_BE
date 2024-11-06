@@ -23,7 +23,7 @@ public class ChattingConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/api/chatting/websocket")
+        registry.addEndpoint("/api/team/chatting/websocket")
                 .setAllowedOriginPatterns("http://localhost:*", "https://localhost:*")
                 .withSockJS()
                 .setWebSocketEnabled(true)
