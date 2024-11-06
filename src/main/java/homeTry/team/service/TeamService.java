@@ -266,7 +266,7 @@ public class TeamService {
 
     //팀의 멤버를 찾아와주는 기능
     private List<Member> getMemberList(Team team) {
-        List<TeamMemberMapping> teamMemberMappingList = teamMemberMappingService.getTeamMemberMapping(team);
+        List<TeamMemberMapping> teamMemberMappingList = teamMemberMappingService.getTeamMemberMappingByTeam(team);
 
         return teamMemberMappingList // 해당 팀의 멤버 리스트를 받음
                 .stream()
@@ -359,10 +359,31 @@ public class TeamService {
         }
     }
 
+    //Team엔티티 반환
     @Transactional(readOnly = true)
     public Team getTeamEntity(Long teamId) {
         return teamRepository.findById(teamId)
                 .orElseThrow(TeamNotFoundException::new);
+    }
+
+    //내가 가입한 팀 리스트 반환 (슬라이스 적용)
+    @Transactional(readOnly = true)
+    public Slice<TeamResponse> getMyTeamList(MemberDTO memberDTO, Pageable pageable) {
+        Member member = memberService.getMemberEntity(memberDTO.id());
+
+        Slice<TeamMemberMapping> teamMemberMappingList = teamMemberMappingService.getTeamMemberMappingByMember(member, pageable);
+
+        List<Team> TeamList = teamMemberMappingList.getContent()
+                .stream()
+                .map(TeamMemberMapping::getTeam)
+                .toList();
+
+        List<TeamResponse> myTeamList = TeamList
+                .stream()
+                .map(this::convertToTeamResponse)
+                .toList();
+
+        return new SliceImpl<>(myTeamList, pageable, teamMemberMappingList.hasNext());
     }
 }
 

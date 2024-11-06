@@ -105,4 +105,13 @@ public class TeamController {
         teamService.checkPassword(teamId, checkingPasswordRequest);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @GetMapping("/joined")
+    public ResponseEntity<Slice<TeamResponse>> getJoinedTeam(
+            @LoginMember MemberDTO memberDTO,
+            @PageableDefault(size = 8, sort = "teamId", direction = Sort.Direction.ASC) Pageable pageable
+    ) {
+        Slice<TeamResponse> responseSlice = teamService.getMyTeamList(memberDTO, pageable);
+        return ResponseEntity.ok(responseSlice);
+    }
 }
