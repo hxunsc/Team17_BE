@@ -63,9 +63,10 @@ public class ExerciseTime extends BaseEntity {
         }
     }
 
-    public void resetExerciseTime() {
+    public void resetDailyExercise() {
         this.exerciseTime = Duration.ZERO;
         this.isActive = false;
+        this.startTime = DateTimeUtil.getStartOfDay(LocalDate.now());
     }
 
     public Long getId() {
