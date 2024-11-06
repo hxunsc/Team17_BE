@@ -46,10 +46,6 @@ public class ExerciseService {
         Exercise exercise = getExerciseById(exerciseId);
         validateMemberPermission(exercise, memberDTO);
 
-        if (!exercise.getMember().getId().equals(memberDTO.id())) {
-            throw new NoExercisePermissionException();
-        }
-
         ExerciseTime currentExerciseTime = exerciseTimeService.getExerciseTime(
             exercise.getExerciseId());
         if (currentExerciseTime != null && currentExerciseTime.isActive()) {
