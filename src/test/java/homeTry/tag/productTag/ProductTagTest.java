@@ -36,15 +36,18 @@ public class ProductTagTest {
     private JwtAuth jwtAuth;
 
     private String token;
-    private Member testMember;
+    private Member member;
+    private Member savedMember;
 
     private ProductTag savedProductTag;
 
     @BeforeEach
     void beforeEach() {
 
-        testMember = memberRepository.save( new Member("test@test.com", "1234"));
-        token = jwtAuth.generateToken(MemberDTO.from(testMember));
+        member = new Member("test@test.com", "1234");
+        member.promoteToAdmin();
+        savedMember = memberRepository.save(member);
+        token = jwtAuth.generateToken(MemberDTO.from(savedMember));
 
         savedProductTag = productTagRepository.save(new ProductTag("testTagName"));
     }

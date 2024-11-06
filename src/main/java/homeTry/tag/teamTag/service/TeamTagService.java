@@ -1,9 +1,12 @@
 package homeTry.tag.teamTag.service;
 
+import homeTry.member.dto.MemberDTO;
+import homeTry.member.service.MemberService;
+import homeTry.tag.exception.badRequestException.UnauthorizedTagAccessException;
 import homeTry.tag.model.vo.TagName;
-import homeTry.tag.productTag.exception.BadRequestException.ProductTagAlreadyExistsException;
 import homeTry.tag.teamTag.dto.TeamTagDTO;
 import homeTry.tag.teamTag.dto.request.TeamTagRequest;
+import homeTry.tag.teamTag.dto.response.TeamTagResponse;
 import homeTry.tag.teamTag.exception.BadRequestException.TeamTagAlreadyExistsException;
 import homeTry.tag.teamTag.exception.BadRequestException.TeamTagNotFoundException;
 import homeTry.tag.teamTag.model.entity.TeamTag;
@@ -21,17 +24,19 @@ public class TeamTagService {
 
     private final TeamTagRepository teamTagRepository;
     private final TeamTagMappingService teamTagMappingService;
+    private final MemberService memberService;
 
-    public TeamTagService(TeamTagRepository teamTagRepository, TeamTagMappingService teamTagMappingService) {
+    public TeamTagService(TeamTagRepository teamTagRepository, TeamTagMappingService teamTagMappingService, MemberService memberService) {
         this.teamTagRepository = teamTagRepository;
         this.teamTagMappingService = teamTagMappingService;
+        this.memberService = memberService;
     }
 
     //모든 태그 반환
     @Transactional(readOnly = true)
     public List<TeamTagDTO> getAllTeamTagList() {
-        List<TeamTag> tagList = teamTagRepository.findAllByIsDeprecatedFalse();
-        return tagList
+        List<TeamTag> teamTags = teamTagRepository.findAllByIsDeprecatedFalse();
+        return teamTags
                 .stream()
                 .map(TeamTagDTO::from)
                 .toList();
@@ -56,8 +61,22 @@ public class TeamTagService {
                 .toList();
     }
 
+    public TeamTagResponse getTeamTagResponse(MemberDTO memberDTO) {
+
+        verifyAdmin(memberDTO);
+
+        List<TeamTagDTO> teamTagList = teamTagRepository.findAllByIsDeprecatedFalse()
+                        .stream()
+                        .map(TeamTagDTO::from)
+                        .toList();
+
+        return new TeamTagResponse(teamTagList);
+    }
+
     @Transactional
-    public void addTeamTag(TeamTagRequest teamTagRequest){
+    public void addTeamTag(TeamTagRequest teamTagRequest, MemberDTO memberDTO){
+
+        verifyAdmin(memberDTO);
 
         if(teamTagRepository.existsByTagName(new TagName(teamTagRequest.teamTagName()))){
             throw new TeamTagAlreadyExistsException();
@@ -71,12 +90,20 @@ public class TeamTagService {
     }
 
     @Transactional
-    public void deleteTeamTag(Long teamTagId){
+    public void deleteTeamTag(Long teamTagId, MemberDTO memberDTO){
+
+        verifyAdmin(memberDTO);
 
         TeamTag teamTag = teamTagRepository.findById(teamTagId)
                 .orElseThrow(() -> new TeamTagNotFoundException());
 
         teamTag.markAsDeprecated();
+    }
+
+    private void verifyAdmin(MemberDTO memberDTO) {
+        if (!memberService.isAdmin(memberDTO.id())) {
+            throw new UnauthorizedTagAccessException();
+        }
     }
 
 }
