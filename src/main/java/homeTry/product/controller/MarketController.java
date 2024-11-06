@@ -44,7 +44,7 @@ public class MarketController {
     @GetMapping("/{productId}")
     public ResponseEntity<Void> redirectProduct(@PathVariable Long productId,
                                                 @LoginMember MemberDTO memberDTO) {
-        productService.incrementViewCountAndGetUrl(productId, memberDTO);
+        productService.incrementViewCount(productId, memberDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

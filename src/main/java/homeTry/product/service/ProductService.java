@@ -51,9 +51,9 @@ public class ProductService {
         return productRepository.findByIdInOrderByViewCountDescPriceAsc(productIds, pageable);
     }
 
-    // 특정 상품 선택 시 해당 상품 URL 반환
+    // 특정 상품 선택 시 해당 상품의 조회 수 증가
     @Transactional
-    public void incrementViewCountAndGetUrl(Long productId, MemberDTO memberDTO) {
+    public void incrementViewCount(Long productId, MemberDTO memberDTO) {
         if (memberDTO == null) {
             throw new InvalidMemberException();
         }
