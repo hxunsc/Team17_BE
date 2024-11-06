@@ -43,8 +43,7 @@ public class ExerciseService {
 
     @Transactional
     public void deleteExercise(Long exerciseId, MemberDTO memberDTO) {
-        Exercise exercise = getExerciseById(exerciseId);
-        validateMemberPermission(exercise, memberDTO);
+        Exercise exercise = findExerciseWithPermissionCheck(exerciseId, memberDTO);
 
         ExerciseTime currentExerciseTime = exerciseTimeService.getExerciseTime(
             exercise.getExerciseId());
@@ -57,8 +56,7 @@ public class ExerciseService {
 
     @Transactional
     public void startExercise(Long exerciseId, MemberDTO memberDTO) {
-        Exercise exercise = getExerciseById(exerciseId);
-        validateMemberPermission(exercise, memberDTO);
+        Exercise exercise = findExerciseWithPermissionCheck(exerciseId, memberDTO);
 
         // 삭제한 운동을 시작하려는 경우
         if (exercise.isDeprecated()) {
@@ -70,22 +68,24 @@ public class ExerciseService {
 
     @Transactional
     public void stopExercise(Long exerciseId, MemberDTO memberDTO) {
-        Exercise exercise = getExerciseById(exerciseId);
-        validateMemberPermission(exercise, memberDTO);
-
+        Exercise exercise = findExerciseWithPermissionCheck(exerciseId, memberDTO);
         exerciseTimeService.stopExerciseTime(exercise);
+    }
+
+    private Exercise findExerciseWithPermissionCheck(Long exerciseId, MemberDTO memberDTO) {
+        Exercise exercise = getExerciseById(exerciseId);
+
+        // 해당 운동이 해당 회원의 것인지 검증
+        if (!exercise.getMember().getId().equals(memberDTO.id())) {
+            throw new NoExercisePermissionException();
+        }
+
+        return exercise;
     }
 
     private Exercise getExerciseById(Long exerciseId) {
         return exerciseRepository.findById(exerciseId)
             .orElseThrow(ExerciseNotFoundException::new);
-    }
-
-    // 해당 운동이 해당 회원의 것인지 검증
-    private void validateMemberPermission(Exercise exercise, MemberDTO memberDTO) {
-        if (!exercise.getMember().getId().equals(memberDTO.id())) {
-            throw new NoExercisePermissionException();
-        }
     }
 
     @Transactional(readOnly = true)
