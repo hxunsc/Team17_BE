@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import homeTry.common.auth.jwt.JwtAuth;
 import homeTry.member.dto.MemberDTO;
+import homeTry.member.model.enums.Role;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -25,7 +26,7 @@ class CorsTest {
     private JwtAuth jwtAuth;
 
 
-    private MemberDTO memberDTO = new MemberDTO(1L, "1@1.com", "1");
+    private final MemberDTO memberDTO = new MemberDTO(1L, "1@1.com", "1", Role.USER);
 
 
     @Test
