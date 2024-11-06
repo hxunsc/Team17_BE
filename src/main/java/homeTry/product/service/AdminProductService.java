@@ -36,7 +36,7 @@ public class AdminProductService {
 
     // 상품 추가
     @Transactional
-    public void createProduct(ProductRequest request, MemberDTO memberDTO) {
+    public void addProduct(ProductRequest request, MemberDTO memberDTO) {
         // 관리자 권한 확인
         verifyAdmin(memberDTO);
 
