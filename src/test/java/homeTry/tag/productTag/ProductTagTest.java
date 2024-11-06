@@ -1,13 +1,11 @@
-package homeTry.diary;
-
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+package homeTry.tag.productTag;
 
 import homeTry.common.auth.jwt.JwtAuth;
-import homeTry.diary.model.entity.Diary;
-import homeTry.diary.repository.DiaryRepository;
 import homeTry.member.dto.MemberDTO;
 import homeTry.member.model.entity.Member;
 import homeTry.member.repository.MemberRepository;
+import homeTry.tag.productTag.model.entity.ProductTag;
+import homeTry.tag.productTag.repository.ProductTagRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,9 +16,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+
 @SpringBootTest
 @AutoConfigureMockMvc
-public class DiaryTest {
+public class ProductTagTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -29,7 +30,7 @@ public class DiaryTest {
     private MemberRepository memberRepository;
 
     @Autowired
-    private DiaryRepository diaryRepository;
+    private ProductTagRepository productTagRepository;
 
     @Autowired
     private JwtAuth jwtAuth;
@@ -37,39 +38,49 @@ public class DiaryTest {
     private String token;
     private Member testMember;
 
-    private Diary savedDiary;
+    private ProductTag savedProductTag;
 
     @BeforeEach
     void beforeEach() {
+
         testMember = memberRepository.save( new Member("test@test.com", "1234"));
         token = jwtAuth.generateToken(MemberDTO.from(testMember));
 
-        savedDiary = diaryRepository.save(new Diary("testMemo", testMember));
+        savedProductTag = productTagRepository.save(new ProductTag("testTagName"));
     }
 
     @Test
-    @DisplayName("일기 생성 테스트")
-    void createDiaryTest() throws  Exception{
+    @DisplayName("상품 태그 목록 조회 테스트")
+    void getProductTagList() throws Exception {
 
-        String diaryRequestJson = """
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/admin/productTag")
+                        .header("Authorization", "Bearer " + token))
+                        .andExpect(status().isOk());
+    }
+
+
+    @Test
+    @DisplayName("상품 태그 생성 테스트")
+    void createProductTagTest() throws Exception {
+
+        String productTagRequestJson = """
             {
-                "memo": "testMemo"
+                "productTagName" : "createTag"
             }
             """;
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/diary")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/admin/productTag")
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(diaryRequestJson))
+                        .content(productTagRequestJson))
                         .andExpect(status().isCreated());
 
     }
 
     @Test
-    @DisplayName("일기 삭제 테스트")
-    void deleteDiaryTest() throws Exception {
-
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/diary/" + savedDiary.getId())
+    @DisplayName("상품 태그 삭제 테스트")
+    void deleteProductTagTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/admin/productTag/" + savedProductTag.getId())
                         .header("Authorization", "Bearer " + token))
                         .andExpect(status().isNoContent());
     }
