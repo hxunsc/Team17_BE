@@ -2,7 +2,7 @@ package homeTry.tag.teamTag.service;
 
 import homeTry.member.dto.MemberDTO;
 import homeTry.member.service.MemberService;
-import homeTry.tag.exception.badRequestException.UnauthorizedTagAccessException;
+import homeTry.tag.exception.badRequestException.ForbiddenTagAccessException;
 import homeTry.tag.model.vo.TagName;
 import homeTry.tag.teamTag.dto.TeamTagDTO;
 import homeTry.tag.teamTag.dto.request.TeamTagRequest;
@@ -102,7 +102,7 @@ public class TeamTagService {
 
     private void verifyAdmin(MemberDTO memberDTO) {
         if (!memberService.isAdmin(memberDTO.id())) {
-            throw new UnauthorizedTagAccessException();
+            throw new ForbiddenTagAccessException();
         }
     }
 

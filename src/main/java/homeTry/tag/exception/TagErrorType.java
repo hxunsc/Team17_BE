@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 
 public enum TagErrorType implements ErrorType {
 
-    UNAUTHORIZED_TAG_ACCESS_EXCEPTION("TAG403_001", HttpStatus.FORBIDDEN, "관리자 권한이 필요합니다.");
+    FORBIDDEN_TAG_ACCESS_EXCEPTION("TAG403_001", HttpStatus.FORBIDDEN, "관리자 권한이 필요합니다.");
 
     private final String errorCode;
     private final HttpStatus httpStatus;

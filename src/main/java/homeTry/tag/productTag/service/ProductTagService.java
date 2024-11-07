@@ -4,7 +4,7 @@ import java.util.List;
 
 import homeTry.member.dto.MemberDTO;
 import homeTry.member.service.MemberService;
-import homeTry.tag.exception.badRequestException.UnauthorizedTagAccessException;
+import homeTry.tag.exception.badRequestException.ForbiddenTagAccessException;
 import homeTry.tag.model.vo.TagName;
 import homeTry.tag.productTag.dto.ProductTagDto;
 import homeTry.tag.productTag.dto.request.ProductTagRequest;
@@ -77,7 +77,7 @@ public class ProductTagService {
 
     private void verifyAdmin(MemberDTO memberDTO) {
         if (!memberService.isAdmin(memberDTO.id())) {
-            throw new UnauthorizedTagAccessException();
+            throw new ForbiddenTagAccessException();
         }
     }
 }
