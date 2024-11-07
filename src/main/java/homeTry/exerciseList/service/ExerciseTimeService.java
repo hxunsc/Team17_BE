@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -91,12 +90,7 @@ public class ExerciseTimeService {
     // 당일의 운동 전체 시간 반환
     @Transactional(readOnly = true)
     public Long getExerciseTimesForToday(Long memberId) {
-        LocalDateTime startOfDay = DateTimeUtil.getStartOfDay(LocalDate.now());
-        LocalDateTime endOfDay = DateTimeUtil.getEndOfDay(LocalDate.now());
-
-        // 해당 멤버의 당일 운동 시간 목록 조회
-        List<ExerciseTime> exerciseTimes = exerciseTimeRepository.findValidExerciseTimesForMemberOnDate(
-            memberId, startOfDay, endOfDay);
+        List<ExerciseTime> exerciseTimes = getExerciseTimesListForToday(memberId);
 
         // 운동 시간 총 합
         return exerciseTimes
@@ -109,17 +103,22 @@ public class ExerciseTimeService {
     // 메인 페이지 운동 리스트 반환
     @Transactional(readOnly = true)
     public List<ExerciseResponse> getExerciseResponsesForToday(Long memberId) {
-        LocalDateTime startOfDay = DateTimeUtil.getStartOfDay(LocalDate.now());
-        LocalDateTime endOfDay = DateTimeUtil.getEndOfDay(LocalDate.now());
-
-        // 삭제된 운동 제외하고 운동 시간 가져오기
-        List<ExerciseTime> exerciseTimes = exerciseTimeRepository.findValidExerciseTimesForMemberOnDate(
-            memberId, startOfDay, endOfDay);
+        List<ExerciseTime> exerciseTimes = getExerciseTimesListForToday(memberId);
 
         return exerciseTimes
             .stream()
             .map(ExerciseResponse::from)
             .toList();
+    }
+
+    // 특정 회원의 오늘 운동 시간 목록 조회
+    private List<ExerciseTime> getExerciseTimesListForToday(Long memberId) {
+        LocalDateTime[] adjustedDateRange = DateTimeUtil.getAdjustedDateRange();
+        LocalDateTime startOfDay = adjustedDateRange[0];
+        LocalDateTime endOfDay = adjustedDateRange[1];
+
+        return exerciseTimeRepository.findValidExerciseTimesForMemberOnDate(memberId, startOfDay,
+            endOfDay);
     }
 
     @Transactional
