@@ -92,8 +92,8 @@ public class ExerciseService {
     }
 
     @Transactional(readOnly = true)
-    public List<Exercise> findAllExercises() {
-        return exerciseRepository.findAll();
+    public List<Exercise> findAllNonDeprecatedExercises() {
+        return exerciseRepository.findAllNonDeprecatedExercises();
     }
 
     @Transactional

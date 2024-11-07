@@ -51,7 +51,7 @@ public class ExerciseTest {
     private String token;
 
     @BeforeEach
-    void beforeEach() throws Exception {
+    void beforeEach() {
         Member testMember = memberRepository.save(new Member("test@example.com", "1234"));
         token = jwtAuth.generateToken(MemberDTO.from(testMember));
     }

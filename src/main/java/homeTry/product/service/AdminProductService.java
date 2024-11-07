@@ -93,7 +93,7 @@ public class AdminProductService {
     // 관리자 권한 확인
     private void verifyAdmin(MemberDTO memberDTO) {
         if (!memberService.isAdmin(memberDTO.id())) {
-            throw new UnauthorizedAccessException();
+            throw new ForbiddenProductAccessException();
         }
     }
 
