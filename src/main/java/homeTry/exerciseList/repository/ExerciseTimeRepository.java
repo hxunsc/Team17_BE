@@ -13,10 +13,6 @@ import java.util.Optional;
 @Repository
 public interface ExerciseTimeRepository extends JpaRepository<ExerciseTime, Long> {
 
-    // 운동 토탈 시간
-    List<ExerciseTime> findByExerciseMemberIdAndStartTimeBetween(
-        Long memberId, LocalDateTime startTime, LocalDateTime endTime);
-
     // ExerciseTime 리스트 조회 - 멤버 ID와 날짜(당일), 유효한(삭제되지 않은) 운동만
     @Query("SELECT et FROM ExerciseTime et " +
         "JOIN FETCH et.exercise e " +
@@ -34,4 +30,6 @@ public interface ExerciseTimeRepository extends JpaRepository<ExerciseTime, Long
             "JOIN et.exercise e " +
             "WHERE e.member.id = :memberId AND et.isActive = true")
     long countActiveExercisesByMemberId(@Param("memberId") Long memberId);
+
+    void deleteByExerciseId(Long exerciseId);
 }

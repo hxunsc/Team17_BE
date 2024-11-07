@@ -42,6 +42,11 @@ public class ExerciseSchedulerService {
             ExerciseTime exerciseTime = exerciseTimeService.getExerciseTime(
                 exercise.getExerciseId());
 
+            // ExerciseTime 이 없는 경우 넘어감
+            if (exerciseTime == null) {
+                return;
+            }
+
             // 3시에도 운동이 실행 중이면 강제로 멈추고 exerciseTime 저장
             if (exerciseTime.isActive()) {
                 exerciseService.stopExercise(exercise.getExerciseId(),
