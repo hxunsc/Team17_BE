@@ -1,6 +1,7 @@
 package homeTry.member.service;
 
 
+import homeTry.common.auth.kakaoAuth.dto.KakaoMemberInfoDTO;
 import homeTry.exerciseList.service.ExerciseHistoryService;
 import homeTry.member.dto.MemberDTO;
 import homeTry.member.dto.request.ChangeNicknameRequest;
@@ -13,6 +14,7 @@ import homeTry.member.model.enums.Role;
 import homeTry.member.model.vo.Email;
 import homeTry.member.model.vo.Nickname;
 import homeTry.member.repository.MemberRepository;
+import homeTry.member.utils.RandomNicknameGenerator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,19 +31,24 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public MemberDTO login(MemberDTO memberDTO) {
-        Member member = memberRepository.findByEmail(new Email(memberDTO.email()))
+    public MemberDTO login(KakaoMemberInfoDTO kakaoMemberInfoDTO) {
+        Member member = memberRepository.findByEmail(new Email(kakaoMemberInfoDTO.email()))
                 .orElseThrow(LoginFailedException::new);
 
         return MemberDTO.from(member);
     }
 
     @Transactional
-    public MemberDTO register(MemberDTO memberDTO) {
+    public MemberDTO register(KakaoMemberInfoDTO kakaoMemberInfoDTO) {
+
+        MemberDTO memberDTO = new MemberDTO(1L, kakaoMemberInfoDTO.email(),
+                RandomNicknameGenerator.generateNickname(), Role.USER);
+
         Member member = memberDTO.toEntity();
 
-        if (memberRepository.existsByEmail(new Email(memberDTO.email())))
+        if (memberRepository.existsByEmail(new Email(memberDTO.email()))) {
             throw new RegisterEmailConflictException();
+        }
 
         return MemberDTO.from(memberRepository.save(member));
     }
