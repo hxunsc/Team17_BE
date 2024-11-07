@@ -18,7 +18,8 @@ values ('test1@naver.com', 'test1', '0', '2024-10-04T12:30:00', false),
        ('test2@naver.com', 'test2', '0', '2024-10-04T12:40:00', false),
        ('test3@naver.com', 'test3', '0', '2024-10-04T12:40:00', false);
 
-insert into team (team_name, team_description, leader_id, max_participants, current_participants, password, is_deprecated)
+insert into team (team_name, team_description, leader_id, max_participants, current_participants,
+                  password, is_deprecated)
 values ('test1 team', 'test1 team description', 1, 8, 2, null, false),
        ('test2 team', 'test2 team description', 1, 8, 1, '1234', false),
        ('test3 team', 'test3 team description', 3, 8, 2, '1234', false),
@@ -29,6 +30,10 @@ insert into team_member_mapping (member_id, team_id, is_deprecated)
 values (1, 1, false),
        (2, 1, false),
        (1, 3, false);
+
+insert into chatting (team_member_mapping_id, message, is_deprecated)
+values (1, '채팅 테스트 1', false),
+       (1, '채팅 테스트 2', false);
 
 insert into team_tag_mapping (team_tag_id, team_id, is_deprecated)
 values (1, 1, false),
@@ -57,14 +62,15 @@ values (1, '2024-10-09 03:00:10', 5400, false),
        (3, '2024-10-09 03:00:10', 3600, false),
        (4, '2024-10-08 03:00:20', 5400, false);
 
-insert into product (image_url, product_url, name, price, store_name, view_count, is_deprecated)
-values ('https://tinyurl.com/25ntsq9k', 'https://tinyurl.com/27sk7wrj', '런닝머신', 240000, 'coupang', 15, false),
-       ('https://tinyurl.com/2ylb52aq', 'https://tinyurl.com/2cxw4zxa', '실내자전거', 190000, 'coupang', 5, false),
-       ('https://tinyurl.com/28y6jl8d', 'https://tinyurl.com/29m67lsf', '폼롤러', 5000, 'adidas', 15, false),
-       ('https://tinyurl.com/2954eoum', 'https://brand.naver.com/adidasfitness/products/10824318636', '요가매트', 24000, 'adidas', 8, false),
-       ('https://tinyurl.com/2cpy86bd', 'https://tinyurl.com/2y9fzpw8', '짐볼', 9900, 'body crew', 20, false),
-       ('https://tinyurl.com/23oej7er', 'https://tinyurl.com/2bkxjcyd', '요가 밴드', 7900, 'coupang', 11, false),
-       ('https://tinyurl.com/28g7dayl', 'https://tinyurl.com/26czhyqs', '아몬드 브리즈 언스위트', 15550, 'coupang', 25, false);
+insert into product (id, image_url, product_url, name, price, store_name, view_count)
+values (1, 'https://image10.coupangcdn.com/image/retail/images/1147911926604673-f01e3efb-c763-4601-a6f4-b02c377a97be.jpg', 'https://www.coupang.com/vp/products/7471278137?itemId=19495714190&vendorItemId=86605287776&src=1042503&spec=10304982&addtag=400&ctag=7471278137&lptag=10304982I19495714190&itime=20241031222941&pageType=PRODUCT&pageValue=7471278137&wPcid=17275845253493863363419&wRef=&wTime=20241031222941&redirect=landing&gclid=Cj0KCQjw1Yy5BhD-ARIsAI0RbXZiIjAHoyOj548lsnL_Bq6s72c7QwRgeKTJqmuqIyahbgzxMJiD_zgaAjzLEALw_wcB&mcid=f8fc9917542743f5b35b1439e91d61ba&campaignid=21638433336&adgroupid=', '런닝머신', 240000, 'coupang', 15),
+       (2, 'https://example.com/product2.jpg', 'https://example.com/product2', '실내자전거', 190000, 'coupang', 5),
+       (3, 'https://example.com/product3.jpg', 'https://example.com/product3', '폼롤러', 5000, 'adidas', 15),
+       (4, 'https://example.com/product4.jpg', 'https://example.com/product4', '요가매트', 24000, 'adidas', 8),
+       (5, 'https://example.com/product5.jpg', 'https://example.com/product5', '짐볼', 9900, 'body crew', 20),
+       (6, 'https://example.com/product6.jpg', 'https://example.com/product6', '요가 밴드', 7900, 'coupang', 11),
+       (7, 'https://example.com/product7.jpg', 'https://example.com/product7', '아몬드 브리즈 언스위트', 15550, 'coupang', 25);
+
 
 insert into product_tag (tag_name, is_deprecated)
 values ('운동 상품', false),
@@ -78,7 +84,6 @@ values (1, 1, false),
        (5, 1, false),
        (6, 1, false),
        (7, 2, false);
-
 
 
 

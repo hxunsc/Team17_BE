@@ -73,9 +73,8 @@ public class ChattingTest {
                 testMember).get();
 
         for (int i = 0; i < 30; i++) {
-            int finalI = i;
             chattingIdList.add(
-                    chattingRepository.save(new Chatting(testTeamMemberMapping, "테스트 메세지" + finalI))
+                    chattingRepository.save(new Chatting(testTeamMemberMapping, "테스트 메세지" + i))
                             .getId());
         }
     }
