@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Table(
@@ -42,7 +43,13 @@ public class ExerciseTime extends BaseEntity {
 
     public ExerciseTime(Exercise exercise) {
         this.exercise = exercise;
-        this.startTime = DateTimeUtil.getStartOfDay(LocalDate.now());
+
+        // 하루 초기화 시간인 새벽 3시를 기준으로 이전이면 날짜를 하루 빼서 시작 시간 설정
+        LocalDate currentDate = LocalDate.now();
+        if (LocalTime.now().isBefore(LocalTime.of(3, 0, 0))) {
+            currentDate = currentDate.minusDays(1);
+        }
+        this.startTime = DateTimeUtil.getStartOfDay(currentDate);
     }
 
     public void startExercise() {
