@@ -28,7 +28,7 @@ public class ProductTagService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductTagDto> getTeamTagList() {
+    public List<ProductTagDto> getProductTagList() {
 
         List<ProductTag> productTags = productTagRepository.findAllByIsDeprecatedFalse();
 
