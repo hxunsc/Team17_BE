@@ -30,7 +30,7 @@ public class TeamTagController {
     public ResponseEntity<TeamTagResponse> getTeamTagList(
             @LoginMember MemberDTO memberDTO
     ) {
-        return new ResponseEntity<>(new TeamTagResponse(teamTagService.getAllTeamTagList()), HttpStatus.OK);
+        return new ResponseEntity<>(teamTagService.getTeamTagResponse(memberDTO), HttpStatus.OK);
     }
 
     @PostMapping
@@ -38,7 +38,7 @@ public class TeamTagController {
             @RequestBody TeamTagRequest teamTagRequest,
             @LoginMember MemberDTO memberDTO
     ) {
-        teamTagService.addTeamTag(teamTagRequest);
+        teamTagService.addTeamTag(teamTagRequest, memberDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -47,7 +47,7 @@ public class TeamTagController {
             @PathVariable Long teamTagId,
             @LoginMember MemberDTO memberDTO
     ) {
-        teamTagService.deleteTeamTag(teamTagId);
+        teamTagService.deleteTeamTag(teamTagId, memberDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

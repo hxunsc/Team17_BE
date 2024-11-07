@@ -30,7 +30,7 @@ public class ProductTagController {
     public ResponseEntity<ProductTagResponse> getProductTagList(
             @LoginMember MemberDTO memberDTO
     ) {
-        return new ResponseEntity<>(productTagService.getProductTagList(), HttpStatus.OK);
+        return new ResponseEntity<>(productTagService.getProductTagResponse(memberDTO), HttpStatus.OK);
     }
     
     @PostMapping
@@ -38,7 +38,7 @@ public class ProductTagController {
             @RequestBody ProductTagRequest productTagRequest,
             @LoginMember MemberDTO memberDTO
         ) {
-        productTagService.addProductTag(productTagRequest);
+        productTagService.addProductTag(productTagRequest, memberDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -47,7 +47,7 @@ public class ProductTagController {
             @PathVariable Long productTagId,
             @LoginMember MemberDTO memberDTO
     ) {
-        productTagService.deleteProductTag(productTagId);
+        productTagService.deleteProductTag(productTagId, memberDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

@@ -56,4 +56,9 @@ public class DiaryService {
         diaryRepository.delete(diary);
 
     }
+
+    @Transactional
+    public void deleteByMember(Long memberId) {
+        diaryRepository.deleteByMember(memberService.getMemberEntity(memberId));
+    }
 }

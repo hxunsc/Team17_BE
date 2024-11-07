@@ -37,7 +37,7 @@ public class ExerciseHistoryService {
         LocalDateTime startOfDay = DateTimeUtil.getStartOfDay(date);
         LocalDateTime endOfDay = DateTimeUtil.getEndOfDay(date);
 
-        List<ExerciseHistory> exercises = exerciseHistoryRepository.findByExerciseMemberIdAndCreatedAtBetween(
+        List<ExerciseHistory> exercises = exerciseHistoryRepository.findValidExerciseHistoriesForMemberOnDate(
             memberId, startOfDay, endOfDay);
 
         return sumExerciseTime(exercises);
@@ -50,7 +50,7 @@ public class ExerciseHistoryService {
         LocalDateTime startOfWeekWith3AM = DateTimeUtil.getStartOfWeek(LocalDate.now());
         LocalDateTime endOfWeekWith3AM = DateTimeUtil.getEndOfWeek(LocalDate.now());
 
-        List<ExerciseHistory> weeklyExercises = exerciseHistoryRepository.findByExerciseMemberIdAndCreatedAtBetween(
+        List<ExerciseHistory> weeklyExercises = exerciseHistoryRepository.findValidExerciseHistoriesForMemberOnDate(
             memberId, startOfWeekWith3AM, endOfWeekWith3AM);
 
         return sumExerciseTime(weeklyExercises);
@@ -63,7 +63,7 @@ public class ExerciseHistoryService {
         LocalDateTime startOfMonthWith3AM = DateTimeUtil.getStartOfMonth(LocalDate.now());
         LocalDateTime endOfMonthWith3AM = DateTimeUtil.getEndOfMonth(LocalDate.now());
 
-        List<ExerciseHistory> monthlyExercises = exerciseHistoryRepository.findByExerciseMemberIdAndCreatedAtBetween(
+        List<ExerciseHistory> monthlyExercises = exerciseHistoryRepository.findValidExerciseHistoriesForMemberOnDate(
             memberId, startOfMonthWith3AM, endOfMonthWith3AM);
 
         return sumExerciseTime(monthlyExercises);
@@ -93,4 +93,10 @@ public class ExerciseHistoryService {
             .map(ExerciseResponse::from)
             .toList();
     }
+
+    @Transactional
+    public void deleteExerciseHistoriesByExerciseId(Long exerciseId) {
+        exerciseHistoryRepository.deleteByExerciseId(exerciseId);
+    }
+
 }

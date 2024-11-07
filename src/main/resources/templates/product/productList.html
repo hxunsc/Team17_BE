@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Product List</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
+</head>
+<body>
+<h1>Product List</h1>
+<button onclick="location.href='/admin/product/add'">Add New Product</button>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Store Name</th>
+        <th>Tag</th>
+        <th>View Count</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product : ${products}">
+        <td th:text="${product.productId}"></td>
+        <td th:text="${product.name}"></td>
+        <td th:text="${product.price}"></td>
+        <td th:text="${product.storeName}"></td>
+        <td th:text="${product.tag.productTagName}"></td>
+        <td th:text="${product.viewCount}"></td>
+        <td>
+            <form th:action="@{/admin/product/delete/{id}(id=${product.productId()})}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div th:if="${products.totalPages > 1}">
+        <span th:each="pageNumber : ${#numbers.sequence(0, products.totalPages - 1)}">
+            <a th:href="@{/admin/product/list(page=${pageNumber})}" th:text="${pageNumber + 1}"></a>
+        </span>
+</div>
+</body>
+</html>

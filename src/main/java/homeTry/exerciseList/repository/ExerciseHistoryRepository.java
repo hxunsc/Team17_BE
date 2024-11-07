@@ -12,10 +12,6 @@ import java.util.List;
 @Repository
 public interface ExerciseHistoryRepository extends JpaRepository<ExerciseHistory, Long> {
 
-    // 운동 토탈 시간
-    List<ExerciseHistory> findByExerciseMemberIdAndCreatedAtBetween(
-        Long memberId, LocalDateTime startDate, LocalDateTime endDate);
-
     // ExerciseHistory 리스트 조회 - 멤버 ID와 특정 날짜, 유효한(삭제되지 않은) 운동만
     @Query("SELECT eh FROM ExerciseHistory eh " +
         "JOIN FETCH eh.exercise e " +
@@ -26,5 +22,7 @@ public interface ExerciseHistoryRepository extends JpaRepository<ExerciseHistory
         @Param("memberId") Long memberId,
         @Param("startOfDay") LocalDateTime startOfDay,
         @Param("endOfDay") LocalDateTime endOfDay);
+
+    void deleteByExerciseId(Long exerciseId);
 
 }

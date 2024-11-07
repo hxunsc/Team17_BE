@@ -17,6 +17,7 @@ public record ProductRequest(
     @NotBlank
     @Size(min = 1, max = 15, message = "상점의 이름은 최소 1글자, 최대 15글자 입니다")
     String storeName,
+    @NotNull
     Long tagId
 ) {
 

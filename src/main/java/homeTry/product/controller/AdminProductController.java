@@ -30,9 +30,9 @@ public class AdminProductController {
 
     // 상품 추가
     @PostMapping
-    public ResponseEntity<Void> createProduct(@RequestBody @Valid ProductRequest productRequest,
+    public ResponseEntity<Void> addProduct(@RequestBody @Valid ProductRequest productRequest,
         @LoginMember MemberDTO memberDTO) {
-        adminProductService.createProduct(productRequest, memberDTO);
+        adminProductService.addProduct(productRequest, memberDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
