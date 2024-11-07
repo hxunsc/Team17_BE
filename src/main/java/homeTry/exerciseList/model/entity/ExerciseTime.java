@@ -45,11 +45,8 @@ public class ExerciseTime extends BaseEntity {
         this.exercise = exercise;
 
         // 하루 초기화 시간인 새벽 3시를 기준으로 이전이면 날짜를 하루 빼서 시작 시간 설정
-        LocalDate currentDate = LocalDate.now();
-        if (LocalTime.now().isBefore(LocalTime.of(3, 0, 0))) {
-            currentDate = currentDate.minusDays(1);
-        }
-        this.startTime = DateTimeUtil.getStartOfDay(currentDate);
+        LocalDate adjustedDate = DateTimeUtil.getAdjustedCurrentDate();
+        this.startTime = DateTimeUtil.getStartOfDay(adjustedDate);
     }
 
     public void startExercise() {
