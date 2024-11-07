@@ -90,6 +90,22 @@ public class Member extends BaseEntity {
         this.nickname = nickname;
     }
 
+    public void revokeEmail() {
+        this.email = new Email(Email.DELETED_EMAIL_VALUE);
+    }
+
+    public void revokeNickname() {
+        this.nickname = new Nickname(Nickname.DELETED_NICKNAME_VALUE);
+    }
+
+    public void revokeKakaoAccessToken() {
+        this.kakaoAccessToken = null;
+    }
+
+    public void revokeExerciseAttendanceDate() {
+        this.exerciseAttendanceDate = 0;
+    }
+
     public void incrementAttendanceDate() {
         this.exerciseAttendanceDate++;
     }
@@ -105,5 +121,8 @@ public class Member extends BaseEntity {
     public boolean isAdmin(){
         return (this.role == Role.ADMIN);
     }
+
+
+
 
 }

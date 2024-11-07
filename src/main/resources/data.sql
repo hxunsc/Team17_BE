@@ -31,9 +31,9 @@ values (1, 1, false),
        (2, 1, false),
        (1, 3, false);
 
-insert into chatting (team_member_mapping_id, message, is_deprecated)
-values (1, '채팅 테스트 1', false),
-       (1, '채팅 테스트 2', false);
+insert into chatting (team_member_mapping_id, message, created_at, is_deprecated)
+values (1, '채팅 테스트 1', '2024-10-04T12:30:00', false),
+       (1, '채팅 테스트 2', '2024-10-04T12:30:00', false);
 
 insert into team_tag_mapping (team_tag_id, team_id, is_deprecated)
 values (1, 1, false),
@@ -70,7 +70,6 @@ values ('https://tinyurl.com/25ntsq9k', 'https://tinyurl.com/27sk7wrj', '런닝�
        ('https://tinyurl.com/2cpy86bd', 'https://tinyurl.com/2y9fzpw8', '짐볼', 9900, 'body crew', 20, false),
        ('https://tinyurl.com/23oej7er', 'https://tinyurl.com/2bkxjcyd', '요가 밴드', 7900, 'coupang', 11, false),
        ('https://tinyurl.com/28g7dayl', 'https://tinyurl.com/26czhyqs', '아몬드 브리즈 언스위트', 15550, 'coupang', 25, false);
-
 
 insert into product_tag (tag_name, is_deprecated)
 values ('운동 상품', false),
