@@ -94,6 +94,12 @@ public class MemberService {
     }
 
     @Transactional
+    public void withdrawMember(Long id) {
+        Member member = getMemberEntity(id);
+        deactivateMember(member);
+    }
+
+    @Transactional
     public void promoteToAdmin(Long id) {
         Member member = getMemberEntity(id);
         member.promoteToAdmin();
@@ -115,5 +121,14 @@ public class MemberService {
     public Role getRole(Long id) {
         Member member = getMemberEntity(id);
         return member.getRole();
+    }
+
+    private void deactivateMember(Member member) {
+        member.revokeEmail();
+        member.revokeNickname();
+        member.revokeExerciseAttendanceDate();
+        member.revokeKakaoAccessToken();
+        member.demoteToUser();
+        member.markAsDeprecated();
     }
 }
