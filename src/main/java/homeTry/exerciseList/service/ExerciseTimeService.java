@@ -95,7 +95,7 @@ public class ExerciseTimeService {
         LocalDateTime endOfDay = DateTimeUtil.getEndOfDay(LocalDate.now());
 
         // 해당 멤버의 당일 운동 시간 목록 조회
-        List<ExerciseTime> exerciseTimes = exerciseTimeRepository.findByExerciseMemberIdAndStartTimeBetween(
+        List<ExerciseTime> exerciseTimes = exerciseTimeRepository.findValidExerciseTimesForMemberOnDate(
             memberId, startOfDay, endOfDay);
 
         // 운동 시간 총 합
