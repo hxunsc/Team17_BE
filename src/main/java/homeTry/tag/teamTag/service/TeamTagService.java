@@ -61,6 +61,7 @@ public class TeamTagService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public TeamTagResponse getTeamTagResponse(MemberDTO memberDTO) {
 
         verifyAdmin(memberDTO);

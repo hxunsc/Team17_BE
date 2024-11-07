@@ -27,6 +27,7 @@ public class ProductTagService {
         this.memberService = memberService;
     }
 
+    @Transactional(readOnly = true)
     public List<ProductTagDto> getTeamTagList() {
 
         List<ProductTag> productTags = productTagRepository.findAllByIsDeprecatedFalse();
@@ -37,6 +38,7 @@ public class ProductTagService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public ProductTagResponse getProductTagResponse(MemberDTO memberDTO) {
 
         verifyAdmin(memberDTO);
