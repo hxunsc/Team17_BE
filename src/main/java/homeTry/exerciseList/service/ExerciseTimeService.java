@@ -81,7 +81,7 @@ public class ExerciseTimeService {
         exerciseTime.resetDailyExercise();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public ExerciseTime getExerciseTime(Long exerciseId) {
         return exerciseTimeRepository.findByExerciseId(exerciseId)
             .orElse(null);

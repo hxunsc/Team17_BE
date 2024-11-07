@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
     name = "exercise_time",
     indexes = {
         @Index(name = "idx_exercise_time_exercise_start_time", columnList = "exercise_id, startTime"),
+        @Index(name = "idx_exercise_time_exercise_id", columnList = "exercise_id")
     }
 )
 public class ExerciseTime extends BaseEntity {
@@ -89,4 +90,7 @@ public class ExerciseTime extends BaseEntity {
         return exercise;
     }
 
+    public void startExerciseAt(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
 }
