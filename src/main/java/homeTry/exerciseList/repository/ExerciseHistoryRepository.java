@@ -23,4 +23,6 @@ public interface ExerciseHistoryRepository extends JpaRepository<ExerciseHistory
         @Param("startOfDay") LocalDateTime startOfDay,
         @Param("endOfDay") LocalDateTime endOfDay);
 
+    void deleteByExerciseId(Long exerciseId);
+
 }

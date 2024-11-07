@@ -20,14 +20,17 @@ public class ExerciseService {
     private final ExerciseRepository exerciseRepository;
     private final ExerciseEventPublisher exerciseEventPublisher;
     private final ExerciseTimeService exerciseTimeService;
+    private final ExerciseHistoryService exerciseHistoryService;
     private final MemberService memberService;
 
     public ExerciseService(ExerciseRepository exerciseRepository,
         ExerciseEventPublisher exerciseEventPublisher,
-        ExerciseTimeService exerciseTimeService, MemberService memberService) {
+        ExerciseTimeService exerciseTimeService, ExerciseHistoryService exerciseHistoryService,
+        MemberService memberService) {
         this.exerciseRepository = exerciseRepository;
         this.exerciseEventPublisher = exerciseEventPublisher;
         this.exerciseTimeService = exerciseTimeService;
+        this.exerciseHistoryService = exerciseHistoryService;
         this.memberService = memberService;
     }
 
@@ -91,6 +94,19 @@ public class ExerciseService {
     @Transactional(readOnly = true)
     public List<Exercise> findAllExercises() {
         return exerciseRepository.findAll();
+    }
+
+    @Transactional
+    public void deleteAllExercisesByMemberId(Long memberId) {
+        // 관련된 ExerciseTime, ExerciseHistory 삭제
+        List<Exercise> exercises = exerciseRepository.findByMemberId(memberId);
+        for (Exercise exercise : exercises) {
+            exerciseTimeService.deleteExerciseTimesByExerciseId(exercise.getExerciseId());
+            exerciseHistoryService.deleteExerciseHistoriesByExerciseId(exercise.getExerciseId());
+        }
+
+        // Exercise 삭제
+        exerciseRepository.deleteByMemberId(memberId);
     }
 
 }

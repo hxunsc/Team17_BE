@@ -93,4 +93,10 @@ public class ExerciseHistoryService {
             .map(ExerciseResponse::from)
             .toList();
     }
+
+    @Transactional
+    public void deleteExerciseHistoriesByExerciseId(Long exerciseId) {
+        exerciseHistoryRepository.deleteByExerciseId(exerciseId);
+    }
+
 }

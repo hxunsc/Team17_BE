@@ -122,4 +122,9 @@ public class ExerciseTimeService {
             .toList();
     }
 
+    @Transactional
+    public void deleteExerciseTimesByExerciseId(Long exerciseId) {
+        exerciseTimeRepository.deleteByExerciseId(exerciseId);
+    }
+
 }
