@@ -34,7 +34,7 @@ public class ExerciseSchedulerService {
     @Scheduled(cron = "0 0 3 * * *", zone = "Asia/Seoul")
     @Transactional
     public void saveAllExerciseHistoryAt3AM() {
-        List<Exercise> allExercises = exerciseService.findAllExercises();
+        List<Exercise> allExercises = exerciseService.findAllNonDeprecatedExercises();
         Set<Long> membersWithExerciseTime = new HashSet<>();
 
         // 모든 운동 기록을 히스토리에 저장하고 운동 시간을 초기화

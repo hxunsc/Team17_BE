@@ -12,13 +12,12 @@ import java.util.List;
 @Repository
 public interface ExerciseHistoryRepository extends JpaRepository<ExerciseHistory, Long> {
 
-    // ExerciseHistory 리스트 조회 - 멤버 ID와 특정 날짜, 유효한(삭제되지 않은) 운동만
+    // ExerciseHistory 리스트 조회 - 멤버 ID와 특정 날짜 기준
     @Query("SELECT eh FROM ExerciseHistory eh " +
         "JOIN FETCH eh.exercise e " +
         "WHERE e.member.id = :memberId " +
-        "AND eh.createdAt BETWEEN :startOfDay AND :endOfDay " +
-        "AND e.isDeprecated = false")
-    List<ExerciseHistory> findValidExerciseHistoriesForMemberOnDate(
+        "AND eh.createdAt BETWEEN :startOfDay AND :endOfDay")
+    List<ExerciseHistory> findExerciseHistoriesForMemberOnDate(
         @Param("memberId") Long memberId,
         @Param("startOfDay") LocalDateTime startOfDay,
         @Param("endOfDay") LocalDateTime endOfDay);
