@@ -123,18 +123,21 @@ public class TeamService {
     @Transactional(readOnly = true)
     public Slice<TeamResponse> getSearchedTeamList(Pageable pageable, List<Long> tagIdList, String teamName, MemberDTO memberDTO) {
 
+        final boolean HAS_TAGS = tagIdList != null;
+        final boolean HAS_NAMES = teamName != null;
+
         Member member = memberService.getMemberEntity(memberDTO.id());
 
         // 팀 이름과 태그 리스트가 주어진 경우
-        if (tagIdList != null && teamName != null)
+        if (HAS_TAGS && HAS_NAMES)
             return getTeamsByTagsAndName(pageable, member, tagIdList, teamName);
 
         //태그 리스트만 주어진 경우
-        if (tagIdList != null)
+        if (HAS_TAGS)
             return getTeamsByTags(pageable, member, tagIdList);
 
         // 팀 이름만 주어진 경우
-        if (teamName != null)
+        if (HAS_NAMES)
             return getTeamsByName(pageable, member, teamName);
 
         //그룹 화면 최초 접속인 경우
