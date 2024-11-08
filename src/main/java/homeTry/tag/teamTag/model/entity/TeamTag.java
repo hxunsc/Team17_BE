@@ -6,7 +6,10 @@ import homeTry.tag.teamTag.model.vo.TeamTagAttribute;
 import jakarta.persistence.*;
 
 @Entity
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = "tag_name")})
+@Table(
+        uniqueConstraints = {@UniqueConstraint(columnNames = "tag_name")},
+        indexes = {@Index(name = "idx_team_tag_is_deprecated", columnList = "isDeprecated")}
+)
 public class TeamTag extends Tag {
 
     @Embedded
