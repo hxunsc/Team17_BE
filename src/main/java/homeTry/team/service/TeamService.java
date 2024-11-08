@@ -226,7 +226,7 @@ public class TeamService {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(TeamNotFoundException::new);
 
-        List<Member> memberList = teamMemberMappingService.getTeamMemberListByTeam(team); //팀의 멤버들을 조회해옴
+        List<Member> memberList = teamMemberMappingService.getMemberListByTeam(team); //팀의 멤버들을 조회해옴
 
         List<RankingDTO> rankingList = getRankingList(memberList, date); //랭킹을 구해옴
 

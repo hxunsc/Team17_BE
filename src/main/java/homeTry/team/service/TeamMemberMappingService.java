@@ -45,7 +45,7 @@ public class TeamMemberMappingService {
     }
 
     //팀에 속한 멤버들을 반환
-    public List<Member> getTeamMemberListByTeam(Team team) {
+    public List<Member> getMemberListByTeam(Team team) {
         return teamMemberMappingRepository.findByTeam(team)
                 .stream()
                 .map(TeamMemberMapping::getMember)
