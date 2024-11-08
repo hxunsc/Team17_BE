@@ -2,9 +2,14 @@ package homeTry.tag.productTag.service;
 
 import java.util.List;
 
+import homeTry.member.dto.MemberDTO;
+import homeTry.member.service.MemberService;
+import homeTry.tag.exception.badRequestException.ForbiddenTagAccessException;
+import homeTry.tag.model.vo.TagName;
 import homeTry.tag.productTag.dto.ProductTagDto;
 import homeTry.tag.productTag.dto.request.ProductTagRequest;
 import homeTry.tag.productTag.dto.response.ProductTagResponse;
+import homeTry.tag.productTag.exception.BadRequestException.ProductTagAlreadyExistsException;
 import homeTry.tag.productTag.exception.BadRequestException.ProductTagNotFoundException;
 import homeTry.tag.productTag.model.entity.ProductTag;
 import homeTry.tag.productTag.repository.ProductTagRepository;
@@ -15,14 +20,30 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductTagService {
 
     private final ProductTagRepository productTagRepository;
+    private final MemberService memberService;
 
-    public ProductTagService(ProductTagRepository productTagRepository) {
+    public ProductTagService(ProductTagRepository productTagRepository, MemberService memberService) {
         this.productTagRepository = productTagRepository;
+        this.memberService = memberService;
     }
 
-    public ProductTagResponse getProductTagList() {
+    @Transactional(readOnly = true)
+    public List<ProductTagDto> getProductTagList() {
 
-        List<ProductTagDto> productTagList = productTagRepository.findAll()
+        List<ProductTag> productTags = productTagRepository.findAllByIsDeprecatedFalse();
+
+        return productTags
+                .stream()
+                .map(ProductTagDto::from)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public ProductTagResponse getProductTagResponse(MemberDTO memberDTO) {
+
+        verifyAdmin(memberDTO);
+
+        List<ProductTagDto> productTagList = productTagRepository.findAllByIsDeprecatedFalse()
                 .stream()
                 .map(ProductTagDto::from)
                 .toList();
@@ -31,7 +52,13 @@ public class ProductTagService {
     }
 
     @Transactional
-    public void addProductTag(ProductTagRequest productTagRequest) {
+    public void addProductTag(ProductTagRequest productTagRequest, MemberDTO memberDTO) {
+
+        verifyAdmin(memberDTO);
+
+        if(productTagRepository.existsByTagName(new TagName(productTagRequest.productTagName()))){
+            throw new ProductTagAlreadyExistsException();
+        }
 
         productTagRepository.save(
                 new ProductTag(
@@ -40,11 +67,19 @@ public class ProductTagService {
     }
 
     @Transactional
-    public void deleteProductTag(Long productTagId) {
+    public void deleteProductTag(Long productTagId, MemberDTO memberDTO) {
+
+        verifyAdmin(memberDTO);
 
         ProductTag productTag = productTagRepository.findById(productTagId)
                 .orElseThrow(() -> new ProductTagNotFoundException());
 
-        productTagRepository.delete(productTag);
+        productTag.markAsDeprecated();
+    }
+
+    private void verifyAdmin(MemberDTO memberDTO) {
+        if (!memberService.isAdmin(memberDTO.id())) {
+            throw new ForbiddenTagAccessException();
+        }
     }
 }

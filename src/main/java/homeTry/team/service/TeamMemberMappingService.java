@@ -6,6 +6,8 @@ import homeTry.team.exception.TeamMemberNotFoundException;
 import homeTry.team.model.entity.Team;
 import homeTry.team.model.entity.TeamMemberMapping;
 import homeTry.team.repository.TeamMemberMappingRepository;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,9 +44,12 @@ public class TeamMemberMappingService {
         teamMemberMappingRepository.deleteByTeam(team);
     }
 
-    //팀에 속한 멤버들의 TeamMemberMapping 을 반환
-    public List<TeamMemberMapping> getTeamMemberMapping(Team team) {
-        return teamMemberMappingRepository.findByTeam(team);
+    //팀에 속한 멤버들을 반환
+    public List<Member> getMemberListByTeam(Team team) {
+        return teamMemberMappingRepository.findByTeam(team)
+                .stream()
+                .map(TeamMemberMapping::getMember)
+                .toList();
     }
 
     //특정 TeamMemberMapping 을 반환
@@ -53,4 +58,11 @@ public class TeamMemberMappingService {
                 .orElseThrow(TeamMemberNotFoundException::new);
     }
 
+    //유저가 가입한 팀 리스트를 반환
+    public List<Team> getTeamListByMember(Member member) {
+        return teamMemberMappingRepository.findByMember(member)
+                .stream()
+                .map(TeamMemberMapping::getTeam)
+                .toList();
+    }
 }

@@ -5,6 +5,7 @@ import homeTry.exerciseList.service.ExerciseTimeService;
 import homeTry.member.dto.MemberDTO;
 import homeTry.member.model.entity.Member;
 import homeTry.member.service.MemberService;
+import homeTry.tag.teamTag.dto.AllTeamTagDTO;
 import homeTry.tag.teamTag.dto.TeamTagDTO;
 import homeTry.tag.teamTag.model.entity.TeamTag;
 import homeTry.tag.teamTag.service.TeamTagService;
@@ -42,9 +43,6 @@ public class TeamService {
     private final TeamMemberMappingService teamMemberMappingService;
     private final ExerciseHistoryService exerciseHistoryService;
     private final ExerciseTimeService exerciseTimeService;
-    private static final String GENDER = "성별";
-    private static final String AGE = "나이";
-    private static final String EXERCISE_INTENSITY = "운동강도";
     private static final int FIRST = 1;
 
 
@@ -98,12 +96,7 @@ public class TeamService {
     }
 
     //팀의 태그 정보를 추가
-    private void addTagsToTeam(List<TeamTagDTO> teamTagDTOList, Team team) {
-        List<Long> tagIdList = teamTagDTOList
-                .stream()
-                .map(TeamTagDTO::tagId)
-                .toList();
-
+    private void addTagsToTeam(List<Long> tagIdList, Team team) {
         List<TeamTag> tagList = teamTagService.getTeamTagList(tagIdList);
 
         teamTagMappingService.addTeamTagMappings(tagList, team);
@@ -117,7 +110,7 @@ public class TeamService {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(TeamNotFoundException::new);
 
-        validateIsLeader(team.getLeaderId(), member.getId()); //팀 리더인지 체크
+        team.validateIsLeader(member.getId()); //팀 리더인지 체크
 
         teamMemberMappingService.deleteAllTeamMemberFromTeam(team); // 해당 팀에 대한 TeamMemberMapping 데이터 삭제
 
@@ -126,29 +119,25 @@ public class TeamService {
         teamRepository.delete(team); //Team 삭제
     }
 
-    //팀 리더인지 체크
-    private void validateIsLeader(long leaderId, long memberId) {
-        if (leaderId != memberId) {
-            throw new NotTeamLeaderException();
-        }
-    }
-
     //팀 조회 기능
     @Transactional(readOnly = true)
     public Slice<TeamResponse> getSearchedTeamList(Pageable pageable, List<Long> tagIdList, String teamName, MemberDTO memberDTO) {
 
+        final boolean HAS_TAGS = tagIdList != null;
+        final boolean HAS_NAMES = teamName != null;
+
         Member member = memberService.getMemberEntity(memberDTO.id());
 
         // 팀 이름과 태그 리스트가 주어진 경우
-        if (tagIdList != null && teamName != null)
+        if (HAS_TAGS && HAS_NAMES)
             return getTeamsByTagsAndName(pageable, member, tagIdList, teamName);
 
         //태그 리스트만 주어진 경우
-        if (tagIdList != null)
+        if (HAS_TAGS)
             return getTeamsByTags(pageable, member, tagIdList);
 
         // 팀 이름만 주어진 경우
-        if (teamName != null)
+        if (HAS_NAMES)
             return getTeamsByName(pageable, member, teamName);
 
         //그룹 화면 최초 접속인 경우
@@ -222,19 +211,13 @@ public class TeamService {
     //모든 팀 태그를 조회
     @Transactional(readOnly = true)
     public TagListResponse getAllTeamTagList(MemberDTO memberDTO) {
-        List<TeamTagDTO> teamTagDTOList = teamTagService.getAllTeamTagList();
+        AllTeamTagDTO allTeamTagDTO = teamTagService.getAllTeamTagList(); //모든 태그 조회해 옴
 
-        List<TeamTagDTO> genderTagList = teamTagFilter(teamTagDTOList, GENDER);
-        List<TeamTagDTO> ageTagList = teamTagFilter(teamTagDTOList, AGE);
-        List<TeamTagDTO> exerciseIntensityTagList = teamTagFilter(teamTagDTOList, EXERCISE_INTENSITY);
-
-        return new TagListResponse(genderTagList, ageTagList, exerciseIntensityTagList);
-    }
-
-    private List<TeamTagDTO> teamTagFilter(List<TeamTagDTO> teamTagDTOList, String tagAttribute) {
-        return teamTagDTOList.stream()
-                .filter(teamTagDTO -> teamTagDTO.teamTagAttribute().equals(tagAttribute))
-                .toList();
+        return new TagListResponse(
+                allTeamTagDTO.genderTagList(),
+                allTeamTagDTO.ageTagList(),
+                allTeamTagDTO.exerciseIntensityTagList()
+        );
     }
 
     //팀 랭킹 조회 기능(페이징 적용)
@@ -243,35 +226,34 @@ public class TeamService {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(TeamNotFoundException::new);
 
-        List<Member> memberList = getMemberList(team); //팀의 멤버들을 조회해옴
+        List<Member> memberList = teamMemberMappingService.getMemberListByTeam(team); //팀의 멤버들을 조회해옴
 
         List<RankingDTO> rankingList = getRankingList(memberList, date); //랭킹을 구해옴
 
-        RankingDTO myRanking = rankingList //내 랭킹을 찾음
-                .stream()
-                .filter(rankingDTO -> memberDTO.nickname().equals(rankingDTO.name()))
-                .findFirst()
-                .orElseThrow(MyRankingNotFoundException::new);
+        RankingDTO myRanking = findMyRanking(rankingList, memberDTO.nickname()); //내 랭킹을 찾음
 
-        int start = (int) pageable.getOffset();
-        int end = Math.min(start + pageable.getPageSize(), rankingList.size());
-        List<RankingDTO> PagedRankingList = rankingList.subList(start, end); //페이징 처리를 위해 리스트 슬라이싱
-
-        boolean hasNext = end < rankingList.size();
-
-        Slice<RankingDTO> slice = new SliceImpl<>(rankingList, pageable, hasNext); // 랭킹 페이지 생성
+        Slice<RankingDTO> slice = getSlice(rankingList, pageable); // 슬라이싱 처리
 
         return new RankingResponse(myRanking.ranking(), myRanking.name(), myRanking.totalExerciseTime(), slice);
     }
 
-    //팀의 멤버를 찾아와주는 기능
-    private List<Member> getMemberList(Team team) {
-        List<TeamMemberMapping> teamMemberMappingList = teamMemberMappingService.getTeamMemberMapping(team);
+    //리스트에 대해서 슬라이싱 처리해 주는 제네릭 메소드
+    private <T> Slice<T> getSlice(List<T> list, Pageable pageable) {
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), list.size());
+        List<T> pagedList = list.subList(start, end); //페이징 처리를 위해 리스트 슬라이싱
 
-        return teamMemberMappingList // 해당 팀의 멤버 리스트를 받음
+        boolean hasNext = end < list.size();
+
+        return new SliceImpl<>(list, pageable, hasNext);
+    }
+
+    private RankingDTO findMyRanking(List<RankingDTO> rankingList, String userNickname) {
+        return rankingList
                 .stream()
-                .map(TeamMemberMapping::getMember)
-                .toList();
+                .filter(rankingDTO -> userNickname.equals(rankingDTO.name()))
+                .findFirst()
+                .orElseThrow(MyRankingNotFoundException::new);
     }
 
     //멤버 리스트에서 랭킹을 매겨주는 기능
@@ -295,7 +277,7 @@ public class TeamService {
                 .toList();
     }
 
-    //멤버들의 오늘 totalExerciseTime 을 조회
+    //멤버들의 오늘 totalExerciseTime 을 조회 후
     private List<RankingDTO> getTotalExerciseTimeListOfToday(List<Member> memberList) {
         return memberList
                 .stream()
@@ -325,7 +307,9 @@ public class TeamService {
 
         Member member = memberService.getMemberEntity(memberDTO.id());
 
-        teamMemberMappingService.addTeamMember(team, member); // 팀에 가입
+        team.joinTeam(); // 팀에 가입
+
+        teamMemberMappingService.addTeamMember(team, member); // 매핑 정보 추가
     }
 
     //멤버가 팀에서 탈퇴
@@ -336,7 +320,13 @@ public class TeamService {
 
         Member member = memberService.getMemberEntity(memberDTO.id());
 
-        teamMemberMappingService.deleteTeamMember(team, member);
+        if (team.validateIsLeader(member.getId())) { // 팀 리더가 탈퇴하는 요청인지 체크. 팀 리더는 팀 삭제만 가능. 탈퇴는 불가
+            throw new TeamLeaderCannotWithdrawException();
+        }
+
+        teamMemberMappingService.deleteTeamMember(team, member); //TeamMember 중간테이블에서 데이터 삭제
+
+        team.decreaseParticipantsByWithdraw(); //팀의 현재 참여인원 감소
     }
 
     //팀 비밀번호 검사
@@ -345,24 +335,29 @@ public class TeamService {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(TeamNotFoundException::new);
 
-        verifyPassword(team, checkingPasswordRequest);
+        team.verifyPassword(checkingPasswordRequest.password());
     }
 
-    //팀 비밀번호와 맞는 지 검사 수행
-    private void verifyPassword(Team team, CheckingPasswordRequest checkingPasswordRequest) {
-        boolean result = team.getPassword()
-                .map(password -> password.getValue().equals(checkingPasswordRequest.password()))
-                .orElseThrow(TeamHasNotPasswordException::new);
-
-        if (!result) {
-            throw new InvalidPasswordException();
-        }
-    }
-
+    //Team엔티티 반환
     @Transactional(readOnly = true)
     public Team getTeamEntity(Long teamId) {
         return teamRepository.findById(teamId)
                 .orElseThrow(TeamNotFoundException::new);
+    }
+
+    //내가 가입한 팀 리스트 반환 (슬라이스 적용)
+    @Transactional(readOnly = true)
+    public Slice<TeamResponse> getMyTeamList(MemberDTO memberDTO, Pageable pageable) {
+        Member member = memberService.getMemberEntity(memberDTO.id());
+
+        List<Team> teamList = teamMemberMappingService.getTeamListByMember(member);
+
+        List<TeamResponse> myTeamList = teamList
+                .stream()
+                .map(this::convertToTeamResponse)
+                .toList();
+
+        return getSlice(myTeamList, pageable);
     }
 }
 

@@ -18,6 +18,10 @@ public class ProductTagMappingService {
         this.productTagMappingRepository = productTagMappingRepository;
     }
 
+    public void save(ProductTagMapping mapping) {
+        productTagMappingRepository.save(mapping);
+    }
+
     // 태그에 맞는 상품 ID 리스트 반환
     @Transactional(readOnly = true)
     public List<Long> getProductIdsByTagIds(List<Long> tagIds) {
@@ -32,9 +36,27 @@ public class ProductTagMappingService {
     @Transactional(readOnly = true)
     public ProductTagDto getTagForProduct(Long productId) {
         ProductTagMapping mapping = productTagMappingRepository.findByProductId(productId)
+            .stream()
+            .findFirst()
             .orElseThrow(ProductTagNotFoundException::new);
 
         return ProductTagDto.from(mapping.getProductTag());
+    }
+
+    // 특정 Product와 연관된 ProductTagMapping을 조회하고, isDeprecated를 true로 설정
+    @Transactional
+    public void setMappingsDeprecatedByProductId(Long productId) {
+        List<ProductTagMapping> mappings = productTagMappingRepository.findByProductId(productId);
+        mappings.forEach(mapping -> mapping.markAsDeprecated());
+        productTagMappingRepository.saveAll(mappings);
+    }
+
+    // 특정 ProductTag와 연관된 ProductTagMapping을 조회하고, isDeprecated를 true로 설정
+    @Transactional
+    public void setMappingsDeprecatedByTagId(Long tagId) {
+        List<ProductTagMapping> mappings = productTagMappingRepository.findByProductTagId(tagId);
+        mappings.forEach(mapping -> mapping.markAsDeprecated());
+        productTagMappingRepository.saveAll(mappings);
     }
 
 }

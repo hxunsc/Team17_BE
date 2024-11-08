@@ -1,6 +1,7 @@
 package homeTry.member.service;
 
 
+import homeTry.common.auth.kakaoAuth.dto.KakaoMemberInfoDTO;
 import homeTry.exerciseList.service.ExerciseHistoryService;
 import homeTry.member.dto.MemberDTO;
 import homeTry.member.dto.request.ChangeNicknameRequest;
@@ -9,13 +10,13 @@ import homeTry.member.exception.badRequestException.LoginFailedException;
 import homeTry.member.exception.badRequestException.MemberNotFoundException;
 import homeTry.member.exception.badRequestException.RegisterEmailConflictException;
 import homeTry.member.model.entity.Member;
+import homeTry.member.model.enums.Role;
 import homeTry.member.model.vo.Email;
 import homeTry.member.model.vo.Nickname;
 import homeTry.member.repository.MemberRepository;
+import homeTry.member.utils.RandomNicknameGenerator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Duration;
 
 @Service
 public class MemberService {
@@ -24,24 +25,32 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     public MemberService(ExerciseHistoryService exerciseHistoryService,
-                         MemberRepository memberRepository) {
+            MemberRepository memberRepository) {
         this.exerciseHistoryService = exerciseHistoryService;
         this.memberRepository = memberRepository;
     }
 
     @Transactional(readOnly = true)
-    public Long login(MemberDTO memberDTO) {
-        return memberRepository.findByEmail(new Email(memberDTO.email())).orElseThrow(LoginFailedException::new).getId();
+    public MemberDTO login(KakaoMemberInfoDTO kakaoMemberInfoDTO) {
+        Member member = memberRepository.findByEmail(new Email(kakaoMemberInfoDTO.email()))
+                .orElseThrow(LoginFailedException::new);
+
+        return MemberDTO.from(member);
     }
 
     @Transactional
-    public Long register(MemberDTO memberDTO) {
+    public MemberDTO register(KakaoMemberInfoDTO kakaoMemberInfoDTO) {
+
+        MemberDTO memberDTO = new MemberDTO(1L, kakaoMemberInfoDTO.email(),
+                RandomNicknameGenerator.generateNickname(), Role.USER);
+
         Member member = memberDTO.toEntity();
 
-        if (memberRepository.existsByEmail(new Email(memberDTO.email())))
+        if (memberRepository.existsByEmail(new Email(memberDTO.email()))) {
             throw new RegisterEmailConflictException();
+        }
 
-        return memberRepository.save(member).getId();
+        return MemberDTO.from(memberRepository.save(member));
     }
 
     @Transactional(readOnly = true)
@@ -67,7 +76,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void incrementAttendanceDate(Long id){
+    public void incrementAttendanceDate(Long id) {
         Member member = getMemberEntity(id);
         member.incrementAttendanceDate();
     }
@@ -82,5 +91,44 @@ public class MemberService {
 
         return new MyPageResponse(member.getId(), member.getNickname(),
                 member.getEmail(), member.getExerciseAttendanceDate(), weeklyTotal, monthlyTotal);
+    }
+
+    @Transactional
+    public void withdrawMember(Long id) {
+        Member member = getMemberEntity(id);
+        deactivateMember(member);
+    }
+
+    @Transactional
+    public void promoteToAdmin(Long id) {
+        Member member = getMemberEntity(id);
+        member.promoteToAdmin();
+    }
+
+    @Transactional
+    public void demoteToUser(Long id) {
+        Member member = getMemberEntity(id);
+        member.demoteToUser();
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isAdmin(Long id) {
+        Member member = getMemberEntity(id);
+        return member.isAdmin();
+    }
+
+    @Transactional(readOnly = true)
+    public Role getRole(Long id) {
+        Member member = getMemberEntity(id);
+        return member.getRole();
+    }
+
+    private void deactivateMember(Member member) {
+        member.revokeEmail();
+        member.revokeNickname();
+        member.revokeExerciseAttendanceDate();
+        member.revokeKakaoAccessToken();
+        member.demoteToUser();
+        member.markAsDeprecated();
     }
 }
