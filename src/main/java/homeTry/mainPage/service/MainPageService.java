@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Service
 public class MainPageService {
@@ -28,20 +29,25 @@ public class MainPageService {
     @Transactional(readOnly = true)
     public MainPageResponse getMainPage(LocalDate date, Long memberId, Pageable pageable) {
 
-        if (LocalDate.now().isEqual(date)) {
-            return getTodayMainPageResponse(memberId, pageable);
+        LocalDate adjustedToday = LocalDate.now();
+        if (LocalTime.now().isBefore(LocalTime.of(3, 0, 0))) {
+            adjustedToday = adjustedToday.minusDays(1);
+        }
+
+        if (adjustedToday.isEqual(date)) {
+            return getTodayMainPageResponse(memberId, date,  pageable);
         }
 
         return getHistoricalMainPageResponse(memberId, date, pageable);
 
     }
 
-    private MainPageResponse getTodayMainPageResponse(Long memberId, Pageable pageable) {
+    private MainPageResponse getTodayMainPageResponse(Long memberId, LocalDate date, Pageable pageable) {
 
         return new MainPageResponse(
                 exerciseTimeService.getExerciseTimesForToday(memberId),
                 exerciseTimeService.getExerciseResponsesForToday(memberId),
-                diaryService.getDiaryByDate(LocalDate.now(), memberId, pageable));
+                diaryService.getDiaryByDate(date, memberId, pageable));
 
     }
 
