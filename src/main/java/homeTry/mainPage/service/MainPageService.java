@@ -1,5 +1,6 @@
 package homeTry.mainPage.service;
 
+import homeTry.common.constants.DateTimeUtil;
 import homeTry.diary.service.DiaryService;
 import homeTry.exerciseList.service.ExerciseHistoryService;
 import homeTry.exerciseList.service.ExerciseTimeService;
@@ -29,10 +30,7 @@ public class MainPageService {
     @Transactional(readOnly = true)
     public MainPageResponse getMainPage(LocalDate date, Long memberId, Pageable pageable) {
 
-        LocalDate adjustedToday = LocalDate.now();
-        if (LocalTime.now().isBefore(LocalTime.of(3, 0, 0))) {
-            adjustedToday = adjustedToday.minusDays(1);
-        }
+        LocalDate adjustedToday = DateTimeUtil.getAdjustedCurrentDate();
 
         if (adjustedToday.isEqual(date)) {
             return getTodayMainPageResponse(memberId, date,  pageable);
