@@ -318,8 +318,7 @@ public class TeamService {
 
         Member member = memberService.getMemberEntity(memberDTO.id());
 
-        if (!team.isJoinable()) //팀에 모든 인원이 가득 찼는지 확인
-            throw new TeamParticipantsFullException();
+        team.joinTeam();
 
         teamMemberMappingService.addTeamMember(team, member); // 팀에 가입
     }

@@ -3,6 +3,7 @@ package homeTry.team.model.entity;
 import homeTry.common.entity.BaseEntity;
 import homeTry.member.model.entity.Member;
 import homeTry.team.exception.NotTeamLeaderException;
+import homeTry.team.exception.TeamParticipantsFullException;
 import homeTry.team.model.vo.Description;
 import homeTry.team.model.vo.Name;
 import homeTry.team.model.vo.Participant;
@@ -82,13 +83,17 @@ public class Team extends BaseEntity {
         return Optional.ofNullable(password);
     }
 
-    public boolean isJoinable() {
-        return !this.currentParticipants.isSameValue(this.maxParticipants);
-    }
-
     public void decreaseParticipantsByWithdraw() {
         long decreasedParticipants = getCurrentParticipants().value() - 1;
         this.currentParticipants = new Participant(decreasedParticipants);
+    }
+
+    public void joinTeam() {
+        if (this.currentParticipants.isSameValue(this.maxParticipants)) //팀이 가득찬 경우 가입이 불가능하게 예외 던짐
+            throw new TeamParticipantsFullException();
+
+        long increasedParticipants = getCurrentParticipants().value() + 1;
+        this.currentParticipants = new Participant(increasedParticipants);
     }
 
     public boolean validateIsLeader(long memberId) {
