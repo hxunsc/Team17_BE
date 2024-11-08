@@ -5,6 +5,7 @@ import homeTry.exerciseList.service.ExerciseTimeService;
 import homeTry.member.dto.MemberDTO;
 import homeTry.member.model.entity.Member;
 import homeTry.member.service.MemberService;
+import homeTry.tag.teamTag.dto.AllTeamTagDTO;
 import homeTry.tag.teamTag.dto.TeamTagDTO;
 import homeTry.tag.teamTag.model.entity.TeamTag;
 import homeTry.tag.teamTag.service.TeamTagService;
@@ -42,9 +43,6 @@ public class TeamService {
     private final TeamMemberMappingService teamMemberMappingService;
     private final ExerciseHistoryService exerciseHistoryService;
     private final ExerciseTimeService exerciseTimeService;
-    private static final String GENDER = "성별";
-    private static final String AGE = "나이";
-    private static final String EXERCISE_INTENSITY = "운동강도";
     private static final int FIRST = 1;
 
 
@@ -215,15 +213,16 @@ public class TeamService {
     //모든 팀 태그를 조회
     @Transactional(readOnly = true)
     public TagListResponse getAllTeamTagList(MemberDTO memberDTO) {
-        List<TeamTagDTO> teamTagDTOList = teamTagService.getAllTeamTagList();
+        AllTeamTagDTO allTeamTagDTO = teamTagService.getAllTeamTagList(); //모든 태그 조회해 옴
 
-        List<TeamTagDTO> genderTagList = teamTagFilter(teamTagDTOList, GENDER);
-        List<TeamTagDTO> ageTagList = teamTagFilter(teamTagDTOList, AGE);
-        List<TeamTagDTO> exerciseIntensityTagList = teamTagFilter(teamTagDTOList, EXERCISE_INTENSITY);
-
-        return new TagListResponse(genderTagList, ageTagList, exerciseIntensityTagList);
+        return new TagListResponse(
+                allTeamTagDTO.genderTagList(),
+                allTeamTagDTO.ageTagList(),
+                allTeamTagDTO.exerciseIntensityTagList()
+        );
     }
 
+    //TeamTagDTO 에서
     private List<TeamTagDTO> teamTagFilter(List<TeamTagDTO> teamTagDTOList, String tagAttribute) {
         return teamTagDTOList.stream()
                 .filter(teamTagDTO -> teamTagDTO.teamTagAttribute().equals(tagAttribute))
