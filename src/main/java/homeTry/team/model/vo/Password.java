@@ -27,27 +27,7 @@ public record Password(String value) {
         return value;
     }
 
-    @Override
-    public boolean equals(Object object) {
-        if (this == object) {
-            return true;
-        }
-
-        if (!(object instanceof Password)) {
-            return false;
-        }
-
-        Password password = (Password) object;
-        return Objects.equals(this.value, password.getValue());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(value);
-    }
-
-    @Override
-    public String toString() {
-        return value;
+    public boolean isSamePassword(String password) {
+        return value.equals(password);
     }
 }
