@@ -2,6 +2,10 @@ package homeTry.team.model.entity;
 
 import homeTry.common.entity.BaseEntity;
 import homeTry.member.model.entity.Member;
+import homeTry.team.exception.InvalidPasswordException;
+import homeTry.team.exception.NotTeamLeaderException;
+import homeTry.team.exception.TeamHasNotPasswordException;
+import homeTry.team.exception.TeamParticipantsFullException;
 import homeTry.team.model.vo.Description;
 import homeTry.team.model.vo.Name;
 import homeTry.team.model.vo.Participant;
@@ -81,13 +85,32 @@ public class Team extends BaseEntity {
         return Optional.ofNullable(password);
     }
 
-    public void updateTeam(String teamName, String teamDescription, Member leader,
-                           long maxParticipants, long currentParticipants, String password) {
-        this.teamName = new Name(teamName);
-        this.teamDescription = new Description(teamDescription);
-        this.leaderId = leader.getId();
-        this.maxParticipants = new Participant(maxParticipants);
-        this.currentParticipants = new Participant(currentParticipants);
-        this.password = new Password(password);
+    public void decreaseParticipantsByWithdraw() {
+        long decreasedParticipants = getCurrentParticipants().value() - 1;
+        this.currentParticipants = new Participant(decreasedParticipants);
+    }
+
+    public void joinTeam() {
+        if (this.currentParticipants.isSameValue(this.maxParticipants)) //팀이 가득찬 경우 가입이 불가능하게 예외 던짐
+            throw new TeamParticipantsFullException();
+
+        long increasedParticipants = getCurrentParticipants().value() + 1;
+        this.currentParticipants = new Participant(increasedParticipants);
+    }
+
+    public boolean validateIsLeader(long memberId) {
+        if (leaderId != memberId) {
+            throw new NotTeamLeaderException();
+        }
+
+        return true;
+    }
+
+    public void verifyPassword(String password) {
+        if (password == null) //팀에 비밀번호가 없는 경우
+            throw new TeamHasNotPasswordException();
+
+        if (!this.password.isSamePassword(password)) //비밀번호가 맞지 않는 경우
+            throw new InvalidPasswordException();
     }
 }

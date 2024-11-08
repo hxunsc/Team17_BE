@@ -24,9 +24,7 @@ public record TeamCreateRequest(
         @Size(min = 4, max = 16, message = "패스워드는 최소 4글자, 최대 16글자 입니다.")
         String password,
 
-        @NotEmpty
-        @Valid //리스트 내부의 tagIdDTO에 대한 유효성 검사를 위한 @Valid 어노테이션 추가
-        List<TeamTagDTO> tagIdList
+        List<Long> tagIdList
 ) {
 
 }
