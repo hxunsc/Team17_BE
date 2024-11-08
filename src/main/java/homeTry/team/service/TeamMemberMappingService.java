@@ -44,9 +44,12 @@ public class TeamMemberMappingService {
         teamMemberMappingRepository.deleteByTeam(team);
     }
 
-    //팀에 속한 멤버들의 TeamMemberMapping 을 반환
-    public List<TeamMemberMapping> getTeamMemberMappingByTeam(Team team) {
-        return teamMemberMappingRepository.findByTeam(team);
+    //팀에 속한 멤버들을 반환
+    public List<Member> getTeamMemberListByTeam(Team team) {
+        return teamMemberMappingRepository.findByTeam(team)
+                .stream()
+                .map(TeamMemberMapping::getMember)
+                .toList();
     }
 
     //특정 TeamMemberMapping 을 반환
@@ -59,5 +62,4 @@ public class TeamMemberMappingService {
     public Slice<TeamMemberMapping> getTeamMemberMappingByMember(Member member, Pageable pageable) {
         return teamMemberMappingRepository.findByMember(member, pageable);
     }
-
 }
