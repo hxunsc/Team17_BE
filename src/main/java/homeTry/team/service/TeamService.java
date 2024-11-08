@@ -96,12 +96,7 @@ public class TeamService {
     }
 
     //팀의 태그 정보를 추가
-    private void addTagsToTeam(List<TeamTagDTO> teamTagDTOList, Team team) {
-        List<Long> tagIdList = teamTagDTOList
-                .stream()
-                .map(TeamTagDTO::tagId)
-                .toList();
-
+    private void addTagsToTeam(List<Long> tagIdList, Team team) {
         List<TeamTag> tagList = teamTagService.getTeamTagList(tagIdList);
 
         teamTagMappingService.addTeamTagMappings(tagList, team);
