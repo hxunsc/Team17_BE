@@ -220,13 +220,6 @@ public class TeamService {
         );
     }
 
-    //TeamTagDTO 에서
-    private List<TeamTagDTO> teamTagFilter(List<TeamTagDTO> teamTagDTOList, String tagAttribute) {
-        return teamTagDTOList.stream()
-                .filter(teamTagDTO -> teamTagDTO.teamTagAttribute().equals(tagAttribute))
-                .toList();
-    }
-
     //팀 랭킹 조회 기능(페이징 적용)
     @Transactional(readOnly = true)
     public RankingResponse getTeamRanking(MemberDTO memberDTO, Long teamId, Pageable pageable, LocalDate date) {
