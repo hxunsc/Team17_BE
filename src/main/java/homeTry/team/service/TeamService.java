@@ -350,19 +350,14 @@ public class TeamService {
     public Slice<TeamResponse> getMyTeamList(MemberDTO memberDTO, Pageable pageable) {
         Member member = memberService.getMemberEntity(memberDTO.id());
 
-        Slice<TeamMemberMapping> teamMemberMappingList = teamMemberMappingService.getTeamMemberMappingByMember(member, pageable);
+        List<Team> teamList = teamMemberMappingService.getTeamListByMember(member);
 
-        List<Team> TeamList = teamMemberMappingList.getContent()
-                .stream()
-                .map(TeamMemberMapping::getTeam)
-                .toList();
-
-        List<TeamResponse> myTeamList = TeamList
+        List<TeamResponse> myTeamList = teamList
                 .stream()
                 .map(this::convertToTeamResponse)
                 .toList();
 
-        return new SliceImpl<>(myTeamList, pageable, teamMemberMappingList.hasNext());
+        return getSlice(myTeamList, pageable);
     }
 }
 
