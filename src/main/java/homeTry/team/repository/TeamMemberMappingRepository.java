@@ -18,5 +18,5 @@ public interface TeamMemberMappingRepository extends JpaRepository<TeamMemberMap
 
     List<TeamMemberMapping> findByTeam(Team team);
 
-    Slice<TeamMemberMapping> findByMember(Member member, Pageable pageable);
+    List<TeamMemberMapping> findByMember(Member member);
 }

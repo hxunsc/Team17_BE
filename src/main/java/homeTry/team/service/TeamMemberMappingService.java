@@ -58,8 +58,11 @@ public class TeamMemberMappingService {
                 .orElseThrow(TeamMemberNotFoundException::new);
     }
 
-    //특정 유저의 TeamMemberMapping 을 반환
-    public Slice<TeamMemberMapping> getTeamMemberMappingByMember(Member member, Pageable pageable) {
-        return teamMemberMappingRepository.findByMember(member, pageable);
+    //유저가 가입한 팀 리스트를 반환
+    public List<Team> getTeamListByMember(Member member) {
+        return teamMemberMappingRepository.findByMember(member)
+                .stream()
+                .map(TeamMemberMapping::getTeam)
+                .toList();
     }
 }
