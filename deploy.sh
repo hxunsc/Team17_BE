@@ -1,4 +1,8 @@
 #!/bin/bash
+# Gradle build
+cd /home/ubuntu/Team17_BE || exit
+./gradlew bootJar
+
 BUILD_PATH=$(ls /home/ubuntu/Team17_BE/build/libs/*.jar)
 JAR_NAME=$(basename $BUILD_PATH)
 

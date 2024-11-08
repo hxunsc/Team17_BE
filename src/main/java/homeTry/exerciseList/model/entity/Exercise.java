@@ -9,7 +9,8 @@ import jakarta.persistence.*;
 @Table(
     name = "exercise",
     indexes = {
-        @Index(name = "idx_member_id", columnList = "member_member_id")
+        @Index(name = "idx_exercise_member_id", columnList = "member_id"),
+        @Index(name = "idx_exercise_is_deprecated", columnList = "is_deprecated")
     }
 )
 public class Exercise extends BaseEntity {
@@ -22,9 +23,6 @@ public class Exercise extends BaseEntity {
     @AttributeOverride(name = "value", column = @Column(name = "exercise_name", nullable = false))
     private ExerciseName exerciseName;
 
-    @Column(nullable = false)
-    private boolean isDeprecated;
-
     @ManyToOne
     @JoinColumn(nullable = false)
     private Member member;
@@ -34,7 +32,6 @@ public class Exercise extends BaseEntity {
 
     public Exercise(String exerciseName, Member member) {
         this.exerciseName = new ExerciseName(exerciseName);
-        this.isDeprecated = false;
         this.member = member;
     }
 
@@ -46,16 +43,8 @@ public class Exercise extends BaseEntity {
         return exerciseName.value();
     }
 
-    public boolean isDeprecated() {
-        return isDeprecated;
-    }
-
     public Member getMember() {
         return member;
-    }
-
-    public void markAsDeprecated() {
-        this.isDeprecated = true;
     }
 
 }

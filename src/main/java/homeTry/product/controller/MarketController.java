@@ -4,7 +4,6 @@ import homeTry.common.annotation.LoginMember;
 import homeTry.member.dto.MemberDTO;
 import homeTry.product.dto.response.ProductResponse;
 import homeTry.product.service.ProductService;
-import java.net.URI;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -45,8 +44,8 @@ public class MarketController {
     @GetMapping("/{productId}")
     public ResponseEntity<Void> redirectProduct(@PathVariable Long productId,
                                                 @LoginMember MemberDTO memberDTO) {
-        String productUrl = productService.incrementViewCountAndGetUrl(productId, memberDTO);
-        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(productUrl)).build();
+        productService.incrementViewCount(productId, memberDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

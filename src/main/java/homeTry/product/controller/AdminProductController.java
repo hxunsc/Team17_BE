@@ -1,7 +1,9 @@
 package homeTry.product.controller;
 
+import homeTry.common.annotation.LoginMember;
+import homeTry.member.dto.MemberDTO;
 import homeTry.product.dto.request.ProductRequest;
-import homeTry.product.dto.response.ProductResponse;
+import homeTry.product.dto.response.ProductAdminResponse;
 import homeTry.product.service.AdminProductService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -16,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-// TODO : 관리자 권한 확인 로직 추가
 @RestController
 @RequestMapping("/api/admin/product")
 public class AdminProductController {
@@ -27,25 +28,27 @@ public class AdminProductController {
         this.adminProductService = adminProductService;
     }
 
-    //
     // 상품 추가
     @PostMapping
-    public ResponseEntity<Void> createProduct(@RequestBody @Valid ProductRequest productRequest) {
-        adminProductService.createProduct(productRequest);
+    public ResponseEntity<Void> addProduct(@RequestBody @Valid ProductRequest productRequest,
+        @LoginMember MemberDTO memberDTO) {
+        adminProductService.addProduct(productRequest, memberDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     // 상품 삭제
     @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
-        adminProductService.deleteProduct(productId);
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId,
+        @LoginMember MemberDTO memberDTO) {
+        adminProductService.deleteProduct(productId, memberDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     // 상품 조회
     @GetMapping
-    public ResponseEntity<Page<ProductResponse>> getProducts(Pageable pageable) {
-        Page<ProductResponse> products = adminProductService.getProducts(pageable);
+    public ResponseEntity<Page<ProductAdminResponse>> getProducts(Pageable pageable,
+        @LoginMember MemberDTO memberDTO) {
+        Page<ProductAdminResponse> products = adminProductService.getProducts(pageable, memberDTO);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 

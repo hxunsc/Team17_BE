@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -18,6 +19,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Slice<Product> findByIdInOrderByViewCountDescPriceAsc(List<Long> ids, Pageable pageable);
 
     // 관리자 페이지 상품 조회
-    Page<Product> findAllByOrderByIdAsc(Pageable pageable);
+    @Query("SELECT p FROM Product p WHERE p.isDeprecated = false ORDER BY p.id ASC")
+    Page<Product> findAllNonDeprecated(Pageable pageable);
 
 }

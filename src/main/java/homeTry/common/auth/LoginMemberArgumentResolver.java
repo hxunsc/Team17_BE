@@ -3,6 +3,7 @@ package homeTry.common.auth;
 import homeTry.common.annotation.LoginMember;
 import homeTry.common.auth.exception.badRequestException.InvalidTokenException;
 import homeTry.common.auth.exception.internalServerException.HomeTryServerException;
+import homeTry.common.auth.jwt.JwtAuth;
 import homeTry.member.exception.badRequestException.MemberNotFoundException;
 import homeTry.member.service.MemberService;
 import org.springframework.core.MethodParameter;
@@ -28,7 +29,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+            NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         try {
             String token = webRequest.getHeader("Authorization").substring(7);
             Long id = jwtAuth.extractId(token);

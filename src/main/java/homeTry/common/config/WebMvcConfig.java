@@ -1,6 +1,6 @@
 package homeTry.common.config;
 
-import homeTry.common.auth.JwtAuth;
+import homeTry.common.auth.jwt.JwtAuth;
 import homeTry.common.auth.LoginMemberArgumentResolver;
 import homeTry.common.interceptor.JwtInterceptor;
 import homeTry.member.service.MemberService;
@@ -45,7 +45,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-            .allowedOrigins("http://localhost:3000", "http://localhost:8080", "http://localhost:63342", "https://localhost:3000")
+            .allowedOriginPatterns("http://localhost:*", "https://localhost:*")
             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
             .allowedHeaders("*") 
             .exposedHeaders(HttpHeaders.LOCATION)

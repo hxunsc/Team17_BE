@@ -1,0 +1,61 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f9ff; /* 연한 파스텔 블루 배경색 */
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    background-color: #ffffff; /* 흰색 배경 */
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #007bff; /* 파스텔 블루 제목 색상 */
+    text-align: center;
+}
+
+button {
+    background-color: #007bff; /* 파스텔 블루 버튼 배경 */
+    color: white; /* 버튼 텍스트 색상 */
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #0056b3; /* 버튼 호버 시 색상 */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #007bff; /* 테이블 경계선 색상 */
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #e7f3ff; /* 테이블 헤더 배경색 */
+    color: #007bff; /* 헤더 텍스트 색상 */
+}
+
+tr:nth-child(even) {
+    background-color: #f1f8ff; /* 짝수 행 배경색 */
+}
+
+tr:hover {
+    background-color: #e7f3ff; /* 행 호버 시 색상 */
+}

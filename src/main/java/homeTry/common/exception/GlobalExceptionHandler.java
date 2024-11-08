@@ -136,7 +136,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(ConstraintViolationException ex) {
+    public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException ex) {
         ErrorType errorType = CommonErrorType.CONSTRAINT_VIOLATION_EXCEPTION;
         ErrorResponse errorResponse = new ErrorResponse(
                 errorType.getErrorCode(),

@@ -20,12 +20,22 @@ public abstract class BaseEntity {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
+    private boolean isDeprecated;
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
+    }
+
+    public boolean isDeprecated() {
+        return isDeprecated;
+    }
+
+    public void markAsDeprecated() {
+        this.isDeprecated = true;
     }
 
 }

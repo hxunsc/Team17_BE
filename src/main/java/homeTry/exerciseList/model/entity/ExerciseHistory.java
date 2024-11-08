@@ -10,8 +10,7 @@ import java.time.Duration;
 @Table(
     name = "exercise_history",
     indexes = {
-        @Index(name = "idx_exercise_id", columnList = "exercise_id"),
-        @Index(name = "idx_created_at", columnList = "created_at")
+        @Index(name = "idx_exercise_history_exercise_created", columnList = "exercise_id, created_at")
     }
 )
 public class ExerciseHistory extends BaseEntity {

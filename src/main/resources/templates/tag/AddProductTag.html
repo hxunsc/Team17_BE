@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Product Tag</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+</head>
+<body>
+<div class="container">
+    <h1>Add New Product Tag</h1>
+    <form action="/admin/tag/product/save" method="post">
+        <label for="productTagName">Tag Name:</label>
+        <input type="text" id="productTagName" name="productTagName" required>
+        <button type="submit">Save Tag</button>
+    </form>
+</div>
+</body>
+</html>
