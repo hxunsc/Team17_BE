@@ -2,7 +2,9 @@ package homeTry.team.model.entity;
 
 import homeTry.common.entity.BaseEntity;
 import homeTry.member.model.entity.Member;
+import homeTry.team.exception.InvalidPasswordException;
 import homeTry.team.exception.NotTeamLeaderException;
+import homeTry.team.exception.TeamHasNotPasswordException;
 import homeTry.team.exception.TeamParticipantsFullException;
 import homeTry.team.model.vo.Description;
 import homeTry.team.model.vo.Name;
@@ -112,5 +114,13 @@ public class Team extends BaseEntity {
         this.maxParticipants = new Participant(maxParticipants);
         this.currentParticipants = new Participant(currentParticipants);
         this.password = new Password(password);
+    }
+
+    public void verifyPassword(String password) {
+        if (password == null) //팀에 비밀번호가 없는 경우
+            throw new TeamHasNotPasswordException();
+
+        if (!this.password.isSamePassword(password)) //비밀번호가 맞지 않는 경우
+            throw new InvalidPasswordException();
     }
 }

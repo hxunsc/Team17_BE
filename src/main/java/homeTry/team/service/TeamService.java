@@ -335,18 +335,7 @@ public class TeamService {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(TeamNotFoundException::new);
 
-        verifyPassword(team, checkingPasswordRequest);
-    }
-
-    //팀 비밀번호와 맞는 지 검사 수행
-    private void verifyPassword(Team team, CheckingPasswordRequest checkingPasswordRequest) {
-        boolean result = team.getPassword()
-                .map(password -> password.getValue().equals(checkingPasswordRequest.password()))
-                .orElseThrow(TeamHasNotPasswordException::new);
-
-        if (!result) {
-            throw new InvalidPasswordException();
-        }
+        team.verifyPassword(checkingPasswordRequest.password());
     }
 
     //Team엔티티 반환
