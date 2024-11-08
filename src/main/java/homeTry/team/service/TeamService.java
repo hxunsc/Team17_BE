@@ -318,7 +318,7 @@ public class TeamService {
 
         Member member = memberService.getMemberEntity(memberDTO.id());
 
-        team.joinTeam();
+        team.joinTeam(); // 팀에 가입
 
         teamMemberMappingService.addTeamMember(team, member); // 팀에 가입
     }
