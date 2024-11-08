@@ -226,35 +226,34 @@ public class TeamService {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(TeamNotFoundException::new);
 
-        List<Member> memberList = getMemberList(team); //팀의 멤버들을 조회해옴
+        List<Member> memberList = teamMemberMappingService.getTeamMemberListByTeam(team); //팀의 멤버들을 조회해옴
 
         List<RankingDTO> rankingList = getRankingList(memberList, date); //랭킹을 구해옴
 
-        RankingDTO myRanking = rankingList //내 랭킹을 찾음
-                .stream()
-                .filter(rankingDTO -> memberDTO.nickname().equals(rankingDTO.name()))
-                .findFirst()
-                .orElseThrow(MyRankingNotFoundException::new);
+        RankingDTO myRanking = findMyRanking(rankingList, memberDTO.nickname()); //내 랭킹을 찾음
 
-        int start = (int) pageable.getOffset();
-        int end = Math.min(start + pageable.getPageSize(), rankingList.size());
-        List<RankingDTO> PagedRankingList = rankingList.subList(start, end); //페이징 처리를 위해 리스트 슬라이싱
-
-        boolean hasNext = end < rankingList.size();
-
-        Slice<RankingDTO> slice = new SliceImpl<>(rankingList, pageable, hasNext); // 랭킹 페이지 생성
+        Slice<RankingDTO> slice = getSlice(rankingList, pageable); // 슬라이싱 처리
 
         return new RankingResponse(myRanking.ranking(), myRanking.name(), myRanking.totalExerciseTime(), slice);
     }
 
-    //팀의 멤버를 찾아와주는 기능
-    private List<Member> getMemberList(Team team) {
-        List<TeamMemberMapping> teamMemberMappingList = teamMemberMappingService.getTeamMemberMappingByTeam(team);
+    //리스트에 대해서 슬라이싱 처리해 주는 제네릭 메소드
+    private <T> Slice<T> getSlice(List<T> list, Pageable pageable) {
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), list.size());
+        List<T> pagedList = list.subList(start, end); //페이징 처리를 위해 리스트 슬라이싱
 
-        return teamMemberMappingList // 해당 팀의 멤버 리스트를 받음
+        boolean hasNext = end < list.size();
+
+        return new SliceImpl<>(list, pageable, hasNext);
+    }
+
+    private RankingDTO findMyRanking(List<RankingDTO> rankingList, String userNickname) {
+        return rankingList
                 .stream()
-                .map(TeamMemberMapping::getMember)
-                .toList();
+                .filter(rankingDTO -> userNickname.equals(rankingDTO.name()))
+                .findFirst()
+                .orElseThrow(MyRankingNotFoundException::new);
     }
 
     //멤버 리스트에서 랭킹을 매겨주는 기능
