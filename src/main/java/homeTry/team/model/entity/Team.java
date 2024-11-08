@@ -106,16 +106,6 @@ public class Team extends BaseEntity {
         return true;
     }
 
-    public void updateTeam(String teamName, String teamDescription, Member leader,
-                           long maxParticipants, long currentParticipants, String password) {
-        this.teamName = new Name(teamName);
-        this.teamDescription = new Description(teamDescription);
-        this.leaderId = leader.getId();
-        this.maxParticipants = new Participant(maxParticipants);
-        this.currentParticipants = new Participant(currentParticipants);
-        this.password = new Password(password);
-    }
-
     public void verifyPassword(String password) {
         if (password == null) //팀에 비밀번호가 없는 경우
             throw new TeamHasNotPasswordException();
