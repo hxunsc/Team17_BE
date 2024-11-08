@@ -87,6 +87,14 @@ public class Team extends BaseEntity {
         this.currentParticipants = new Participant(decreasedParticipants);
     }
 
+    public boolean validateIsLeader(long memberId) {
+        if (leaderId != memberId) {
+            throw new NotTeamLeaderException();
+        }
+
+        return true;
+    }
+
     public void updateTeam(String teamName, String teamDescription, Member leader,
                            long maxParticipants, long currentParticipants, String password) {
         this.teamName = new Name(teamName);
