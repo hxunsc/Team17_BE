@@ -117,20 +117,13 @@ public class TeamService {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(TeamNotFoundException::new);
 
-        validateIsLeader(team.getLeaderId(), member.getId()); //팀 리더인지 체크
+        team.validateIsLeader(member.getId()); //팀 리더인지 체크
 
         teamMemberMappingService.deleteAllTeamMemberFromTeam(team); // 해당 팀에 대한 TeamMemberMapping 데이터 삭제
 
         teamTagMappingService.deleteAllTeamTagMappingFromTeam(team); //해당 팀에 대한 TeamTagMapping 데이터 삭제
 
         teamRepository.delete(team); //Team 삭제
-    }
-
-    //팀 리더인지 체크
-    private void validateIsLeader(long leaderId, long memberId) {
-        if (leaderId != memberId) {
-            throw new NotTeamLeaderException();
-        }
     }
 
     //팀 조회 기능
@@ -336,9 +329,13 @@ public class TeamService {
 
         Member member = memberService.getMemberEntity(memberDTO.id());
 
-        teamMemberMappingService.deleteTeamMember(team, member);
+        if (team.validateIsLeader(member.getId())) { // 팀 리더가 탈퇴하는 요청인지 체크. 팀 리더는 팀 삭제만 가능. 탈퇴는 불가
+            throw new TeamLeaderCannotWithdrawException();
+        }
 
-        team.decreaseParticipantsByWithdraw();
+        teamMemberMappingService.deleteTeamMember(team, member); //TeamMember 중간테이블에서 데이터 삭제
+
+        team.decreaseParticipantsByWithdraw(); //팀의 현재 참여인원 감소
     }
 
     //팀 비밀번호 검사
