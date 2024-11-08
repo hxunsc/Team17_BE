@@ -277,7 +277,7 @@ public class TeamService {
                 .toList();
     }
 
-    //멤버들의 오늘 totalExerciseTime 을 조회
+    //멤버들의 오늘 totalExerciseTime 을 조회 후
     private List<RankingDTO> getTotalExerciseTimeListOfToday(List<Member> memberList) {
         return memberList
                 .stream()
@@ -309,7 +309,7 @@ public class TeamService {
 
         team.joinTeam(); // 팀에 가입
 
-        teamMemberMappingService.addTeamMember(team, member); // 팀에 가입
+        teamMemberMappingService.addTeamMember(team, member); // 매핑 정보 추가
     }
 
     //멤버가 팀에서 탈퇴
