@@ -82,6 +82,10 @@ public class Team extends BaseEntity {
         return Optional.ofNullable(password);
     }
 
+    public boolean isJoinable() {
+        return !this.currentParticipants.isSameValue(this.maxParticipants);
+    }
+
     public void decreaseParticipantsByWithdraw() {
         long decreasedParticipants = getCurrentParticipants().value() - 1;
         this.currentParticipants = new Participant(decreasedParticipants);
