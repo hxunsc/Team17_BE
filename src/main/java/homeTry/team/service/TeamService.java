@@ -337,6 +337,8 @@ public class TeamService {
         Member member = memberService.getMemberEntity(memberDTO.id());
 
         teamMemberMappingService.deleteTeamMember(team, member);
+
+        team.decreaseParticipantsByWithdraw();
     }
 
     //팀 비밀번호 검사

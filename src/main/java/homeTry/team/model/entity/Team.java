@@ -2,6 +2,7 @@ package homeTry.team.model.entity;
 
 import homeTry.common.entity.BaseEntity;
 import homeTry.member.model.entity.Member;
+import homeTry.team.exception.NotTeamLeaderException;
 import homeTry.team.model.vo.Description;
 import homeTry.team.model.vo.Name;
 import homeTry.team.model.vo.Participant;
@@ -79,6 +80,11 @@ public class Team extends BaseEntity {
 
     public Optional<Password> getPassword() {
         return Optional.ofNullable(password);
+    }
+
+    public void decreaseParticipantsByWithdraw() {
+        long decreasedParticipants = getCurrentParticipants().value() - 1;
+        this.currentParticipants = new Participant(decreasedParticipants);
     }
 
     public void updateTeam(String teamName, String teamDescription, Member leader,
