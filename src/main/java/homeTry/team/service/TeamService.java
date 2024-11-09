@@ -329,7 +329,7 @@ public class TeamService {
             throw new TeamLeaderCannotWithdrawException();
         }
 
-        teamMemberMappingService.deleteTeamMember(team, member); //TeamMember 중간테이블에서 데이터 삭제
+        teamMemberMappingService.markDeprecated(team, member); //TeamMemberMapping 테이블에서 softDelete
 
         team.decreaseParticipantsByWithdraw(); //팀의 현재 참여인원 감소
     }
