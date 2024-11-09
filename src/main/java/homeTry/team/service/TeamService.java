@@ -111,7 +111,8 @@ public class TeamService {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(TeamNotFoundException::new);
 
-        team.validateIsLeader(member.getId()); //팀 리더인지 체크
+        if (!team.validateIsLeader(member.getId())) //팀 리더인지 체크
+            throw new NotTeamLeaderException();
 
         teamMemberMappingService.deleteAllTeamMemberFromTeam(team); // 해당 팀에 대한 TeamMemberMapping 데이터 삭제
 
