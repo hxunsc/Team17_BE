@@ -1,5 +1,6 @@
 package homeTry.common.interceptor;
 
+import homeTry.common.auth.jwt.JwtAuth;
 import homeTry.member.service.MemberService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,8 +11,12 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Component
 public class AdminInterceptor implements HandlerInterceptor {
 
+    private final MemberService memberService;
+    private final JwtAuth jwtAuth;
 
-    public AdminInterceptor() {
+    public AdminInterceptor(MemberService memberService, JwtAuth jwtAuth) {
+        this.memberService = memberService;
+        this.jwtAuth = jwtAuth;
     }
 
     @Override
@@ -48,8 +53,7 @@ public class AdminInterceptor implements HandlerInterceptor {
         return null;
     }
 
-    // 관리자 토큰이 유효한지 확인하는 메서드
     private boolean isValidAdminToken(String adminToken) {
-        return adminToken.contains("adminCheck");
+        return memberService.isAdmin(jwtAuth.extractId(adminToken));
     }
 }

@@ -1,6 +1,9 @@
 package homeTry.admin.service;
 
 import homeTry.admin.dto.request.AdminCodeRequest;
+import homeTry.common.auth.jwt.JwtAuth;
+import homeTry.member.dto.MemberDTO;
+import homeTry.member.service.MemberService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,6 +13,14 @@ import org.springframework.stereotype.Service;
 @Service
 @PropertySource("classpath:application-secret.properties")
 public class AdminPageService {
+
+    private final MemberService memberService;
+    private final JwtAuth jwtAuth;
+
+    public AdminPageService(MemberService memberService, JwtAuth jwtAuth) {
+        this.memberService = memberService;
+        this.jwtAuth = jwtAuth;
+    }
 
     private static final int COOKIE_EXPIRATION_TIME = 60 * 60 * 24;
 
@@ -21,8 +32,6 @@ public class AdminPageService {
         if (isValidAdminCode(inputAdminCode)) {
 
             String adminToken = getAdminToken(memberId);
-
-            // 쿠키를 설정하는 메서드를 호출
             setAdminTokenCookie(response, adminToken);
 
             return "redirect:/admin";
@@ -35,9 +44,9 @@ public class AdminPageService {
         return adminPromoteCode.equals(inputAdminCode);
     }
 
-    //AdminToken 발급 로직 필요
     private String getAdminToken(Long memberId) {
-        return "generated_admin_token";
+        memberService.promoteToAdmin(memberId);
+        return jwtAuth.generateToken(memberService.getMember(memberId));
     }
 
     private void setAdminTokenCookie(HttpServletResponse response, String adminToken) {
