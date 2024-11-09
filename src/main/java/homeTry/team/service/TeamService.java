@@ -18,7 +18,6 @@ import homeTry.team.dto.response.TagListResponse;
 import homeTry.team.dto.response.TeamResponse;
 import homeTry.team.exception.*;
 import homeTry.team.model.entity.Team;
-import homeTry.team.model.entity.TeamMemberMapping;
 import homeTry.team.model.vo.Name;
 import homeTry.team.repository.TeamRepository;
 import org.springframework.data.domain.*;
@@ -37,6 +36,8 @@ public class TeamService {
 
     private static final int DEFAULT_PARTICIPANTS = 1;
     private static final int DEFAULT_RANKING = 0;
+    private static final int FIRST = 1;
+
     private final TeamRepository teamRepository;
     private final MemberService memberService;
     private final TeamTagService teamTagService;
@@ -44,7 +45,6 @@ public class TeamService {
     private final TeamMemberMappingService teamMemberMappingService;
     private final ExerciseHistoryService exerciseHistoryService;
     private final ExerciseTimeService exerciseTimeService;
-    private static final int FIRST = 1;
 
 
     public TeamService(TeamRepository teamRepository,
@@ -101,23 +101,6 @@ public class TeamService {
         List<TeamTag> tagList = teamTagService.getTeamTagList(tagIdList);
 
         teamTagMappingService.addTeamTagMappings(tagList, team);
-    }
-
-    //팀 삭제 기능
-    @Transactional
-    public void deleteTeam(MemberDTO memberDTO, Long teamId) {
-        Member member = memberService.getMemberEntity(memberDTO.id());
-
-        Team team = teamRepository.findById(teamId)
-                .orElseThrow(TeamNotFoundException::new);
-
-        team.validateIsLeader(member.getId()); //팀 리더인지 체크
-
-        teamMemberMappingService.deleteAllTeamMemberFromTeam(team); // 해당 팀에 대한 TeamMemberMapping 데이터 삭제
-
-        teamTagMappingService.deleteAllTeamTagMappingFromTeam(team); //해당 팀에 대한 TeamTagMapping 데이터 삭제
-
-        teamRepository.delete(team); //Team 삭제
     }
 
     //팀 조회 기능
@@ -316,23 +299,6 @@ public class TeamService {
         teamMemberMappingService.addTeamMember(team, member); // 매핑 정보 추가
     }
 
-    //멤버가 팀에서 탈퇴
-    @Transactional
-    public void withDrawTeam(MemberDTO memberDTO, Long teamId) {
-        Team team = teamRepository.findById(teamId)
-                .orElseThrow(TeamNotFoundException::new);
-
-        Member member = memberService.getMemberEntity(memberDTO.id());
-
-        if (team.validateIsLeader(member.getId())) { // 팀 리더가 탈퇴하는 요청인지 체크. 팀 리더는 팀 삭제만 가능. 탈퇴는 불가
-            throw new TeamLeaderCannotWithdrawException();
-        }
-
-        teamMemberMappingService.deleteTeamMember(team, member); //TeamMember 중간테이블에서 데이터 삭제
-
-        team.decreaseParticipantsByWithdraw(); //팀의 현재 참여인원 감소
-    }
-
     //팀 비밀번호 검사
     @Transactional(readOnly = true)
     public void checkPassword(Long teamId, CheckingPasswordRequest checkingPasswordRequest) {
@@ -362,14 +328,6 @@ public class TeamService {
                 .toList();
 
         return getSlice(myTeamList, pageable);
-    }
-
-    //회원탈퇴로 인해 해당 회원이 팀 리더인 팀 일괄 삭제
-    @Transactional
-    public void deleteTeamByTeamLeaderWithdraw(MemberDTO memberDTO) {
-        teamRepository.findByLeaderId(memberDTO.id())
-                .stream()
-                .forEach(team -> deleteTeam(memberDTO, team.getId()));
     }
 }
 
