@@ -43,18 +43,9 @@ public class TeamWithdrawService {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(TeamNotFoundException::new);
 
-        Member member = memberService.getMemberEntity(memberId);
-
-        if (!team.validateIsLeader(memberId)) //팀 리더인지 체크
-            throw new NotTeamLeaderException();
-
         //chattingService.deleteTeamChattingMessageAll(team)
 
-        teamMemberMappingService.deleteAllTeamMemberFromTeam(team); // 해당 팀에 대한 TeamMemberMapping 데이터 삭제
-
-        teamTagMappingService.deleteAllTeamTagMappingFromTeam(team); //해당 팀에 대한 TeamTagMapping 데이터 삭제
-
-        teamRepository.delete(team); //Team 삭제
+        teamService.deleteTeam(memberId, team);
     }
 
     //팀 탈퇴 기능
@@ -63,20 +54,12 @@ public class TeamWithdrawService {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(TeamNotFoundException::new);
 
-        Member member = memberService.getMemberEntity(memberId);
-
-        if (team.validateIsLeader(memberId)) { // 팀 리더가 탈퇴하는 요청인지 체크. 팀 리더는 팀 삭제만 가능. 탈퇴는 불가
-            throw new TeamLeaderCannotWithdrawException();
-        }
-
-        teamMemberMappingService.markDeprecated(team, member); //TeamMemberMapping 테이블에서 softDelete
-
-        team.decreaseParticipantsByWithdraw(); //팀의 현재 참여인원 감소
+        teamService.withdrawTeam(memberId, team);
     }
 
     //회원 탈퇴로 인한 팀 삭제 처리 및 팀 탈퇴 처리
     public void withdrawAllTeamsByMemberWithdraw(Long memberId) {
-        List<Team> teamList = teamRepository.findByLeaderId(memberId);
+        List<Team> teamList = teamService.getTeamListByLeaderId(memberId);
 
         deleteTeamByTeamLeaderWithdraw(teamList, memberId);
 
