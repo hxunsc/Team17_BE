@@ -50,8 +50,6 @@ public class ExerciseHistoryService {
         LocalDate adjustedToday = DateTimeUtil.getAdjustedCurrentDate();
         LocalDateTime startOfWeekWith3AM = DateTimeUtil.getStartOfWeek(adjustedToday);
         LocalDateTime endOfWeekWith3AM = DateTimeUtil.getEndOfWeek(adjustedToday);
-        System.out.println("주의 시작: " + startOfWeekWith3AM);
-        System.out.println("주의 끝: " + endOfWeekWith3AM);
 
         List<ExerciseHistory> weeklyExercises = exerciseHistoryRepository.findExerciseHistoriesForMemberOnDate(
             memberId, startOfWeekWith3AM, endOfWeekWith3AM);
@@ -66,8 +64,6 @@ public class ExerciseHistoryService {
         LocalDate adjustedToday = DateTimeUtil.getAdjustedCurrentDate();
         LocalDateTime startOfMonthWith3AM = DateTimeUtil.getStartOfMonth(adjustedToday);
         LocalDateTime endOfMonthWith3AM = DateTimeUtil.getEndOfMonth(adjustedToday);
-        System.out.println( "달의 시작: " + startOfMonthWith3AM);
-        System.out.println( "달의 끝: " + endOfMonthWith3AM);
 
         List<ExerciseHistory> monthlyExercises = exerciseHistoryRepository.findExerciseHistoriesForMemberOnDate(
             memberId, startOfMonthWith3AM, endOfMonthWith3AM);
