@@ -1,5 +1,6 @@
 package homeTry.team.service;
 
+import homeTry.common.constants.DateTimeUtil;
 import homeTry.exerciseList.service.ExerciseHistoryService;
 import homeTry.exerciseList.service.ExerciseTimeService;
 import homeTry.member.dto.MemberDTO;
@@ -258,10 +259,13 @@ public class TeamService {
 
     //멤버 리스트에서 랭킹을 매겨주는 기능
     private List<RankingDTO> getRankingList(List<Member> memberList, LocalDate date) {
-        List<RankingDTO> totalExerciseTimeList = new ArrayList<>();
-        if (date.isEqual(LocalDate.now())) // 오늘 조회인경우
+        List<RankingDTO> totalExerciseTimeList = new ArrayList<>(); //멤버들의 totalExerciseTime을 저장하는 리스트
+
+        LocalDate currentDate = DateTimeUtil.getAdjustedCurrentDate(); //현재 날짜값 받아옴
+
+        if (date.isEqual(currentDate)) // 오늘 조회인경우
             totalExerciseTimeList = getTotalExerciseTimeListOfToday(memberList);
-        if (!date.isEqual(LocalDate.now())) // 과거 조회인경우
+        if (!date.isEqual(currentDate)) // 과거 조회인경우
             totalExerciseTimeList = getTotalExerciseTimeListOfHistory(memberList, date);
 
         AtomicInteger rankCounter = new AtomicInteger(FIRST);
