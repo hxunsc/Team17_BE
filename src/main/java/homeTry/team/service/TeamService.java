@@ -1,6 +1,5 @@
 package homeTry.team.service;
 
-import homeTry.chatting.service.ChattingService;
 import homeTry.common.constants.DateTimeUtil;
 import homeTry.exerciseList.service.ExerciseHistoryService;
 import homeTry.exerciseList.service.ExerciseTimeService;
@@ -46,7 +45,6 @@ public class TeamService {
     private final TeamMemberMappingService teamMemberMappingService;
     private final ExerciseHistoryService exerciseHistoryService;
     private final ExerciseTimeService exerciseTimeService;
-    private final ChattingService chattingService;
 
 
     public TeamService(TeamRepository teamRepository,
@@ -55,8 +53,7 @@ public class TeamService {
                        TeamTagMappingService teamTagMappingService,
                        TeamMemberMappingService teamMemberMappingService,
                        ExerciseHistoryService exerciseHistoryService,
-                       ExerciseTimeService exerciseTimeService,
-                       ChattingService chattingService) {
+                       ExerciseTimeService exerciseTimeService) {
         this.teamRepository = teamRepository;
         this.memberService = memberService;
         this.teamTagService = teamTagService;
@@ -64,7 +61,6 @@ public class TeamService {
         this.teamMemberMappingService = teamMemberMappingService;
         this.exerciseHistoryService = exerciseHistoryService;
         this.exerciseTimeService = exerciseTimeService;
-        this.chattingService = chattingService;
     }
 
     //팀 추가 기능
@@ -105,26 +101,6 @@ public class TeamService {
         List<TeamTag> tagList = teamTagService.getTeamTagList(tagIdList);
 
         teamTagMappingService.addTeamTagMappings(tagList, team);
-    }
-
-    //팀 삭제 기능
-    @Transactional
-    public void deleteTeam(Long memberId, Long teamId) {
-        Member member = memberService.getMemberEntity(memberId);
-
-        Team team = teamRepository.findById(teamId)
-                .orElseThrow(TeamNotFoundException::new);
-
-        if (!team.validateIsLeader(memberId)) //팀 리더인지 체크
-            throw new NotTeamLeaderException();
-
-        teamMemberMappingService.deleteAllTeamMemberFromTeam(team); // 해당 팀에 대한 TeamMemberMapping 데이터 삭제
-
-        teamTagMappingService.deleteAllTeamTagMappingFromTeam(team); //해당 팀에 대한 TeamTagMapping 데이터 삭제
-
-        // chattingService.deleteTeamChattingMessageAll(team); 해당 팀에 대한 모든 채팅 기록 삭제
-
-        teamRepository.delete(team); //Team 삭제
     }
 
     //팀 조회 기능
@@ -323,23 +299,6 @@ public class TeamService {
         teamMemberMappingService.addTeamMember(team, member); // 매핑 정보 추가
     }
 
-    //멤버가 팀에서 탈퇴
-    @Transactional
-    public void withDrawTeam(Long memberId, Long teamId) {
-        Team team = teamRepository.findById(teamId)
-                .orElseThrow(TeamNotFoundException::new);
-
-        Member member = memberService.getMemberEntity(memberId);
-
-        if (team.validateIsLeader(memberId)) { // 팀 리더가 탈퇴하는 요청인지 체크. 팀 리더는 팀 삭제만 가능. 탈퇴는 불가
-            throw new TeamLeaderCannotWithdrawException();
-        }
-
-        teamMemberMappingService.markDeprecated(team, member); //TeamMemberMapping 테이블에서 softDelete
-
-        team.decreaseParticipantsByWithdraw(); //팀의 현재 참여인원 감소
-    }
-
     //팀 비밀번호 검사
     @Transactional(readOnly = true)
     public void checkPassword(Long teamId, CheckingPasswordRequest checkingPasswordRequest) {
@@ -369,31 +328,6 @@ public class TeamService {
                 .toList();
 
         return getSlice(myTeamList, pageable);
-    }
-
-    //회원 탈퇴로 인한 팀 삭제 처리 및 팀 탈퇴 처리
-    @Transactional
-    public void withdrawAllTeamsByMemberWithdraw(Long memberId) {
-        deleteTeamByTeamLeaderWithdraw(memberId); // 회원 탈퇴한 회원이 리더인 팀 일괄 삭제
-        withDrawAllTeams(memberId); // 회원 탈퇴한 회원이 속해있는 팀의 TeamMemberMapping 데이터 일괄 소프트 삭제
-
-    }
-
-    //회원탈퇴로 인한 해당 회원이 팀의 멤버로 속해있는 TeamMemberMapping에 대해 softDelete 적용
-    private void withDrawAllTeams(Long memberId) {
-        Member member = memberService.getMemberEntity(memberId);
-
-        teamMemberMappingService.getTeamListByMember(member)
-                .stream()
-                .forEach(team -> withDrawTeam(memberId, team.getId()));
-
-    }
-
-    //회원탈퇴로 인해 해당 회원이 팀 리더인 팀 일괄 삭제
-    private void deleteTeamByTeamLeaderWithdraw(Long memberId) {
-        teamRepository.findByLeaderId(memberId)
-                .stream()
-                .forEach(team -> deleteTeam(memberId, team.getId()));
     }
 }
 
