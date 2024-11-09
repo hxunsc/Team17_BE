@@ -6,7 +6,6 @@ import homeTry.product.dto.request.ProductRequest;
 import homeTry.product.dto.response.ProductAdminResponse;
 import homeTry.product.service.AdminProductService;
 import homeTry.tag.productTag.dto.ProductTagDto;
-import homeTry.tag.productTag.dto.response.ProductTagResponse;
 import homeTry.tag.productTag.service.ProductTagService;
 import java.util.List;
 import org.springframework.data.domain.Page;
