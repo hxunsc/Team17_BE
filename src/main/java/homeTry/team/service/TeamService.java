@@ -363,6 +363,14 @@ public class TeamService {
 
         return getSlice(myTeamList, pageable);
     }
+
+    //회원탈퇴로 인해 해당 회원이 팀 리더인 팀 일괄 삭제
+    @Transactional
+    public void deleteTeamByTeamLeaderWithdraw(MemberDTO memberDTO) {
+        teamRepository.findByLeaderId(memberDTO.id())
+                .stream()
+                .forEach(team -> deleteTeam(memberDTO, team.getId()));
+    }
 }
 
 
