@@ -9,8 +9,8 @@ public enum CommonErrorType implements ErrorType {
     MISSING_PATH_VARIABLE_EXCEPTION("Common400_004", HttpStatus.BAD_REQUEST, "PathVariable이 누락됐습니다."),
     MISSING_REQUEST_PARAM_EXCEPTION("Common400_005", HttpStatus.BAD_REQUEST, "RequestParameter가 누락됐습니다."),
     CONSTRAINT_VIOLATION_EXCEPTION("Common400_006", HttpStatus.BAD_REQUEST, "ConstraintViolationException 발생"),
-    HTTP_REQUEST_METHOD_NOT_SUPPORT_EXCEPTION("Common400_007", HttpStatus.BAD_REQUEST, "HttpRequestMethodNotSupportedException 발생"),
-    METHOD_ARGUMENT_TYPE_MISMATCH_EXCEPTION("Common400_008", HttpStatus.BAD_REQUEST, "날짜를 LocalDate타입으로 변환이 실패되었습니다. 올바른 날짜를 입력해주세요 ex)20240715"),
+    HTTP_REQUEST_METHOD_NOT_SUPPORT_EXCEPTION("Common400_007", HttpStatus.BAD_REQUEST, "해당 endPoint로는 요청하신 타입의 Http 메소드를 지원하지 않습니다."),
+    METHOD_ARGUMENT_TYPE_MISMATCH_EXCEPTION("Common400_008", HttpStatus.BAD_REQUEST, "API에 적힌 쿼리 파라미터에 맞는 형식의 데이터인지, 데이터가 누락되지 않았는지 확인해주세요"),
     HANDLER_METHOD_VALIDATION_EXCEPTION("Common400_009", HttpStatus.BAD_REQUEST, "요청값에 대한 유효성 검사에 실패하였습니다(RequestParam, PathVariable");
 
     private String errorCode;
