@@ -1,5 +1,6 @@
 package homeTry.team.service;
 
+import homeTry.chatting.service.ChattingService;
 import homeTry.common.constants.DateTimeUtil;
 import homeTry.exerciseList.service.ExerciseHistoryService;
 import homeTry.exerciseList.service.ExerciseTimeService;
@@ -18,7 +19,6 @@ import homeTry.team.dto.response.TagListResponse;
 import homeTry.team.dto.response.TeamResponse;
 import homeTry.team.exception.*;
 import homeTry.team.model.entity.Team;
-import homeTry.team.model.entity.TeamMemberMapping;
 import homeTry.team.model.vo.Name;
 import homeTry.team.repository.TeamRepository;
 import org.springframework.data.domain.*;
@@ -37,6 +37,8 @@ public class TeamService {
 
     private static final int DEFAULT_PARTICIPANTS = 1;
     private static final int DEFAULT_RANKING = 0;
+    private static final int FIRST = 1;
+
     private final TeamRepository teamRepository;
     private final MemberService memberService;
     private final TeamTagService teamTagService;
@@ -44,7 +46,7 @@ public class TeamService {
     private final TeamMemberMappingService teamMemberMappingService;
     private final ExerciseHistoryService exerciseHistoryService;
     private final ExerciseTimeService exerciseTimeService;
-    private static final int FIRST = 1;
+    private final ChattingService chattingService;
 
 
     public TeamService(TeamRepository teamRepository,
@@ -53,7 +55,8 @@ public class TeamService {
                        TeamTagMappingService teamTagMappingService,
                        TeamMemberMappingService teamMemberMappingService,
                        ExerciseHistoryService exerciseHistoryService,
-                       ExerciseTimeService exerciseTimeService) {
+                       ExerciseTimeService exerciseTimeService,
+                       ChattingService chattingService) {
         this.teamRepository = teamRepository;
         this.memberService = memberService;
         this.teamTagService = teamTagService;
@@ -61,6 +64,7 @@ public class TeamService {
         this.teamMemberMappingService = teamMemberMappingService;
         this.exerciseHistoryService = exerciseHistoryService;
         this.exerciseTimeService = exerciseTimeService;
+        this.chattingService = chattingService;
     }
 
     //팀 추가 기능
@@ -105,18 +109,20 @@ public class TeamService {
 
     //팀 삭제 기능
     @Transactional
-    public void deleteTeam(MemberDTO memberDTO, Long teamId) {
-        Member member = memberService.getMemberEntity(memberDTO.id());
+    public void deleteTeam(Long memberId, Long teamId) {
+        Member member = memberService.getMemberEntity(memberId);
 
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(TeamNotFoundException::new);
 
-        if (!team.validateIsLeader(member.getId())) //팀 리더인지 체크
+        if (!team.validateIsLeader(memberId)) //팀 리더인지 체크
             throw new NotTeamLeaderException();
 
         teamMemberMappingService.deleteAllTeamMemberFromTeam(team); // 해당 팀에 대한 TeamMemberMapping 데이터 삭제
 
         teamTagMappingService.deleteAllTeamTagMappingFromTeam(team); //해당 팀에 대한 TeamTagMapping 데이터 삭제
+
+        // chattingService.deleteTeamChattingMessageAll(team); 해당 팀에 대한 모든 채팅 기록 삭제
 
         teamRepository.delete(team); //Team 삭제
     }
@@ -319,13 +325,13 @@ public class TeamService {
 
     //멤버가 팀에서 탈퇴
     @Transactional
-    public void withDrawTeam(MemberDTO memberDTO, Long teamId) {
+    public void withDrawTeam(Long memberId, Long teamId) {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(TeamNotFoundException::new);
 
-        Member member = memberService.getMemberEntity(memberDTO.id());
+        Member member = memberService.getMemberEntity(memberId);
 
-        if (team.validateIsLeader(member.getId())) { // 팀 리더가 탈퇴하는 요청인지 체크. 팀 리더는 팀 삭제만 가능. 탈퇴는 불가
+        if (team.validateIsLeader(memberId)) { // 팀 리더가 탈퇴하는 요청인지 체크. 팀 리더는 팀 삭제만 가능. 탈퇴는 불가
             throw new TeamLeaderCannotWithdrawException();
         }
 
@@ -365,12 +371,29 @@ public class TeamService {
         return getSlice(myTeamList, pageable);
     }
 
-    //회원탈퇴로 인해 해당 회원이 팀 리더인 팀 일괄 삭제
+    //회원 탈퇴로 인한 팀 삭제 처리 및 팀 탈퇴 처리
     @Transactional
-    public void deleteTeamByTeamLeaderWithdraw(MemberDTO memberDTO) {
-        teamRepository.findByLeaderId(memberDTO.id())
+    public void withdrawAllTeamsByMemberWithdraw(Long memberId) {
+        deleteTeamByTeamLeaderWithdraw(memberId); // 회원 탈퇴한 회원이 리더인 팀 일괄 삭제
+        withDrawAllTeams(memberId); // 회원 탈퇴한 회원이 속해있는 팀의 TeamMemberMapping 데이터 일괄 소프트 삭제
+
+    }
+
+    //회원탈퇴로 인한 해당 회원이 팀의 멤버로 속해있는 TeamMemberMapping에 대해 softDelete 적용
+    private void withDrawAllTeams(Long memberId) {
+        Member member = memberService.getMemberEntity(memberId);
+
+        teamMemberMappingService.getTeamListByMember(member)
                 .stream()
-                .forEach(team -> deleteTeam(memberDTO, team.getId()));
+                .forEach(team -> withDrawTeam(memberId, team.getId()));
+
+    }
+
+    //회원탈퇴로 인해 해당 회원이 팀 리더인 팀 일괄 삭제
+    private void deleteTeamByTeamLeaderWithdraw(Long memberId) {
+        teamRepository.findByLeaderId(memberId)
+                .stream()
+                .forEach(team -> deleteTeam(memberId, team.getId()));
     }
 }
 
