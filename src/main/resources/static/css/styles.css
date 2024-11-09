@@ -59,3 +59,12 @@ tr:nth-child(even) {
 tr:hover {
     background-color: #e7f3ff; /* 행 호버 시 색상 */
 }
+
+.centered-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    flex-direction: column;
+    gap: 30px;
+}
