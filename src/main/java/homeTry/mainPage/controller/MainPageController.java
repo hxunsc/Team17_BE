@@ -29,7 +29,7 @@ public class MainPageController {
     @GetMapping
     public ResponseEntity<MainPageResponse> mainPage(
             @RequestParam(name = "date") @DateValid @DateTimeFormat(pattern = "yyyyMMdd") LocalDate date,
-            @PageableDefault(size = 15, sort = "createdAt", direction = Sort.Direction.ASC) Pageable pageable,
+            @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.ASC) Pageable pageable,
             @LoginMember MemberDTO memberDTO) {
 
         return new ResponseEntity<>(mainPageService.getMainPage(date, memberDTO.id(), pageable),
