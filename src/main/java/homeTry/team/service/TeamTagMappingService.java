@@ -20,8 +20,10 @@ public class TeamTagMappingService {
     //팀에 해당하는 태그를 TeamTagMapping 에 추가
     //TeamService의 addTeam 메소드에서 하나의 트랜잭션으로 묶여있음
     public void addTeamTagMappings(List<TeamTag> tagList, Team team) {
-        tagList.forEach(
-                tag -> teamTagMappingRepository.save(new TeamTagMapping(tag, team)));
+        tagList
+                .forEach(
+                        tag -> teamTagMappingRepository.save(new TeamTagMapping(tag, team))
+                );
     }
 
     //팀과 연관된 teamTagMapping 을 반환
