@@ -13,10 +13,10 @@ values ('성별', '여성', false),
        ('운동강도', '약', false),
        ('운동강도', '자유', false);
 
-insert into member (email, nickname, exercise_attendance_date, created_at)
-values ('test1@naver.com', 'test1', '0', '2024-10-04T12:30:00'),
-       ('test2@naver.com', 'test2', '0', '2024-10-04T12:40:00'),
-       ('test3@naver.com', 'test3', '0', '2024-10-04T12:40:00');
+insert into member (email, nickname, exercise_attendance_date, created_at, is_deprecated)
+values ('test1@naver.com', 'test1', '0', '2024-10-04T12:30:00', false),
+       ('test2@naver.com', 'test2', '0', '2024-10-04T12:40:00', false),
+       ('test3@naver.com', 'test3', '0', '2024-10-04T12:40:00', false);
 
 insert into team (team_name, team_description, leader_id, max_participants, current_participants,
                   password)
