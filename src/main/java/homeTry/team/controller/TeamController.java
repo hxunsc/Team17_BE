@@ -44,7 +44,7 @@ public class TeamController {
     @DeleteMapping("/{teamId}")
     public ResponseEntity<Void> deleteTeam(@LoginMember MemberDTO memberDTO,
                                            @PathVariable("teamId") Long teamID) {
-        teamService.deleteTeam(memberDTO, teamID);
+        teamService.deleteTeam(memberDTO.id(), teamID);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -92,7 +92,7 @@ public class TeamController {
     public ResponseEntity<Void> withdrawTeam(
             @LoginMember MemberDTO memberDTO,
             @PathVariable("teamId") Long teamId) {
-        teamService.withDrawTeam(memberDTO, teamId);
+        teamService.withDrawTeam(memberDTO.id(), teamId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
