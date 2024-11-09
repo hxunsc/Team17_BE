@@ -8,14 +8,12 @@ import jakarta.persistence.*;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Entity
 @Table(
     name = "exercise_time",
     indexes = {
-        @Index(name = "idx_exercise_time_exercise_start_time", columnList = "exercise_id, startTime"),
-        @Index(name = "idx_exercise_time_exercise_id", columnList = "exercise_id")
+        @Index(name = "idx_exercise_time_exercise_start_time", columnList = "exercise_id, startTime")
     }
 )
 public class ExerciseTime extends BaseEntity {
