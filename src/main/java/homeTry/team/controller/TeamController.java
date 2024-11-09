@@ -100,12 +100,14 @@ public class TeamController {
     //비밀번호 일치 검사 api
     @PostMapping("/checking/{teamId}")
     public ResponseEntity<Void> verifyPassword(
+            @LoginMember MemberDTO memberDTO,
             @PathVariable("teamId") Long teamId,
             @RequestBody @Valid CheckingPasswordRequest checkingPasswordRequest) {
         teamService.checkPassword(teamId, checkingPasswordRequest);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    //내가 가입한 팀 조회
     @GetMapping("/joined")
     public ResponseEntity<Slice<TeamResponse>> getJoinedTeam(
             @LoginMember MemberDTO memberDTO,
