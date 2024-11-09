@@ -1,6 +1,6 @@
 package homeTry.product.model.entity;
 
-import homeTry.common.entity.BaseEntity;
+import homeTry.common.entity.SoftDeletableEntity;
 import homeTry.product.model.vo.*;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
@@ -11,7 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class Product extends BaseEntity {
+public class Product extends SoftDeletableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

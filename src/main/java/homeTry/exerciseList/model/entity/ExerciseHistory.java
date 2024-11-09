@@ -1,6 +1,7 @@
 package homeTry.exerciseList.model.entity;
 
 import homeTry.common.converter.DurationToLongConverter;
+import homeTry.common.entity.BaseEntity;
 import jakarta.persistence.*;
 
 import java.time.Duration;
@@ -10,10 +11,10 @@ import java.time.LocalDateTime;
 @Table(
     name = "exercise_history",
     indexes = {
-        @Index(name = "idx_exercise_history_exercise_created", columnList = "exercise_id, created_at")
+        @Index(name = "idx_exercise_history_exercise_created", columnList = "exercise_id, exercised_at")
     }
 )
-public class ExerciseHistory {
+public class ExerciseHistory extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,16 +30,16 @@ public class ExerciseHistory {
 
     // 운동이 실제로 진행된 날짜
     @Column(nullable = false)
-    private LocalDateTime createdAt;
+    private LocalDateTime exercisedAt;
 
     protected ExerciseHistory() {
 
     }
 
-    public ExerciseHistory(Exercise exercise, Duration exerciseHistoryTime, LocalDateTime createdAt) {
+    public ExerciseHistory(Exercise exercise, Duration exerciseHistoryTime, LocalDateTime exercisedAt) {
         this.exercise = exercise;
         this.exerciseHistoryTime = exerciseHistoryTime;
-        this.createdAt = createdAt;
+        this.exercisedAt = exercisedAt;
     }
 
     public Long getExerciseHistoryId() {
@@ -53,8 +54,8 @@ public class ExerciseHistory {
         return exerciseHistoryTime;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public LocalDateTime getExercisedAt() {
+        return exercisedAt;
     }
 
 }
