@@ -2,6 +2,7 @@ package homeTry.common.config;
 
 import homeTry.common.auth.jwt.JwtAuth;
 import homeTry.common.auth.LoginMemberArgumentResolver;
+import homeTry.common.interceptor.AdminInterceptor;
 import homeTry.common.interceptor.JwtInterceptor;
 import homeTry.member.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +20,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     private final MemberService memberService;
     private final JwtInterceptor jwtInterceptor;
+    private final AdminInterceptor adminInterceptor;
     private final JwtAuth jwtAuth;
 
     @Autowired
-    WebMvcConfig(MemberService memberService, JwtInterceptor jwtInterceptor, JwtAuth jwtAuth) {
+    WebMvcConfig(MemberService memberService, JwtInterceptor jwtInterceptor, AdminInterceptor adminInterceptor, JwtAuth jwtAuth) {
         this.memberService = memberService;
         this.jwtInterceptor = jwtInterceptor;
+        this.adminInterceptor = adminInterceptor;
         this.jwtAuth = jwtAuth;
     }
 
@@ -33,8 +36,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/api/oauth/**");
+                .excludePathPatterns("/api/oauth/**", "/admin/**");
         //토큰 받는 경로 지정
+
+        registry.addInterceptor(adminInterceptor)
+                .addPathPatterns("/admin/**");
     }
 
     @Override

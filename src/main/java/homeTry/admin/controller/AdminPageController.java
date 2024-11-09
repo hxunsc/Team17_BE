@@ -25,7 +25,7 @@ public class AdminPageController {
         return "adminPage";
     }
 
-    @PostMapping("/admin/promote")
+    @PostMapping("/promote")
     public String promoteToAdmin(
             @ModelAttribute AdminCodeRequest request,
             Model model,
