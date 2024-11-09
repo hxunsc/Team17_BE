@@ -18,7 +18,7 @@ public interface ExerciseTimeRepository extends JpaRepository<ExerciseTime, Long
         "JOIN FETCH et.exercise e " +
         "WHERE e.member.id = :memberId " +
         "AND et.startTime BETWEEN :startTime AND :endTime " +
-        "AND e.deprecated = false")
+        "AND e.isDeprecated = false")
     List<ExerciseTime> findValidExerciseTimesForMemberOnDate(
         @Param("memberId") Long memberId,
         @Param("startTime") LocalDateTime startTime,
