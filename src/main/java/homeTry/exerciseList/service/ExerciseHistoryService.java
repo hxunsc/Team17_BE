@@ -26,7 +26,8 @@ public class ExerciseHistoryService {
     // 운동 저장
     @Transactional
     public void saveExerciseHistory(Exercise exercise, ExerciseTime exerciseTime) {
-        ExerciseHistory history = new ExerciseHistory(exercise, exerciseTime.getExerciseTime());
+        ExerciseHistory history = new ExerciseHistory(exercise, exerciseTime.getExerciseTime(),
+            exerciseTime.getStartTime());
         exerciseHistoryRepository.save(history);
     }
 
