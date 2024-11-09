@@ -56,11 +56,11 @@ insert into exercise_time (start_time, exercise_time, is_active, exercise_id, is
 values ('2024-10-10 10:10:00', 6600, false, 1, false),
        ('2024-10-10 10:10:00', 5400, false, 3, false);
 
-insert into exercise_history (exercise_id, created_at, exercise_history_time, is_deprecated)
-values (1, '2024-10-09 03:00:10', 5400, false),
-       (2, '2024-10-08 03:00:20', 3600, false),
-       (3, '2024-10-09 03:00:10', 3600, false),
-       (4, '2024-10-08 03:00:20', 5400, false);
+insert into exercise_history (exercise_id, created_at, exercise_history_time)
+values (1, '2024-10-09 03:00:10', 5400),
+       (2, '2024-10-08 03:00:20', 3600),
+       (3, '2024-10-09 03:00:10', 3600),
+       (4, '2024-10-08 03:00:20', 5400);
 
 insert into product (image_url, product_url, name, price, store_name, view_count, is_deprecated)
 values ('https://tinyurl.com/25ntsq9k', 'https://tinyurl.com/27sk7wrj', '런닝머신', 240000, 'coupang', 15, false),
