@@ -1,6 +1,6 @@
 package homeTry.product.model.entity;
 
-import homeTry.common.entity.BaseEntity;
+import homeTry.common.entity.SoftDeletableEntity;
 import homeTry.tag.productTag.model.entity.ProductTag;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -18,7 +18,7 @@ import jakarta.persistence.Table;
         @Index(name = "idx_product_tag_product_id", columnList = "product_tag_id, product_id")
     }
 )
-public class ProductTagMapping extends BaseEntity {
+public class ProductTagMapping extends SoftDeletableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
