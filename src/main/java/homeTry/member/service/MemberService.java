@@ -129,6 +129,5 @@ public class MemberService {
         member.revokeExerciseAttendanceDate();
         member.revokeKakaoAccessToken();
         member.demoteToUser();
-        member.markAsDeprecated();
     }
 }
