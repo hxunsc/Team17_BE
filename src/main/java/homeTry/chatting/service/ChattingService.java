@@ -73,5 +73,12 @@ public class ChattingService {
                 .map(ChattingMessageResponse::from);
     }
 
+    @Transactional
+    public void deleteChattingMessageAll(Long teamId) {
+        Team team = teamService.getTeamEntity(teamId);
+
+        chattingRepository.deleteAllByTeamMemberMappingTeam(team);
+    }
+
 
 }

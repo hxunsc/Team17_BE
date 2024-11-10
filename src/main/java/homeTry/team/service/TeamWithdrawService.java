@@ -43,12 +43,13 @@ public class TeamWithdrawService {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(TeamNotFoundException::new);
 
+
         Member member = memberService.getMemberEntity(memberId);
 
         if (!team.validateIsLeader(memberId)) //팀 리더인지 체크
             throw new NotTeamLeaderException();
 
-        //chattingService.deleteTeamChattingMessageAll(team)
+//        chattingService.deleteTeamChattingMessageAll(team);
 
         teamMemberMappingService.deleteAllTeamMemberFromTeam(team); // 해당 팀에 대한 TeamMemberMapping 데이터 삭제
 
