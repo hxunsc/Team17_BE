@@ -58,10 +58,11 @@ public class ProductService {
             throw new InvalidMemberException();
         }
 
-        Product product = productRepository.findById(productId)
-            .orElseThrow(ProductNotFoundException::new);
+        if (!productRepository.existsById(productId)) {
+            throw new ProductNotFoundException();
+        }
 
-        product.incrementViewCount(); // 조회수 증가
+        productRepository.incrementViewCount(productId); // 조회수 증가 쿼리 호출
     }
 
 }

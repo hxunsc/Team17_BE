@@ -1,7 +1,5 @@
 package homeTry.tag.controller;
 
-import homeTry.common.annotation.LoginMember;
-import homeTry.member.dto.MemberDTO;
 import homeTry.tag.productTag.dto.ProductTagDto;
 import homeTry.tag.productTag.dto.request.ProductTagRequest;
 import homeTry.tag.productTag.service.ProductTagService;
@@ -27,17 +25,15 @@ public class TagPageController {
     }
 
     @GetMapping("/product")
-    public String showProductTagList(Model model,
-                                     @LoginMember MemberDTO memberDTO) {
-        List<ProductTagDto> productTags = productTagService.getProductTagResponse(memberDTO).productTags();
+    public String showProductTagList(Model model) {
+        List<ProductTagDto> productTags = productTagService.getProductTagResponse().productTags();
         model.addAttribute("productTags", productTags);
         return "tag/ProductTags";
     }
 
     @GetMapping("/team")
-    public String showTeamTagList(Model model,
-                                  @LoginMember MemberDTO memberDTO) {
-        List<TeamTagDTO> teamTags = teamTagService.getTeamTagResponse(memberDTO).teamTags();
+    public String showTeamTagList(Model model) {
+        List<TeamTagDTO> teamTags = teamTagService.getTeamTagResponse().teamTags();
         model.addAttribute("teamTags", teamTags);
         return "tag/TeamTags";
     }
@@ -49,9 +45,8 @@ public class TagPageController {
 
     @PostMapping("/product/save")
     public String saveProductTag(
-            @ModelAttribute ProductTagRequest productTagRequest,
-            @LoginMember MemberDTO memberDTO) {
-        productTagService.addProductTag(productTagRequest, memberDTO);
+            @ModelAttribute ProductTagRequest productTagRequest) {
+        productTagService.addProductTag(productTagRequest);
         return "redirect:/admin/tag/product"; // 상품 태그 목록 페이지로 리다이렉트
     }
 
@@ -62,23 +57,20 @@ public class TagPageController {
 
     @PostMapping("/team/save")
     public String saveTeamTag(
-            @ModelAttribute TeamTagRequest teamTagRequest,
-            @LoginMember MemberDTO memberDTO) {
-        teamTagService.addTeamTag(teamTagRequest, memberDTO);
+            @ModelAttribute TeamTagRequest teamTagRequest) {
+        teamTagService.addTeamTag(teamTagRequest);
         return "redirect:/admin/tag/team";
     }
 
     @PostMapping("/product/delete/{id}")
-    public String deleteProductTag(@PathVariable Long id,
-                                   @LoginMember MemberDTO memberDTO) {
-        productTagService.deleteProductTag(id, memberDTO);
+    public String deleteProductTag(@PathVariable Long id) {
+        productTagService.deleteProductTag(id);
         return "redirect:/admin/tag/product";
     }
 
     @PostMapping("/team/delete/{id}")
-    public String deleteTeamTag(@PathVariable Long id,
-                                @LoginMember MemberDTO memberDTO) {
-        teamTagService.deleteTeamTag(id, memberDTO);
+    public String deleteTeamTag(@PathVariable Long id) {
+        teamTagService.deleteTeamTag(id);
         return "redirect:/admin/tag/team";
     }
 

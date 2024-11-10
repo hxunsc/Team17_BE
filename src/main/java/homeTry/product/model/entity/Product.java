@@ -81,8 +81,4 @@ public class Product extends SoftDeletableEntity {
         return viewCount;
     }
 
-    public void incrementViewCount() {
-        this.viewCount++;
-    }
-
 }

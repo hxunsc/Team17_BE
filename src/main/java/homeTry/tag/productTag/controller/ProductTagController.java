@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import homeTry.tag.productTag.dto.request.ProductTagRequest;
 import homeTry.tag.productTag.dto.response.ProductTagResponse;
-import homeTry.common.annotation.LoginMember;
-import homeTry.member.dto.MemberDTO;
 
 @RestController
 @RequestMapping("api/admin/productTag")
@@ -27,27 +25,23 @@ public class ProductTagController {
     }
 
     @GetMapping
-    public ResponseEntity<ProductTagResponse> getProductTagList(
-            @LoginMember MemberDTO memberDTO
-    ) {
-        return new ResponseEntity<>(productTagService.getProductTagResponse(memberDTO), HttpStatus.OK);
+    public ResponseEntity<ProductTagResponse> getProductTagList() {
+        return new ResponseEntity<>(productTagService.getProductTagResponse(), HttpStatus.OK);
     }
     
     @PostMapping
     public ResponseEntity<Void> createProductTag(
-            @RequestBody ProductTagRequest productTagRequest,
-            @LoginMember MemberDTO memberDTO
+            @RequestBody ProductTagRequest productTagRequest
         ) {
-        productTagService.addProductTag(productTagRequest, memberDTO);
+        productTagService.addProductTag(productTagRequest);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{productTagId}")
     public ResponseEntity<Void> deleteProductTag(
-            @PathVariable Long productTagId,
-            @LoginMember MemberDTO memberDTO
+            @PathVariable Long productTagId
     ) {
-        productTagService.deleteProductTag(productTagId, memberDTO);
+        productTagService.deleteProductTag(productTagId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

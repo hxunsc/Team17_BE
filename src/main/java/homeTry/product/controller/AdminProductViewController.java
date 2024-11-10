@@ -1,7 +1,5 @@
 package homeTry.product.controller;
 
-import homeTry.common.annotation.LoginMember;
-import homeTry.member.dto.MemberDTO;
 import homeTry.product.dto.request.ProductRequest;
 import homeTry.product.dto.response.ProductAdminResponse;
 import homeTry.product.service.AdminProductService;
@@ -32,8 +30,8 @@ public class AdminProductViewController {
 
     // 상품 리스트
     @GetMapping
-    public String getProducts(Model model, Pageable pageable, @LoginMember MemberDTO memberDTO) {
-        Page<ProductAdminResponse> products = adminProductService.getProducts(pageable, memberDTO);
+    public String getProducts(Model model, Pageable pageable) {
+        Page<ProductAdminResponse> products = adminProductService.getProducts(pageable);
         model.addAttribute("products", products);
         return "product/productList";
     }
@@ -49,15 +47,15 @@ public class AdminProductViewController {
 
     // 상품 추가
     @PostMapping("/add")
-    public String addProduct(@ModelAttribute ProductRequest productRequest, @LoginMember MemberDTO memberDTO) {
-        adminProductService.addProduct(productRequest, memberDTO);
+    public String addProduct(@ModelAttribute ProductRequest productRequest) {
+        adminProductService.addProduct(productRequest);
         return "redirect:/admin/product";
     }
 
     // 상품 삭제
     @PostMapping("/delete/{productId}")
-    public String deleteProduct(@PathVariable Long productId, @LoginMember MemberDTO memberDTO) {
-        adminProductService.deleteProduct(productId, memberDTO);
+    public String deleteProduct(@PathVariable Long productId) {
+        adminProductService.deleteProduct(productId);
         return "redirect:/admin/product";
     }
 
