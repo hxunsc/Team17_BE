@@ -56,27 +56,4 @@ public class TeamWithdrawService {
 
         teamService.withdrawTeam(memberId, team);
     }
-
-    //회원 탈퇴로 인한 팀 삭제 처리 및 팀 탈퇴 처리
-    public void withdrawAllTeamsByMemberWithdraw(Long memberId) {
-        List<Team> teamList = teamService.getTeamListByLeaderId(memberId);
-
-        deleteTeamByTeamLeaderWithdraw(teamList, memberId);
-
-        withDrawAllTeams(teamList, memberId);
-    }
-
-    //회원탈퇴로 인한 해당 회원이 팀의 멤버로 속해있는 TeamMemberMapping에 대해 softDelete 적용
-    private void withDrawAllTeams(List<Team> teamList, Long memberId) {
-        teamList.forEach(
-                team -> withdrawTeam(memberId, team.getId())
-        );
-    }
-
-    //회원탈퇴로 인해 해당 회원이 팀 리더인 팀 일괄 삭제
-    private void deleteTeamByTeamLeaderWithdraw(List<Team> teamList, Long memberId) {
-        teamList.forEach(
-                team -> deleteTeam(memberId, team.getId())
-        );
-    }
 }
