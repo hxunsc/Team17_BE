@@ -7,7 +7,8 @@ public enum MemberErrorType implements ErrorType {
 
     MEMBER_NOT_FOUND_EXCEPTION("Member400_001", HttpStatus.BAD_REQUEST, "유저를 찾을 수 없습니다."),
     BAD_ARGUMENT_EXCEPTION("Member400_002", HttpStatus.BAD_REQUEST,
-            "올바르지 않은 회원 정보 입니다"), //동적 에러 메시지
+            "올바르지 않은 회원 정보 입니다"),
+    INACTIVATED_MEMBER_EXCEPTION("Member400_003", HttpStatus.BAD_REQUEST, "비활성화 된 회원입니다."),
     LOGIN_FAILED_EXCEPTION("Member401_001", HttpStatus.UNAUTHORIZED, "로그인에 실패하였습니다."),
     REGISTER_EMAIL_CONFLICT_EXCEPTION("Member409_001", HttpStatus.CONFLICT, "이미 존재하는 이메일입니다."),
 
@@ -15,6 +16,7 @@ public enum MemberErrorType implements ErrorType {
             "서버 Member DB에 에러가 발생하였습니다"),
     UNKNOWN_FATAL_EXCEPTION("Member500_002", HttpStatus.INTERNAL_SERVER_ERROR,
             "서버 Member 기능에 예상치 못한 에러가 발생하였습니다");
+
 
     private final String errorCode;
     private final HttpStatus httpStatus;
