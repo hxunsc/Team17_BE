@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import homeTry.tag.teamTag.dto.request.TeamTagRequest;
 import homeTry.tag.teamTag.dto.response.TeamTagResponse;
-import homeTry.common.annotation.LoginMember;
-import homeTry.member.dto.MemberDTO;
 
 @RestController
 @RequestMapping("/api/admin/teamTag")
@@ -27,27 +25,23 @@ public class TeamTagController {
     }
 
     @GetMapping
-    public ResponseEntity<TeamTagResponse> getTeamTagList(
-            @LoginMember MemberDTO memberDTO
-    ) {
-        return new ResponseEntity<>(teamTagService.getTeamTagResponse(memberDTO), HttpStatus.OK);
+    public ResponseEntity<TeamTagResponse> getTeamTagList() {
+        return new ResponseEntity<>(teamTagService.getTeamTagResponse(), HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<Void> createTeamTag(
-            @RequestBody TeamTagRequest teamTagRequest,
-            @LoginMember MemberDTO memberDTO
+            @RequestBody TeamTagRequest teamTagRequest
     ) {
-        teamTagService.addTeamTag(teamTagRequest, memberDTO);
+        teamTagService.addTeamTag(teamTagRequest);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{teamTagId}")
     public ResponseEntity<Void> deleteTeamTag(
-            @PathVariable Long teamTagId,
-            @LoginMember MemberDTO memberDTO
+            @PathVariable Long teamTagId
     ) {
-        teamTagService.deleteTeamTag(teamTagId, memberDTO);
+        teamTagService.deleteTeamTag(teamTagId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

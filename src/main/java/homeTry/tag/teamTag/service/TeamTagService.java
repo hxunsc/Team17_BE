@@ -1,8 +1,5 @@
 package homeTry.tag.teamTag.service;
 
-import homeTry.member.dto.MemberDTO;
-import homeTry.member.service.MemberService;
-import homeTry.tag.exception.badRequestException.ForbiddenTagAccessException;
 import homeTry.tag.model.vo.TagName;
 import homeTry.tag.teamTag.dto.AllTeamTagDTO;
 import homeTry.tag.teamTag.dto.TeamTagDTO;
@@ -25,16 +22,14 @@ public class TeamTagService {
 
     private final TeamTagRepository teamTagRepository;
     private final TeamTagMappingService teamTagMappingService;
-    private final MemberService memberService;
 
     private static final String GENDER = "성별";
     private static final String AGE = "나이";
     private static final String EXERCISE_INTENSITY = "운동강도";
 
-    public TeamTagService(TeamTagRepository teamTagRepository, TeamTagMappingService teamTagMappingService, MemberService memberService) {
+    public TeamTagService(TeamTagRepository teamTagRepository, TeamTagMappingService teamTagMappingService) {
         this.teamTagRepository = teamTagRepository;
         this.teamTagMappingService = teamTagMappingService;
-        this.memberService = memberService;
     }
 
     //모든 태그 반환
@@ -76,9 +71,7 @@ public class TeamTagService {
     }
 
     @Transactional(readOnly = true)
-    public TeamTagResponse getTeamTagResponse(MemberDTO memberDTO) {
-
-        verifyAdmin(memberDTO);
+    public TeamTagResponse getTeamTagResponse() {
 
         List<TeamTagDTO> teamTagList = teamTagRepository.findAllByIsDeprecatedFalse()
                 .stream()
@@ -89,9 +82,7 @@ public class TeamTagService {
     }
 
     @Transactional
-    public void addTeamTag(TeamTagRequest teamTagRequest, MemberDTO memberDTO) {
-
-        verifyAdmin(memberDTO);
+    public void addTeamTag(TeamTagRequest teamTagRequest) {
 
         if (teamTagRepository.existsByTagName(new TagName(teamTagRequest.teamTagName()))) {
             throw new TeamTagAlreadyExistsException();
@@ -105,20 +96,12 @@ public class TeamTagService {
     }
 
     @Transactional
-    public void deleteTeamTag(Long teamTagId, MemberDTO memberDTO) {
-
-        verifyAdmin(memberDTO);
+    public void deleteTeamTag(Long teamTagId) {
 
         TeamTag teamTag = teamTagRepository.findById(teamTagId)
                 .orElseThrow(() -> new TeamTagNotFoundException());
 
         teamTag.markAsDeprecated();
-    }
-
-    private void verifyAdmin(MemberDTO memberDTO) {
-        if (!memberService.isAdmin(memberDTO.id())) {
-            throw new ForbiddenTagAccessException();
-        }
     }
 
 }
