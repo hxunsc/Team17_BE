@@ -13,7 +13,7 @@ public enum CommonErrorType implements ErrorType {
     METHOD_ARGUMENT_TYPE_MISMATCH_EXCEPTION("Common400_008", HttpStatus.BAD_REQUEST, "API에 적힌 쿼리 파라미터에 맞는 형식의 데이터인지, 데이터가 누락되지 않았는지 확인해주세요"),
     HANDLER_METHOD_VALIDATION_EXCEPTION("Common400_009", HttpStatus.BAD_REQUEST, "요청값에 대한 유효성 검사에 실패하였습니다(RequestParam, PathVariable"),
 
-    INTERNAL_SERVER_EXCEPTION("Common500_001", HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부에서 예상치 못한 에러가 발생하였습니다. 관리자에게 문의 바랍니다.");
+    INTERNAL_SERVER_EXCEPTION("Common500_001", HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부에서 예상치 못한 에러가 발생하였습니다. 관리자에게 문의 바랍니다 ㅠㅠ");
 
     private String errorCode;
     private HttpStatus httpStatus;
