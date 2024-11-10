@@ -43,7 +43,7 @@ public class TeamWithdrawService {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(TeamNotFoundException::new);
 
-        //chattingService.deleteTeamChattingMessageAll(team)
+        chattingService.deleteChattingMessageAll(teamId);
 
         teamService.deleteTeam(memberId, team);
     }
