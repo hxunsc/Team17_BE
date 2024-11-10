@@ -18,15 +18,18 @@ public class ExerciseSchedulerService {
     private final ExerciseService exerciseService;
     private final ExerciseTimeService exerciseTimeService;
     private final ExerciseHistoryService exerciseHistoryService;
+    private final ExerciseTimeHelper exerciseTimeHelper;
     private final MemberService memberService;
 
     public ExerciseSchedulerService(ExerciseService exerciseService,
         ExerciseTimeService exerciseTimeService,
         ExerciseHistoryService exerciseHistoryService,
+        ExerciseTimeHelper exerciseTimeHelper,
         MemberService memberService) {
         this.exerciseService = exerciseService;
         this.exerciseTimeService = exerciseTimeService;
         this.exerciseHistoryService = exerciseHistoryService;
+        this.exerciseTimeHelper = exerciseTimeHelper;
         this.memberService = memberService;
     }
 
@@ -51,7 +54,7 @@ public class ExerciseSchedulerService {
             if (exerciseTime.isActive()) {
                 exerciseService.stopExercise(exercise.getExerciseId(),
                     MemberDTO.from(exercise.getMember()));
-                exerciseTimeService.saveExerciseTime(exerciseTime);
+                exerciseTimeHelper.saveExerciseTime(exerciseTime);
             }
 
             // 운동 시간이 있는 멤버 ID 저장

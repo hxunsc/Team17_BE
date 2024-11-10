@@ -2,17 +2,17 @@ package homeTry.exerciseList.event;
 
 import homeTry.exerciseList.model.entity.Exercise;
 import homeTry.exerciseList.model.entity.ExerciseTime;
-import homeTry.exerciseList.service.ExerciseTimeService;
+import homeTry.exerciseList.service.ExerciseTimeHelper;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ExerciseCreationEventListener {
 
-    private final ExerciseTimeService exerciseTimeService;
+    private final ExerciseTimeHelper exerciseTimeHelper;
 
-    public ExerciseCreationEventListener(ExerciseTimeService exerciseTimeService) {
-        this.exerciseTimeService = exerciseTimeService;
+    public ExerciseCreationEventListener(ExerciseTimeHelper exerciseTimeHelper) {
+        this.exerciseTimeHelper = exerciseTimeHelper;
     }
 
     // "ExerciseCreationEvent"를 수신하고 처리
@@ -22,7 +22,7 @@ public class ExerciseCreationEventListener {
         Exercise exercise = event.exercise();
 
         ExerciseTime currentExerciseTime = new ExerciseTime(exercise);
-        exerciseTimeService.saveExerciseTime(currentExerciseTime);
+        exerciseTimeHelper.saveExerciseTime(currentExerciseTime);
     }
 
 }
