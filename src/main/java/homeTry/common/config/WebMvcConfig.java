@@ -53,7 +53,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-            .allowedOriginPatterns("http://localhost:*", "https://localhost:*")
+            .allowedOriginPatterns("http://localhost:*", "https://localhost:*", "https://hometry.vercel.app/*")
             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
             .allowedHeaders("*") 
             .exposedHeaders(HttpHeaders.LOCATION)
