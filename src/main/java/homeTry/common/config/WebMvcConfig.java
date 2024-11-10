@@ -36,9 +36,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/api/oauth/**", "/admin/**");
-        //토큰 받는 경로 지정
+                .excludePathPatterns("/api/oauth/**",
+                        "/admin/**",
+                        "/static/**",       // 정적 리소스 제외
+                        "/resources/**",
+                        "/css/**");
 
+        //토큰 받는 경로 지정
         registry.addInterceptor(adminInterceptor)
                 .addPathPatterns("/admin/**");
     }
