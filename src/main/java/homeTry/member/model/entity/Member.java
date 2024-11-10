@@ -42,6 +42,10 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    //탈퇴했는지 여부
+    @Column(nullable = false)
+    private boolean isInactive;
+
     protected Member() {
     }
 
@@ -86,6 +90,10 @@ public class Member extends BaseEntity {
         return role;
     }
 
+    public boolean isInactive() {
+        return isInactive;
+    }
+
     public void changeNickname(Nickname nickname) {
         this.nickname = nickname;
     }
@@ -122,7 +130,7 @@ public class Member extends BaseEntity {
         return (this.role == Role.ADMIN);
     }
 
-
-
-
+    public void deactivate() {
+        this.isInactive = true;
+    }
 }

@@ -24,7 +24,7 @@ public class ChattingConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/api/team/chatting/websocket")
-                .setAllowedOriginPatterns("http://localhost:*", "https://localhost:*")
+                .setAllowedOriginPatterns("http://localhost:*", "https://localhost:*", "https://hometry.vercel.app/*")
                 .withSockJS()
                 .setWebSocketEnabled(true)
                 .setSessionCookieNeeded(false);

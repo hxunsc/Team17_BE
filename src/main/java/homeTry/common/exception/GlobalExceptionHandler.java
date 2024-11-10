@@ -1,7 +1,10 @@
 package homeTry.common.exception;
 
+import homeTry.chatting.endpointHandler.async.ChattingMessageListener;
 import homeTry.common.exception.dto.response.ErrorResponse;
 import jakarta.validation.ConstraintViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -21,6 +24,8 @@ import java.util.NoSuchElementException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @Override
     protected ResponseEntity<Object> handleHandlerMethodValidationException(
@@ -153,6 +158,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 errorType.getMessage()
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleCriticalException(Exception ex) {
+        ErrorType errorType = CommonErrorType.INTERNAL_SERVER_EXCEPTION;
+        ErrorResponse errorResponse = new ErrorResponse(
+                errorType.getErrorCode(),
+                errorType.getMessage()
+        );
+        logger.error("서버에서 출처를 알 수 없는 오류 발생!! {}", ex.getMessage());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }

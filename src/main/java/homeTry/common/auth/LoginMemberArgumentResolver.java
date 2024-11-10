@@ -4,7 +4,7 @@ import homeTry.common.annotation.LoginMember;
 import homeTry.common.auth.exception.badRequestException.InvalidTokenException;
 import homeTry.common.auth.exception.internalServerException.HomeTryServerException;
 import homeTry.common.auth.jwt.JwtAuth;
-import homeTry.member.exception.badRequestException.MemberNotFoundException;
+import homeTry.common.exception.BadRequestException;
 import homeTry.member.service.MemberService;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -34,7 +34,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
             String token = webRequest.getHeader("Authorization").substring(7);
             Long id = jwtAuth.extractId(token);
             return memberService.getMember(id);
-        } catch (MemberNotFoundException e) {
+        } catch (BadRequestException e) {
             throw e;
         } catch (NullPointerException e) {
             throw new InvalidTokenException();
