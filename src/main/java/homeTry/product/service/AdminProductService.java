@@ -23,22 +23,18 @@ public class AdminProductService {
     private final ProductRepository productRepository;
     private final ProductTagRepository productTagRepository;
     private final ProductTagMappingService productTagMappingService;
-    private final MemberService memberService;
 
     public AdminProductService(ProductRepository productRepository,
         ProductTagRepository productTagRepository,
-        ProductTagMappingService productTagMappingService, MemberService memberService) {
+        ProductTagMappingService productTagMappingService) {
         this.productRepository = productRepository;
         this.productTagRepository = productTagRepository;
         this.productTagMappingService = productTagMappingService;
-        this.memberService = memberService;
     }
 
     // 상품 추가
     @Transactional
-    public void addProduct(ProductRequest request, MemberDTO memberDTO) {
-        // 관리자 권한 확인
-        verifyAdmin(memberDTO);
+    public void addProduct(ProductRequest request) {
 
         if (request.tagId() == null) {
             throw new MissingProductTagException();
@@ -62,9 +58,7 @@ public class AdminProductService {
 
     // 상품 삭제
     @Transactional
-    public void deleteProduct(Long productId, MemberDTO memberDTO) {
-        // 관리자 권한 확인
-        verifyAdmin(memberDTO);
+    public void deleteProduct(Long productId) {
 
         Product product = productRepository.findById(productId)
             .orElseThrow(ProductNotFoundException::new);
@@ -79,22 +73,13 @@ public class AdminProductService {
 
     // 상품 조회
     @Transactional(readOnly = true)
-    public Page<ProductAdminResponse> getProducts(Pageable pageable, MemberDTO memberDTO) {
-        // 관리자 권한 확인
-        verifyAdmin(memberDTO);
+    public Page<ProductAdminResponse> getProducts(Pageable pageable) {
 
         return productRepository.findAllNonDeprecated(pageable)
             .map(product -> {
                 ProductTagDto tagDto = productTagMappingService.getTagForProduct(product.getId());
                 return ProductAdminResponse.from(product, tagDto);
             });
-    }
-
-    // 관리자 권한 확인
-    private void verifyAdmin(MemberDTO memberDTO) {
-        if (!memberService.isAdmin(memberDTO.id())) {
-            throw new ForbiddenProductAccessException();
-        }
     }
 
 }
