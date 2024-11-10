@@ -25,11 +25,11 @@ public class ProductTagMapping extends SoftDeletableEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
+    @JoinColumn(nullable = false)
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_tag_id", nullable = false)
+    @JoinColumn(nullable = false)
     private ProductTag productTag;
 
 
