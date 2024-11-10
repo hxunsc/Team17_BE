@@ -1,7 +1,5 @@
 package homeTry.product.service;
 
-import homeTry.member.dto.MemberDTO;
-import homeTry.member.service.MemberService;
 import homeTry.product.dto.request.ProductRequest;
 import homeTry.product.dto.response.ProductAdminResponse;
 import homeTry.product.exception.badRequestException.*;
