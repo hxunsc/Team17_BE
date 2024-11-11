@@ -1,7 +1,5 @@
 package homeTry.product.controller;
 
-import homeTry.common.annotation.LoginMember;
-import homeTry.member.dto.MemberDTO;
 import homeTry.product.dto.response.ProductResponse;
 import homeTry.product.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,12 +39,11 @@ public class MarketController {
     @GetMapping
     public ResponseEntity<Slice<ProductResponse>> getProducts(
         @RequestParam(required = false) List<Long> tagIds,
-        @LoginMember MemberDTO memberDTO,
         @PageableDefault(size = 5)
         @SortDefaults({@SortDefault(sort = "viewCount", direction = Sort.Direction.DESC),
                        @SortDefault(sort = "price", direction = Sort.Direction.ASC)})
         Pageable pageable) {
-        Slice<ProductResponse> products = productService.getProducts(tagIds, memberDTO, pageable);
+        Slice<ProductResponse> products = productService.getProducts(tagIds, pageable);
         return new ResponseEntity<>(products, HttpStatus.OK);  // 상태 코드 200
     }
 
@@ -55,9 +52,8 @@ public class MarketController {
         @ApiResponse(responseCode = "200", description = "상품 목록이 성공적으로 선택되고 조회수가 증가함")
     })
     @GetMapping("/{productId}")
-    public ResponseEntity<Void> redirectProduct(@PathVariable Long productId,
-                                                @LoginMember MemberDTO memberDTO) {
-        productService.incrementViewCount(productId, memberDTO);
+    public ResponseEntity<Void> redirectProduct(@PathVariable Long productId) {
+        productService.incrementViewCount(productId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
