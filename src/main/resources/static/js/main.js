@@ -8,7 +8,9 @@ function getRequestWithToken(uri) {
   })
   .then(response => {
     if (!response.ok) {
-      throw new Error(JSON.stringify(response));
+      return response.json().then(errorResponse => {
+        throw new Error(JSON.stringify(errorResponse));
+      });
     }
     return response.text();
   })
@@ -19,12 +21,31 @@ function getRequestWithToken(uri) {
     window.history.pushState({}, '', uri);
   })
   .catch(error => {
-    if (error.errorCode === '401') {
-      alert('회원이 아닙니다.');
-      localStorage.removeItem('access_token');
-    } else {
-      alert('확인되지 않은 에러입니다. 관리자에게 연락해주시기 바랍니다.');
-      console.log(error);
+    try{
+      const errorResponse = JSON.parse(error.message);
+      const errorCode = errorResponse['errorCode']
+
+      if(errorCode === undefined){
+        throw new Error('확인되지 않은 에러이고, 서버 응답을 처리할 수 없습니다.')
+      }
+
+      if (errorCode.includes("401")) {
+        alert('회원 인증에 실패하였습니다.');
+      }
+      else if(errorCode ===  "Member400_001"){
+        alert('토큰은 올바르지만 회원이 아닙니다. 회원가입 해주세요');
+      }
+
+      else {
+        alert('확인되지 않은 에러입니다. 관리자에게 연락해주시기 바랍니다.');
+        console.log(error);
+        console.log(JSON.stringify(errorResponse));
+      }
+      localStorage.removeItem('access_token')
+      window.location.href = '';
+    } catch (e) {
+      alert('확인되지 않은 에러이고, 서버 응답을 처리할 수 없습니다.')
+      console.error(error);
     }
   });
 }

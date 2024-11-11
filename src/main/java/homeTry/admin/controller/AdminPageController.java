@@ -23,13 +23,13 @@ public class AdminPageController {
     }
 
     @GetMapping("/page")
-    public String showAdminPage() {
-        return "adminPage";
+    public String getAdminPage() {
+        return "admin/adminPage";
     }
 
     @GetMapping("/promote")
     public String getAdminPromotePage() {
-        return "adminPromote";
+        return "admin/adminPromote";
     }
 
     @PutMapping("/promote")

@@ -1,0 +1,35 @@
+div {
+  display: flex;
+  flex-direction: column;
+  border-radius: 1vh;
+  box-shadow: 0 0 1vh 5px #ffffff;
+}
+
+.centered-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  flex-direction: column;
+  gap: 15px;
+}
+
+button {
+  font-family: 'Jua', sans-serif;
+  width: 25vh;
+}
+
+input#adminCode {
+  width: 25vh;
+  height: 3vh;
+  font-family: 'Jua', sans-serif;
+  font-size: 2.2vh;
+  color: #96aeed;
+  border: 0.3vh solid #486ac7;
+  border-radius: 1vh;
+}
+
+label {
+  color: #5b7cd7;
+  font-size: 2.5vh;
+}

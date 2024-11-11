@@ -1,9 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
 
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f9ff; /* 연한 파스텔 블루 배경색 */
+    font-family: "Jua", sans-serif;
+    background-color: #f2f2f6; /* FE 서버 배경색 */
     margin: 0;
     padding: 20px;
+}
+
+div {
+    background: white;
 }
 
 .container {
@@ -16,12 +21,13 @@ body {
 }
 
 h1 {
-    color: #007bff; /* 파스텔 블루 제목 색상 */
+    color: rgb(134, 161, 233); /* FE 버튼 색깔 */
     text-align: center;
+    font-size: xxx-large;
 }
 
 button {
-    background-color: #007bff; /* 파스텔 블루 버튼 배경 */
+    background: linear-gradient(rgb(185, 204, 255) 0%, rgb(143, 173, 255) 100%); /* 파스텔 블루 버튼 배경 */
     color: white; /* 버튼 텍스트 색상 */
     border: none;
     border-radius: 5px;
@@ -42,18 +48,22 @@ table {
 }
 
 th, td {
-    border: 1px solid #007bff; /* 테이블 경계선 색상 */
+    border: 0.2vh solid #c8d7ff; /* 테이블 경계선 색상 */
     padding: 10px;
     text-align: left;
 }
 
 th {
-    background-color: #e7f3ff; /* 테이블 헤더 배경색 */
-    color: #007bff; /* 헤더 텍스트 색상 */
+    background-color: #e2eaff; /* 테이블 헤더 배경색 */
+    color: #87a2e9; /* 헤더 텍스트 색상 */
 }
 
 tr:nth-child(even) {
-    background-color: #f1f8ff; /* 짝수 행 배경색 */
+    background-color: #e2eaff; /* 짝수 행 배경색 */
+}
+
+tr:nth-child(odd) {
+    background-color: transparent; /* 홀수 행 배경색 */
 }
 
 tr:hover {
