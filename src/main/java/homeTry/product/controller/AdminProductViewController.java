@@ -5,6 +5,7 @@ import homeTry.product.dto.response.ProductAdminResponse;
 import homeTry.product.service.AdminProductService;
 import homeTry.tag.productTag.dto.ProductTagDto;
 import homeTry.tag.productTag.service.ProductTagService;
+import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,7 +48,7 @@ public class AdminProductViewController {
 
     // 상품 추가
     @PostMapping("/add")
-    public String addProduct(@ModelAttribute ProductRequest productRequest) {
+    public String addProduct(@ModelAttribute @Valid ProductRequest productRequest) {
         adminProductService.addProduct(productRequest);
         return "redirect:/admin/product";
     }
