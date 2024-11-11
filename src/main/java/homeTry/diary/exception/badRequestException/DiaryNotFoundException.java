@@ -1,4 +1,4 @@
-package homeTry.diary.exception.BadRequestException;
+package homeTry.diary.exception.badRequestException;
 
 import homeTry.common.exception.BadRequestException;
 import homeTry.diary.exception.DiaryErrorType;
