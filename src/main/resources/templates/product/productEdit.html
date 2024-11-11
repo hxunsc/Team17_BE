@@ -7,8 +7,8 @@
 </head>
 <body>
 <h1>Edit Product</h1>
-<button onclick="location.href='/admin/product'">Back To List</button>
-<form th:action="@{/admin/product/edit/{productId}(productId=${productRequest.productId})}" method="post">
+<button onclick="location.href='/admin/page/product'">Back To List</button>
+<form th:action="@{/admin/page/product/edit/{productId}(productId=${productRequest.productId})}" method="post">
     <input type="hidden" th:value="${productRequest.productId}" />
     <div>
         <label for="name">Name:</label>
