@@ -1,8 +1,8 @@
 div {
   display: flex;
   flex-direction: column;
-  border-radius: 1vh;
-  box-shadow: 0 0 1vh 5px #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px 5px #ffffff;
 }
 
 button {
@@ -13,8 +13,8 @@ button {
   padding: 10px 15px;
   cursor: pointer;
   transition: background-color 0.3s;
-  margin: 1vh;
-  height: 4vh;
+  margin: 10px;
+  height: 40px;
   font-family: "Jua", sans-serif;
-  font-size: 1.7vh;
+  font-size: 17px;
 }

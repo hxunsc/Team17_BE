@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
 
+
 body {
     font-family: "Jua", sans-serif;
     background-color: #f2f2f6; /* FE 서버 배경색 */
@@ -23,7 +24,7 @@ div {
 h1 {
     color: rgb(134, 161, 233); /* FE 버튼 색깔 */
     text-align: center;
-    font-size: xxx-large;
+    font-size: 48px;
 }
 
 button {
@@ -48,7 +49,7 @@ table {
 }
 
 th, td {
-    border: 0.2vh solid #c8d7ff; /* 테이블 경계선 색상 */
+    border: 2px solid #c8d7ff; /* 테이블 경계선 색상 */
     padding: 10px;
     text-align: left;
 }
@@ -74,7 +75,7 @@ tr:hover {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 50vh;
+    height: 500px;
     flex-direction: column;
     gap: 30px;
 }
