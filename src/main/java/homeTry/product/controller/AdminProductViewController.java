@@ -54,7 +54,7 @@ public class AdminProductViewController {
 
     // 상품 삭제
     @PostMapping("/delete/{productId}")
-    public String deleteProduct(@PathVariable Long productId) {
+    public String deleteProduct(@PathVariable("productId") Long productId) {
         adminProductService.deleteProduct(productId);
         return "redirect:/admin/product";
     }

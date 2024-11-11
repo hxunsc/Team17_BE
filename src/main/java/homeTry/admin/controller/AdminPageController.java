@@ -4,14 +4,16 @@ import homeTry.admin.dto.request.AdminCodeRequest;
 import homeTry.admin.service.AdminPageService;
 import homeTry.common.annotation.LoginMember;
 import homeTry.member.dto.MemberDTO;
-import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+@RequestMapping("/admin")
 public class AdminPageController {
 
     private final AdminPageService adminPageService;
@@ -20,24 +22,21 @@ public class AdminPageController {
         this.adminPageService = adminPageService;
     }
 
-    @GetMapping("/admin")
+    @GetMapping("/page")
     public String showAdminPage() {
         return "adminPage";
     }
 
-    @PostMapping("/promote")
-    public String promoteToAdmin(
-            @ModelAttribute AdminCodeRequest request,
-            Model model,
-            HttpServletResponse response,
-            @LoginMember MemberDTO memberDTO) {
+    @GetMapping("/promote")
+    public String getAdminPromotePage() {
+        return "adminPromote";
+    }
 
-        String result = adminPageService.promoteAdmin(request.adminCode(), memberDTO.id(), response);
+    @PutMapping("/promote")
+    public ResponseEntity<Void> promoteToAdmin(
+            @RequestBody AdminCodeRequest adminCodeRequest, @LoginMember MemberDTO memberDTO) {
+        adminPageService.promoteAdmin(adminCodeRequest, memberDTO.id());
 
-        if ("index".equals(result)) {
-            model.addAttribute("message", "관리자 코드가 올바르지 않습니다.");
-        }
-
-        return result;
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

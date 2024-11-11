@@ -36,7 +36,7 @@ public class ExerciseController {
     }
 
     @PostMapping("/{exerciseId}")
-    public ResponseEntity<Void> startExercise(@PathVariable Long exerciseId,
+    public ResponseEntity<Void> startExercise(@PathVariable("exerciseId") Long exerciseId,
                                               @LoginMember MemberDTO memberDTO) {
 
         exerciseService.startExercise(exerciseId, memberDTO);  // 운동 시작
