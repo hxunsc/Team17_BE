@@ -197,11 +197,7 @@ public class TeamService {
     public TagListResponse getAllTeamTagList(MemberDTO memberDTO) {
         AllTeamTagDTO allTeamTagDTO = teamTagService.getAllTeamTagList(); //모든 태그 조회해 옴
 
-        return new TagListResponse(
-                allTeamTagDTO.genderTagList(),
-                allTeamTagDTO.ageTagList(),
-                allTeamTagDTO.exerciseIntensityTagList()
-        );
+        return TagListResponse.of(allTeamTagDTO);
     }
 
     //팀 랭킹 조회 기능(페이징 적용)
