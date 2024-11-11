@@ -16,7 +16,7 @@ public interface ExerciseHistoryRepository extends JpaRepository<ExerciseHistory
     @Query("SELECT eh FROM ExerciseHistory eh " +
         "JOIN FETCH eh.exercise e " +
         "WHERE e.member.id = :memberId " +
-        "AND eh.createdAt BETWEEN :startOfDay AND :endOfDay")
+        "AND eh.exercisedAt BETWEEN :startOfDay AND :endOfDay")
     List<ExerciseHistory> findExerciseHistoriesForMemberOnDate(
         @Param("memberId") Long memberId,
         @Param("startOfDay") LocalDateTime startOfDay,

@@ -2,9 +2,6 @@ package homeTry.tag.productTag.service;
 
 import java.util.List;
 
-import homeTry.member.dto.MemberDTO;
-import homeTry.member.service.MemberService;
-import homeTry.tag.exception.badRequestException.ForbiddenTagAccessException;
 import homeTry.tag.model.vo.TagName;
 import homeTry.tag.productTag.dto.ProductTagDto;
 import homeTry.tag.productTag.dto.request.ProductTagRequest;
@@ -20,11 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductTagService {
 
     private final ProductTagRepository productTagRepository;
-    private final MemberService memberService;
 
-    public ProductTagService(ProductTagRepository productTagRepository, MemberService memberService) {
+    public ProductTagService(ProductTagRepository productTagRepository) {
         this.productTagRepository = productTagRepository;
-        this.memberService = memberService;
     }
 
     @Transactional(readOnly = true)
@@ -39,9 +34,7 @@ public class ProductTagService {
     }
 
     @Transactional(readOnly = true)
-    public ProductTagResponse getProductTagResponse(MemberDTO memberDTO) {
-
-        verifyAdmin(memberDTO);
+    public ProductTagResponse getProductTagResponse() {
 
         List<ProductTagDto> productTagList = productTagRepository.findAllByIsDeprecatedFalse()
                 .stream()
@@ -52,9 +45,8 @@ public class ProductTagService {
     }
 
     @Transactional
-    public void addProductTag(ProductTagRequest productTagRequest, MemberDTO memberDTO) {
+    public void addProductTag(ProductTagRequest productTagRequest) {
 
-        verifyAdmin(memberDTO);
 
         if(productTagRepository.existsByTagName(new TagName(productTagRequest.productTagName()))){
             throw new ProductTagAlreadyExistsException();
@@ -67,19 +59,12 @@ public class ProductTagService {
     }
 
     @Transactional
-    public void deleteProductTag(Long productTagId, MemberDTO memberDTO) {
+    public void deleteProductTag(Long productTagId) {
 
-        verifyAdmin(memberDTO);
 
         ProductTag productTag = productTagRepository.findById(productTagId)
                 .orElseThrow(() -> new ProductTagNotFoundException());
 
         productTag.markAsDeprecated();
-    }
-
-    private void verifyAdmin(MemberDTO memberDTO) {
-        if (!memberService.isAdmin(memberDTO.id())) {
-            throw new ForbiddenTagAccessException();
-        }
     }
 }

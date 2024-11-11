@@ -5,6 +5,7 @@ import homeTry.chatting.exception.internalServerException.NoSuchMemberInDbWithVa
 import homeTry.common.auth.jwt.JwtAuth;
 import homeTry.common.auth.jwt.JwtUtil;
 import homeTry.member.dto.MemberDTO;
+import homeTry.member.exception.badRequestException.InactivatedMemberException;
 import homeTry.member.exception.badRequestException.MemberNotFoundException;
 import homeTry.member.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class StompInterceptor implements ChannelInterceptor {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
 
         handleConnectCommand(accessor);
-        //todo: 추후 다른 케이스 추가하기
+        //추후 다른 케이스 있다면 추가하기
 
         return message;
     }
@@ -54,7 +55,7 @@ public class StompInterceptor implements ChannelInterceptor {
 
             try {
                 memberDTO = memberService.getMember(jwtAuth.extractId(token));
-            } catch (MemberNotFoundException e) {
+            } catch (MemberNotFoundException | InactivatedMemberException e) {
                 throw new NoSuchMemberInDbWithValidTokenException();
             }
 

@@ -1,11 +1,12 @@
 package homeTry.team.model.entity;
 
 import homeTry.common.entity.BaseEntity;
+import homeTry.common.entity.SoftDeletableEntity;
 import homeTry.member.model.entity.Member;
 import jakarta.persistence.*;
 
 @Entity
-public class TeamMemberMapping extends BaseEntity {
+public class TeamMemberMapping extends SoftDeletableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

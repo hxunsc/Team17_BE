@@ -1,7 +1,5 @@
 package homeTry.product.controller;
 
-import homeTry.common.annotation.LoginMember;
-import homeTry.member.dto.MemberDTO;
 import homeTry.product.dto.request.ProductRequest;
 import homeTry.product.dto.response.ProductAdminResponse;
 import homeTry.product.service.AdminProductService;
@@ -30,25 +28,22 @@ public class AdminProductController {
 
     // 상품 추가
     @PostMapping
-    public ResponseEntity<Void> addProduct(@RequestBody @Valid ProductRequest productRequest,
-        @LoginMember MemberDTO memberDTO) {
-        adminProductService.addProduct(productRequest, memberDTO);
+    public ResponseEntity<Void> addProduct(@RequestBody @Valid ProductRequest productRequest) {
+        adminProductService.addProduct(productRequest);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     // 상품 삭제
     @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId,
-        @LoginMember MemberDTO memberDTO) {
-        adminProductService.deleteProduct(productId, memberDTO);
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
+        adminProductService.deleteProduct(productId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     // 상품 조회
     @GetMapping
-    public ResponseEntity<Page<ProductAdminResponse>> getProducts(Pageable pageable,
-        @LoginMember MemberDTO memberDTO) {
-        Page<ProductAdminResponse> products = adminProductService.getProducts(pageable, memberDTO);
+    public ResponseEntity<Page<ProductAdminResponse>> getProducts(Pageable pageable) {
+        Page<ProductAdminResponse> products = adminProductService.getProducts(pageable);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 

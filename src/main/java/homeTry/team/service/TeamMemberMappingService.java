@@ -32,11 +32,11 @@ public class TeamMemberMappingService {
     }
 
     //TeamMemberMapping 엔티티 삭제 (멤버가 팀에서 나갈 시)
-    public void deleteTeamMember(Team team, Member member) {
+    public void markDeprecated(Team team, Member member) {
         TeamMemberMapping teamMemberMapping = teamMemberMappingRepository.findByTeamAndMember(team, member)
                 .orElseThrow(TeamMemberNotFoundException::new);
 
-        teamMemberMappingRepository.delete(teamMemberMapping);
+        teamMemberMapping.markAsDeprecated(); // softDelete 적용
     }
 
     //팀에 속한 멤버들의 TeamMemberMapping 을 모두 삭제

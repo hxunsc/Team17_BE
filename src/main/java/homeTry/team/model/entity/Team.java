@@ -99,11 +99,7 @@ public class Team extends BaseEntity {
     }
 
     public boolean validateIsLeader(long memberId) {
-        if (leaderId != memberId) {
-            throw new NotTeamLeaderException();
-        }
-
-        return true;
+        return this.leaderId == memberId;
     }
 
     public void verifyPassword(String password) {

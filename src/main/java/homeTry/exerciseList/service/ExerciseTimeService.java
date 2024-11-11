@@ -20,9 +20,12 @@ import java.util.List;
 public class ExerciseTimeService {
 
     private final ExerciseTimeRepository exerciseTimeRepository;
+    private final ExerciseTimeHelper exerciseTimeHelper;
 
-    public ExerciseTimeService(ExerciseTimeRepository exerciseTimeRepository) {
+    public ExerciseTimeService(ExerciseTimeRepository exerciseTimeRepository,
+        ExerciseTimeHelper exerciseTimeHelper) {
         this.exerciseTimeRepository = exerciseTimeRepository;
+        this.exerciseTimeHelper = exerciseTimeHelper;
     }
 
     @Transactional
@@ -37,7 +40,7 @@ public class ExerciseTimeService {
         // 현재 운동 상태 확인
         ExerciseTime currentExerciseTime = getExerciseTime(exercise.getExerciseId());
         currentExerciseTime.startExercise();
-        saveExerciseTime(currentExerciseTime);
+        exerciseTimeHelper.saveExerciseTime(currentExerciseTime);
     }
 
     @Transactional
@@ -51,6 +54,7 @@ public class ExerciseTimeService {
         // 하루 최대 12시간, 한 번에 저장되는 최대 시간 8시간을 넘었는지 확인
         validateExerciseDurationLimits(currentExerciseTime);
         currentExerciseTime.stopExercise();
+        exerciseTimeHelper.saveExerciseTime(currentExerciseTime);
     }
 
     private void validateExerciseDurationLimits(ExerciseTime exerciseTime) {
@@ -60,19 +64,16 @@ public class ExerciseTimeService {
         // 한 번 운동한 시간이 8시간을 초과한 경우
         if (timeElapsed.compareTo(Duration.ofHours(8)) > 0) {
             exerciseTime.stopExerciseWithoutSavingTime();  // 기록 저장 없이 강제 종료
+            exerciseTimeHelper.saveExerciseTime(exerciseTime);
             throw new ExerciseTimeLimitExceededException();
         }
 
         // 하루 총 운동 시간이 12시간을 초과한 경우
         if (totalTime.compareTo(Duration.ofHours(12)) > 0) {
             exerciseTime.stopExerciseWithoutSavingTime();
+            exerciseTimeHelper.saveExerciseTime(exerciseTime);
             throw new DailyExerciseTimeLimitExceededException();
         }
-    }
-
-    @Transactional
-    public void saveExerciseTime(ExerciseTime exerciseTime) {
-        exerciseTimeRepository.save(exerciseTime);
     }
 
     @Transactional

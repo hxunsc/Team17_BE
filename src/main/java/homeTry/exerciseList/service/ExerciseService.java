@@ -93,7 +93,7 @@ public class ExerciseService {
 
     @Transactional(readOnly = true)
     public List<Exercise> findAllNonDeprecatedExercises() {
-        return exerciseRepository.findAllNonDeprecatedExercises();
+        return exerciseRepository.findByIsDeprecatedFalse();
     }
 
     @Transactional

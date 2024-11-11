@@ -26,7 +26,8 @@ public class ExerciseHistoryService {
     // 운동 저장
     @Transactional
     public void saveExerciseHistory(Exercise exercise, ExerciseTime exerciseTime) {
-        ExerciseHistory history = new ExerciseHistory(exercise, exerciseTime.getExerciseTime());
+        ExerciseHistory history = new ExerciseHistory(exercise, exerciseTime.getExerciseTime(),
+            exerciseTime.getStartTime());
         exerciseHistoryRepository.save(history);
     }
 
@@ -47,8 +48,9 @@ public class ExerciseHistoryService {
     @Transactional(readOnly = true)
     public Long getWeeklyTotalExercise(Long memberId) {
         // 이번 주의 시작과 끝 계산 (새벽 3시 기준), 하루 시작: 새벽 3시, 하루 끝: 다음날 새벽 2시 59분 59초
-        LocalDateTime startOfWeekWith3AM = DateTimeUtil.getStartOfWeek(LocalDate.now());
-        LocalDateTime endOfWeekWith3AM = DateTimeUtil.getEndOfWeek(LocalDate.now());
+        LocalDate adjustedToday = DateTimeUtil.getAdjustedCurrentDate();
+        LocalDateTime startOfWeekWith3AM = DateTimeUtil.getStartOfWeek(adjustedToday);
+        LocalDateTime endOfWeekWith3AM = DateTimeUtil.getEndOfWeek(adjustedToday);
 
         List<ExerciseHistory> weeklyExercises = exerciseHistoryRepository.findExerciseHistoriesForMemberOnDate(
             memberId, startOfWeekWith3AM, endOfWeekWith3AM);
@@ -60,8 +62,9 @@ public class ExerciseHistoryService {
     @Transactional(readOnly = true)
     public Long getMonthlyTotalExercise(Long memberId) {
         // 이번 달의 시작과 끝 계산
-        LocalDateTime startOfMonthWith3AM = DateTimeUtil.getStartOfMonth(LocalDate.now());
-        LocalDateTime endOfMonthWith3AM = DateTimeUtil.getEndOfMonth(LocalDate.now());
+        LocalDate adjustedToday = DateTimeUtil.getAdjustedCurrentDate();
+        LocalDateTime startOfMonthWith3AM = DateTimeUtil.getStartOfMonth(adjustedToday);
+        LocalDateTime endOfMonthWith3AM = DateTimeUtil.getEndOfMonth(adjustedToday);
 
         List<ExerciseHistory> monthlyExercises = exerciseHistoryRepository.findExerciseHistoriesForMemberOnDate(
             memberId, startOfMonthWith3AM, endOfMonthWith3AM);

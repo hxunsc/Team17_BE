@@ -9,6 +9,7 @@ import homeTry.team.dto.response.RankingResponse;
 import homeTry.team.dto.response.TagListResponse;
 import homeTry.team.dto.response.TeamResponse;
 import homeTry.team.service.TeamService;
+import homeTry.team.service.TeamWithdrawService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -27,9 +28,12 @@ import java.util.List;
 public class TeamController {
 
     private final TeamService teamService;
+    private final TeamWithdrawService teamWithdrawService;
 
-    public TeamController(TeamService teamService) {
+    public TeamController(TeamService teamService,
+                          TeamWithdrawService teamWithdrawService) {
         this.teamService = teamService;
+        this.teamWithdrawService = teamWithdrawService;
     }
 
     //팀 생성 api
@@ -44,7 +48,7 @@ public class TeamController {
     @DeleteMapping("/{teamId}")
     public ResponseEntity<Void> deleteTeam(@LoginMember MemberDTO memberDTO,
                                            @PathVariable("teamId") Long teamID) {
-        teamService.deleteTeam(memberDTO, teamID);
+        teamWithdrawService.deleteTeam(memberDTO.id(), teamID);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -92,7 +96,7 @@ public class TeamController {
     public ResponseEntity<Void> withdrawTeam(
             @LoginMember MemberDTO memberDTO,
             @PathVariable("teamId") Long teamId) {
-        teamService.withDrawTeam(memberDTO, teamId);
+        teamWithdrawService.withdrawTeam(memberDTO.id(), teamId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -100,12 +104,14 @@ public class TeamController {
     //비밀번호 일치 검사 api
     @PostMapping("/checking/{teamId}")
     public ResponseEntity<Void> verifyPassword(
+            @LoginMember MemberDTO memberDTO,
             @PathVariable("teamId") Long teamId,
             @RequestBody @Valid CheckingPasswordRequest checkingPasswordRequest) {
         teamService.checkPassword(teamId, checkingPasswordRequest);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    //내가 가입한 팀 조회
     @GetMapping("/joined")
     public ResponseEntity<Slice<TeamResponse>> getJoinedTeam(
             @LoginMember MemberDTO memberDTO,
