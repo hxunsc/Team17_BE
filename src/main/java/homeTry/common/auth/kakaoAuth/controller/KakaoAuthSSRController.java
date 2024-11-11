@@ -26,6 +26,6 @@ public class KakaoAuthSSRController {
     public String loginOrRegisterSSR(@RequestParam(name = "code") String code, Model model) {
         String token = jwtAuth.generateToken(kakaoAuthService.loginOrRegister(code));
         model.addAttribute("access_token", token);
-        return "adminKakaoLoginResult";
+        return "admin/adminKakaoLoginResult";
     }
 }
