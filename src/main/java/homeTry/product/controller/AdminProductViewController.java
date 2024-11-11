@@ -24,7 +24,8 @@ public class AdminProductViewController {
     private final AdminProductService adminProductService;
     private final ProductTagService productTagService;
 
-    public AdminProductViewController(AdminProductService adminProductService, ProductTagService productTagService) {
+    public AdminProductViewController(AdminProductService adminProductService,
+        ProductTagService productTagService) {
         this.adminProductService = adminProductService;
         this.productTagService = productTagService;
     }
@@ -50,6 +51,26 @@ public class AdminProductViewController {
     @PostMapping("/add")
     public String addProduct(@ModelAttribute @Valid ProductRequest productRequest) {
         adminProductService.addProduct(productRequest);
+        return "redirect:/admin/product";
+    }
+
+    // 상품 수정 페이지
+    @GetMapping("/edit/{productId}")
+    public String showEditProductForm(@PathVariable("productId") Long productId, Model model) {
+        ProductAdminResponse productResponse = adminProductService.getProductById(productId);
+        model.addAttribute("productRequest", productResponse);
+
+        List<ProductTagDto> tags = productTagService.getProductTagList();
+        model.addAttribute("tags", tags);
+
+        return "product/productEdit";
+    }
+
+    // 상품 수정
+    @PostMapping("/edit/{productId}")
+    public String editProduct(@PathVariable("productId") Long productId,
+        @ModelAttribute @Valid ProductRequest productRequest) {
+        adminProductService.updateProduct(productId, productRequest);
         return "redirect:/admin/product";
     }
 
