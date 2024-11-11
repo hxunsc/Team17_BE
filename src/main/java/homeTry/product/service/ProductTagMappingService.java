@@ -3,7 +3,7 @@ package homeTry.product.service;
 import homeTry.product.model.entity.ProductTagMapping;
 import homeTry.product.repository.ProductTagMappingRepository;
 import homeTry.tag.productTag.dto.ProductTagDto;
-import homeTry.tag.productTag.exception.BadRequestException.ProductTagNotFoundException;
+import homeTry.tag.productTag.exception.badRequestException.ProductTagNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
