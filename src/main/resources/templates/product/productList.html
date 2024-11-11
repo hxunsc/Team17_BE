@@ -30,10 +30,13 @@
         <td th:text="${product.tag.productTagName}"></td>
         <td th:text="${product.viewCount}"></td>
         <td>
-            <form th:action="@{/admin/product/delete/{id}(id=${product.productId()})}" method="post" style="display:inline;">
+            <form th:action="@{/admin/product/delete/{id}(id=${product.productId()})}" method="post"
+                  style="display:inline;">
                 <button type="submit">Delete</button>
             </form>
-            <button onclick="location.href='/admin/product/edit/' + [[${product.productId}]]">Edit</button>
+            <button th:onclick="'location.href=\'/admin/product/edit/' + '[[${product.productId}]]'"
+                    type="button">Edit
+            </button>
         </td>
     </tr>
     </tbody>
