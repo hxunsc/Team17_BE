@@ -8,6 +8,7 @@
 <body>
 <h1>Product List</h1>
 <button onclick="location.href='/admin/product/add'">Add New Product</button>
+<button onclick="location.href='/admin/page'">Back To Main</button>
 <table>
     <thead>
     <tr>
@@ -29,9 +30,10 @@
         <td th:text="${product.tag.productTagName}"></td>
         <td th:text="${product.viewCount}"></td>
         <td>
-            <form th:action="@{/admin/product/delete/{id}(id=${product.productId()})}" method="post">
+            <form th:action="@{/admin/product/delete/{id}(id=${product.productId()})}" method="post" style="display:inline;">
                 <button type="submit">Delete</button>
             </form>
+            <button onclick="location.href='/admin/product/edit/' + [[${product.productId}]]">Edit</button>
         </td>
     </tr>
     </tbody>
