@@ -42,7 +42,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         //토큰 받는 경로 지정
         registry.addInterceptor(adminInterceptor)
                 .addPathPatterns("/admin/page/**");
-//                .excludePathPatterns("/admin/login", "/admin/login/**", "/admin");
     }
 
     @Override
