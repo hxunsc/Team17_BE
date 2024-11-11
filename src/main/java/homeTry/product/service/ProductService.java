@@ -38,7 +38,7 @@ public class ProductService {
         // tag X -> 전체 상품을 1. 조회수 내림차순 2. 가격 오름차순으로 정렬
         Slice<Product> products = (tagIds != null && !tagIds.isEmpty())
             ? getProductsByTagIds(tagIds, pageable)
-            : productRepository.findAllByOrderByViewCountDescPriceAsc(pageable);
+            : productRepository.findAllByIsDeprecatedFalseOrderByViewCountDescPriceAsc(pageable);
 
         return products.map(product -> {
             ProductTagDto tagDto = productTagMappingService.getTagForProduct(product.getId());
@@ -48,7 +48,7 @@ public class ProductService {
 
     private Slice<Product> getProductsByTagIds(List<Long> tagIds, Pageable pageable) {
         List<Long> productIds = productTagMappingService.getProductIdsByTagIds(tagIds);
-        return productRepository.findByIdInOrderByViewCountDescPriceAsc(productIds, pageable);
+        return productRepository.findByIdInAndIsDeprecatedFalseOrderByViewCountDescPriceAsc(productIds, pageable);
     }
 
     // 특정 상품 선택 시 해당 상품의 조회 수 증가
