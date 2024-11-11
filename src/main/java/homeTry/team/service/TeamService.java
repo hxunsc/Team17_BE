@@ -237,7 +237,11 @@ public class TeamService {
                 .stream()
                 .filter(rankingDTO -> userNickname.equals(rankingDTO.name()))
                 .findFirst()
-                .orElseThrow(MyRankingNotFoundException::new);
+                .orElse(new RankingDTO(
+                        userNickname,
+                        DEFAULT_RANKING,
+                        0L
+                ));
     }
 
     //멤버 리스트에서 랭킹을 매겨주는 기능
@@ -255,6 +259,7 @@ public class TeamService {
 
         return totalExerciseTimeList //멤버들 랭킹 구함
                 .stream()
+                .filter(rankingDTO -> rankingDTO.totalExerciseTime() > 0) //기록이 없는 멥버들은 모두 제외
                 .sorted(Comparator.comparing(RankingDTO::totalExerciseTime).reversed())
                 .map(rankingDTO -> new RankingDTO(
                         rankingDTO.name(),
@@ -264,7 +269,7 @@ public class TeamService {
                 .toList();
     }
 
-    //멤버들의 오늘 totalExerciseTime 을 조회 후
+    //멤버들의 오늘 totalExerciseTime 을 조회
     private List<RankingDTO> getTotalExerciseTimeListOfToday(List<Member> memberList) {
         return memberList
                 .stream()
