@@ -72,8 +72,8 @@ values ('https://tinyurl.com/25ntsq9k', 'https://tinyurl.com/27sk7wrj', '런닝�
        ('https://tinyurl.com/28g7dayl', 'https://tinyurl.com/26czhyqs', '아몬드 브리즈 언스위트', 15550, 'coupang', 25, false);
 
 insert into product_tag (tag_name, is_deprecated)
-values ('운동 상품', false),
-       ('운동 식품', false);
+values ('운동 기구', false),
+       ('건강 식품', false);
 
 insert into product_tag_mapping (product_id, product_tag_id, is_deprecated)
 values (1, 1, false),
