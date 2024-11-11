@@ -1,4 +1,4 @@
-package homeTry.tag.productTag.exception.BadRequestException;
+package homeTry.tag.productTag.exception.badRequestException;
 
 import homeTry.common.exception.BadRequestException;
 import homeTry.tag.productTag.exception.ProductTagErrorType;

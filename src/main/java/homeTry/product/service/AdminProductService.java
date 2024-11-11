@@ -7,7 +7,7 @@ import homeTry.product.model.entity.Product;
 import homeTry.product.model.entity.ProductTagMapping;
 import homeTry.product.repository.ProductRepository;
 import homeTry.tag.productTag.dto.ProductTagDto;
-import homeTry.tag.productTag.exception.BadRequestException.ProductTagNotFoundException;
+import homeTry.tag.productTag.exception.badRequestException.ProductTagNotFoundException;
 import homeTry.tag.productTag.model.entity.ProductTag;
 import homeTry.tag.productTag.repository.ProductTagRepository;
 import org.springframework.data.domain.Page;
