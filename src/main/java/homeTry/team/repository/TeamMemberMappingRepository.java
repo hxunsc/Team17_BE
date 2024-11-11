@@ -24,7 +24,12 @@ public interface TeamMemberMappingRepository extends JpaRepository<TeamMemberMap
 
     void deleteByTeam(Team team); //특정 팀에 속한 모든 엔티티 삭제
 
-    List<TeamMemberMapping> findByTeam(Team team);
+    @Query("SELECT tm " +
+            "FROM TeamMemberMapping tm " +
+            "WHERE tm.team = :team " +
+            "AND tm.isDeprecated = false"
+    )
+    List<TeamMemberMapping> findByTeam(@Param("team") Team team);
 
     @Query("SELECT tm " +
             "FROM TeamMemberMapping tm " +
