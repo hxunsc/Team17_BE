@@ -1,13 +1,11 @@
 package homeTry.team.service;
 
 import homeTry.member.model.entity.Member;
-import homeTry.team.exception.AlreadyJoinedTeamException;
-import homeTry.team.exception.TeamMemberNotFoundException;
+import homeTry.team.exception.badRequestException.AlreadyJoinedTeamException;
+import homeTry.team.exception.badRequestException.TeamMemberNotFoundException;
 import homeTry.team.model.entity.Team;
 import homeTry.team.model.entity.TeamMemberMapping;
 import homeTry.team.repository.TeamMemberMappingRepository;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
