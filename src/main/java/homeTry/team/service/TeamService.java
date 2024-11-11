@@ -359,11 +359,6 @@ public class TeamService {
 
         team.decreaseParticipantsByWithdraw(); //팀의 현재 참여인원 감소
     }
-
-    public List<Team> getTeamListByLeaderId(Long memberId) {
-        return teamRepository.findByLeaderId(memberId);
-    }
-
 }
 
 

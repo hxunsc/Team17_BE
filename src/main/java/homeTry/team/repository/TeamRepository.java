@@ -60,6 +60,4 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
             "                   WHERE tm.member = :member) "
     )
     Slice<Team> findTeamExcludingMember(@Param("member") Member member, Pageable pageable);
-
-    List<Team> findByLeaderId(Long id);
 }
