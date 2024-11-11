@@ -1,17 +1,12 @@
 package homeTry.team.service;
 
 import homeTry.chatting.service.ChattingService;
-import homeTry.member.model.entity.Member;
 import homeTry.member.service.MemberService;
-import homeTry.team.exception.NotTeamLeaderException;
-import homeTry.team.exception.TeamLeaderCannotWithdrawException;
-import homeTry.team.exception.TeamNotFoundException;
+import homeTry.team.exception.badRequestException.TeamNotFoundException;
 import homeTry.team.model.entity.Team;
 import homeTry.team.repository.TeamRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 public class TeamWithdrawService {
