@@ -210,6 +210,10 @@ public class TeamService {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(TeamNotFoundException::new);
 
+        Member member = memberService.getMemberEntity(memberDTO.id());
+
+        isMemberOfTeam(member, team); //유저가 팀에 속해있는지 확인
+
         List<Member> memberList = teamMemberMappingService.getMemberListByTeam(team); //팀의 멤버들을 조회해옴
 
         List<RankingDTO> rankingList = getRankingList(memberList, date); //랭킹을 구해옴
@@ -219,6 +223,11 @@ public class TeamService {
         Slice<RankingDTO> slice = getSlice(rankingList, pageable); // 슬라이싱 처리
 
         return new RankingResponse(myRanking.ranking(), myRanking.name(), myRanking.totalExerciseTime(), slice);
+    }
+
+    //유저가 해당 팀에 속해있는 멤버인지 조회
+    private void isMemberOfTeam(Member member, Team team) {
+        teamMemberMappingService.getTeamMemberMapping(team, member);
     }
 
     //리스트에 대해서 슬라이싱 처리해 주는 제네릭 메소드
