@@ -16,7 +16,7 @@ import homeTry.team.dto.request.TeamCreateRequest;
 import homeTry.team.dto.response.RankingResponse;
 import homeTry.team.dto.response.TagListResponse;
 import homeTry.team.dto.response.TeamResponse;
-import homeTry.team.exception.*;
+import homeTry.team.exception.badRequestException.*;
 import homeTry.team.model.entity.Team;
 import homeTry.team.model.vo.Name;
 import homeTry.team.repository.TeamRepository;

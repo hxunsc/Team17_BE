@@ -7,7 +7,7 @@ import homeTry.chatting.repository.ChattingRepository;
 import homeTry.member.dto.MemberDTO;
 import homeTry.member.model.entity.Member;
 import homeTry.member.service.MemberService;
-import homeTry.team.exception.TeamMemberNotFoundException;
+import homeTry.team.exception.badRequestException.TeamMemberNotFoundException;
 import homeTry.team.model.entity.Team;
 import homeTry.team.model.entity.TeamMemberMapping;
 import homeTry.team.service.TeamMemberMappingService;
@@ -28,8 +28,8 @@ public class ChattingService {
 
 
     public ChattingService(TeamService teamService,
-            ChattingRepository chattingRepository,
-            MemberService memberService, TeamMemberMappingService teamMemberMappingService) {
+                           ChattingRepository chattingRepository,
+                           MemberService memberService, TeamMemberMappingService teamMemberMappingService) {
         this.teamService = teamService;
         this.chattingRepository = chattingRepository;
         this.memberService = memberService;
@@ -38,8 +38,8 @@ public class ChattingService {
 
     @Transactional
     public ChattingMessageResponse saveChattingMessage(Long teamId,
-            ChattingMessageRequest chattingMessageRequest,
-            MemberDTO memberDTO) {
+                                                       ChattingMessageRequest chattingMessageRequest,
+                                                       MemberDTO memberDTO) {
 
         Team team = teamService.getTeamEntity(teamId);
         Member member = memberService.getMemberEntity(memberDTO.id());
@@ -57,7 +57,7 @@ public class ChattingService {
 
     @Transactional(readOnly = true)
     public Slice<ChattingMessageResponse> getChattingMessageSlice(Long teamId,
-            MemberDTO memberDTO, Pageable pageable) {
+                                                                  MemberDTO memberDTO, Pageable pageable) {
 
         Team team = teamService.getTeamEntity(teamId);
         Member member = memberService.getMemberEntity(memberDTO.id());

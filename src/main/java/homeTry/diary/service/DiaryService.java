@@ -3,7 +3,7 @@ package homeTry.diary.service;
 import homeTry.common.constants.DateTimeUtil;
 import homeTry.diary.dto.DiaryDto;
 import homeTry.diary.dto.request.DiaryRequest;
-import homeTry.diary.exception.BadRequestException.DiaryNotFoundException;
+import homeTry.diary.exception.badRequestException.DiaryNotFoundException;
 import homeTry.diary.model.entity.Diary;
 import homeTry.diary.repository.DiaryRepository;
 import homeTry.member.service.MemberService;

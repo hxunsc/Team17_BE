@@ -1,6 +1,7 @@
-package homeTry.team.exception;
+package homeTry.team.exception.badRequestException;
 
 import homeTry.common.exception.InternalServerException;
+import homeTry.team.exception.TeamErrorType;
 
 public class TeamMemberNotFoundException extends InternalServerException {
 

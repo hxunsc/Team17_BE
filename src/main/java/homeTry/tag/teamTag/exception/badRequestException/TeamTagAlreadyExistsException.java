@@ -1,4 +1,4 @@
-package homeTry.tag.teamTag.exception.BadRequestException;
+package homeTry.tag.teamTag.exception.badRequestException;
 
 import homeTry.common.exception.BadRequestException;
 import homeTry.tag.teamTag.exception.TeamTagErrorType;
