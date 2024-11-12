@@ -10,6 +10,10 @@ public record MemberDTO(
         Role role
 ) {
 
+    public MemberDTO(String email, String nickname, Role role) {
+        this(0L, email, nickname, role);
+    }
+
     public static MemberDTO from(Member member) {
         return new MemberDTO(member.getId(), member.getEmail(), member.getNickname(), member.getRole());
     }

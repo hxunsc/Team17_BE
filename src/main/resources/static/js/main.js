@@ -23,15 +23,16 @@ function getRequestWithToken(uri) {
   .catch(error => {
     try{
       const errorResponse = JSON.parse(error.message);
-      const errorCode = errorResponse['errorCode']
+      const errorCode = errorResponse['errorCode'];
+      
+      if (errorResponse['status'] === 401) {
+        alert('회원 인증에 실패하였습니다.');
+      }
 
-      if(errorCode === undefined){
+      else if(errorCode === undefined){
         throw new Error('확인되지 않은 에러이고, 서버 응답을 처리할 수 없습니다.')
       }
 
-      if (errorCode.includes("401")) {
-        alert('회원 인증에 실패하였습니다.');
-      }
       else if(errorCode ===  "Member400_001"){
         alert('토큰은 올바르지만 회원이 아닙니다. 회원가입 해주세요');
       }

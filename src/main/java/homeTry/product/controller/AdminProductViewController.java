@@ -5,16 +5,13 @@ import homeTry.product.dto.response.ProductAdminResponse;
 import homeTry.product.service.AdminProductService;
 import homeTry.tag.productTag.dto.ProductTagDto;
 import homeTry.tag.productTag.service.ProductTagService;
-import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -47,13 +44,6 @@ public class AdminProductViewController {
         return "product/productAdd";
     }
 
-    // 상품 추가
-    @PostMapping("/add")
-    public String addProduct(@ModelAttribute @Valid ProductRequest productRequest) {
-        adminProductService.addProduct(productRequest);
-        return "redirect:/admin/product";
-    }
-
     // 상품 수정 페이지
     @GetMapping("/edit/{productId}")
     public String showEditProductForm(@PathVariable("productId") Long productId, Model model) {
@@ -64,21 +54,6 @@ public class AdminProductViewController {
         model.addAttribute("tags", tags);
 
         return "product/productEdit";
-    }
-
-    // 상품 수정
-    @PostMapping("/edit/{productId}")
-    public String editProduct(@PathVariable("productId") Long productId,
-        @ModelAttribute @Valid ProductRequest productRequest) {
-        adminProductService.updateProduct(productId, productRequest);
-        return "redirect:/admin/product";
-    }
-
-    // 상품 삭제
-    @PostMapping("/delete/{productId}")
-    public String deleteProduct(@PathVariable("productId") Long productId) {
-        adminProductService.deleteProduct(productId);
-        return "redirect:/admin/product";
     }
 
 }
