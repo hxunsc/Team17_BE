@@ -2,6 +2,10 @@ package homeTry.product.controller;
 
 import homeTry.product.dto.request.ProductRequest;
 import homeTry.product.service.AdminProductService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "Admin Product", description = "상품 관리자 API")
 @RestController
 @RequestMapping("/admin/page/product")
 public class AdminProductRestController {
@@ -25,6 +30,10 @@ public class AdminProductRestController {
     }
 
     // 상품 추가
+    @Operation(summary = "상품 추가", description = "새로운 상품 추가")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "상품이 성공적으로 추가됨")
+    })
     @PostMapping
     public ResponseEntity<Void> addProduct(@RequestBody @Valid ProductRequest productRequest) {
 
@@ -33,6 +42,10 @@ public class AdminProductRestController {
     }
 
     // 상품 수정
+    @Operation(summary = "상품 수정", description = "기존 상품 정보 수정")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "상품이 성공적으로 수정됨")
+    })
     @PutMapping("/{productId}")
     public ResponseEntity<Void> editProduct(@PathVariable("productId") Long productId,
             @ModelAttribute @Valid ProductRequest productRequest) {
@@ -42,6 +55,10 @@ public class AdminProductRestController {
     }
 
     // 상품 삭제
+    @Operation(summary = "상품 삭제", description = "특정 상품 삭제")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "상품이 성공적으로 샥제됨")
+    })
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> deleteProduct(@PathVariable("productId") Long productId) {
 
