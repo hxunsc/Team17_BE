@@ -56,6 +56,12 @@ public class TeamMemberMappingService {
                 .orElseThrow(TeamMemberNotFoundException::new);
     }
 
+    //특정 TeamMemberMapping 을 id를 가지고 반환
+    public TeamMemberMapping getTeamMemberMappingById(Long teamId, Long memberId) {
+        return teamMemberMappingRepository.findByTeamIdAndMemberId(teamId, memberId)
+                .orElseThrow(TeamMemberNotFoundException::new);
+    }
+
     //유저가 가입한 팀 리스트를 반환
     public List<Team> getTeamListByMember(Member member) {
         return teamMemberMappingRepository.findByMember(member)
