@@ -45,7 +45,7 @@ public class MemberService {
     @Transactional
     public MemberDTO register(KakaoMemberInfoDTO kakaoMemberInfoDTO) {
 
-        MemberDTO memberDTO = new MemberDTO(1L, kakaoMemberInfoDTO.email(),
+        MemberDTO memberDTO = new MemberDTO(kakaoMemberInfoDTO.email(),
                 RandomNicknameGenerator.generateNickname(), Role.USER);
 
         Member member = memberDTO.toEntity();
