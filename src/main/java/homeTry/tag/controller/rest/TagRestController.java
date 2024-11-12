@@ -2,6 +2,7 @@ package homeTry.tag.controller.rest;
 
 import homeTry.tag.productTag.dto.request.ProductTagRequest;
 import homeTry.tag.productTag.service.ProductTagService;
+import homeTry.tag.teamTag.dto.request.TeamTagRequest;
 import homeTry.tag.teamTag.service.TeamTagService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -31,6 +32,18 @@ public class TagRestController {
     @DeleteMapping("/product/{productTagId}")
     public ResponseEntity<Void> deleteProductTag(@PathVariable Long productTagId) {
         productTagService.deleteProductTag(productTagId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/team")
+    public ResponseEntity<Void> addTeamTag(@RequestBody @Valid TeamTagRequest teamTagRequest) {
+        teamTagService.addTeamTag(teamTagRequest);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/team/{teamTagId}")
+    public ResponseEntity<Void> deleteTeamTag(@PathVariable Long teamTagId) {
+        teamTagService.deleteTeamTag(teamTagId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

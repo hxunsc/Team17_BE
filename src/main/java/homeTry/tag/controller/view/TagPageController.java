@@ -1,10 +1,8 @@
 package homeTry.tag.controller.view;
 
 import homeTry.tag.productTag.dto.ProductTagDto;
-import homeTry.tag.productTag.dto.request.ProductTagRequest;
 import homeTry.tag.productTag.service.ProductTagService;
 import homeTry.tag.teamTag.dto.TeamTagDTO;
-import homeTry.tag.teamTag.dto.request.TeamTagRequest;
 import homeTry.tag.teamTag.service.TeamTagService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,27 +37,13 @@ public class TagPageController {
     }
 
     @GetMapping("/product/add")
-    public String showProductTagForm(Model model) {
-        model.addAttribute("productTagRequest", new ProductTagRequest("tagName"));
+    public String showProductTagForm() {
         return "tag/AddProductTag";
     }
 
     @GetMapping("/team/add")
     public String showTeamTagFrom() {
         return "tag/AddTeamTag";
-    }
-
-    @PostMapping("/team/save")
-    public String saveTeamTag(
-            @ModelAttribute TeamTagRequest teamTagRequest) {
-        teamTagService.addTeamTag(teamTagRequest);
-        return "redirect:/admin/page/tag/team";
-    }
-
-    @PostMapping("/team/delete/{id}")
-    public String deleteTeamTag(@PathVariable("id") Long id) {
-        teamTagService.deleteTeamTag(id);
-        return "redirect:/admin/page/tag/team";
     }
 
 }
