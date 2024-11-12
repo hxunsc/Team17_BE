@@ -9,8 +9,11 @@ import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,7 +54,7 @@ public class AdminProductViewController {
     @PostMapping("/add")
     public String addProduct(@ModelAttribute @Valid ProductRequest productRequest) {
         adminProductService.addProduct(productRequest);
-        return "redirect:/admin/product";
+        return "redirect:/admin/page/product";
     }
 
     // 상품 수정 페이지
@@ -71,14 +74,14 @@ public class AdminProductViewController {
     public String editProduct(@PathVariable("productId") Long productId,
         @ModelAttribute @Valid ProductRequest productRequest) {
         adminProductService.updateProduct(productId, productRequest);
-        return "redirect:/admin/product";
+        return "redirect:/admin/page/product";
     }
 
     // 상품 삭제
-    @PostMapping("/delete/{productId}")
-    public String deleteProduct(@PathVariable("productId") Long productId) {
+    @DeleteMapping("/delete/{productId}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable("productId") Long productId) {
         adminProductService.deleteProduct(productId);
-        return "redirect:/admin/product";
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }
