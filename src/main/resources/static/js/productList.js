@@ -4,7 +4,7 @@ function productDeleteRequestWithToken(url) {
   console.log("url", url);
 
   $.ajax({
-    type: 'DELETE', //todo: 추후에 DELETE 로 바꾸기
+    type: 'DELETE',
     url: url,
     contentType: 'application/json; charset=utf-8',
     data: JSON.stringify(requestJson),
