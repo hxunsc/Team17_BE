@@ -1,4 +1,4 @@
-package homeTry.product.controller;
+package homeTry.product.controller.rest;
 
 import homeTry.product.dto.request.ProductRequest;
 import homeTry.product.service.AdminProductService;
