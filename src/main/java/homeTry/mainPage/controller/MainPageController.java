@@ -36,8 +36,8 @@ public class MainPageController {
     @ApiResponse(responseCode = "200", description = "메인페이지 조회 성공")
     public ResponseEntity<MainPageResponse> mainPage(
             @RequestParam(name = "date") @DateValid @DateTimeFormat(pattern = "yyyyMMdd") LocalDate date,
-            @Parameter(hidden = true) @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.ASC) Pageable pageable,
-            @Parameter(hidden = true) @LoginMember MemberDTO memberDTO) {
+            @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.ASC) Pageable pageable,
+            @LoginMember MemberDTO memberDTO) {
 
         return new ResponseEntity<>(mainPageService.getMainPage(date, memberDTO.id(), pageable),
                 HttpStatus.OK);
