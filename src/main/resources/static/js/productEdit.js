@@ -1,9 +1,9 @@
-document.getElementById("editProductForm").addEventListener("submit", function(event) {
-  event.preventDefault(); // 기본 폼 제출 방지
-
-  // 폼에서 필요한 데이터 가져오기
+function productUpdateRequestWithToken() {
   const productId = document.getElementById("productId").value;
+
   const requestJson = {
+    "imageUrl": document.getElementById("imageUrl").value,
+    "productUrl": document.getElementById("productUrl").value,
     "name": document.getElementById("name").value,
     "price": parseInt(document.getElementById("price").value, 10),
     "storeName": document.getElementById("storeName").value,
@@ -17,7 +17,8 @@ document.getElementById("editProductForm").addEventListener("submit", function(e
     contentType: 'application/json; charset=utf-8',
     data: JSON.stringify(requestJson),
     beforeSend: function (xhr) {
-      xhr.setRequestHeader('Authorization', "Bearer " + localStorage.getItem('access_token'));
+      xhr.setRequestHeader('Authorization',
+          "Bearer " + localStorage.getItem('access_token'));
     },
     success: function () {
       alert('상품이 수정되었습니다.');
@@ -28,4 +29,4 @@ document.getElementById("editProductForm").addEventListener("submit", function(e
       alert(errorResponse.message);  // 에러 메시지 alert
     }
   });
-});
+}
