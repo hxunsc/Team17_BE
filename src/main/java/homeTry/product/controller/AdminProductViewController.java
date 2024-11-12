@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/admin/product")
+@RequestMapping("/admin/page/product")
 public class AdminProductViewController {
 
     private final AdminProductService adminProductService;
