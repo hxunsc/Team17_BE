@@ -63,17 +63,17 @@ values (1, '2024-10-09 03:00:10', 5400),
        (4, '2024-10-08 03:00:20', 5400);
 
 insert into product (image_url, product_url, name, price, store_name, view_count, is_deprecated)
-values ('https://tinyurl.com/25ntsq9k', 'https://tinyurl.com/27sk7wrj', '런닝머신', 240000, 'coupang', 15, false),
-       ('https://tinyurl.com/2ylb52aq', 'https://tinyurl.com/2cxw4zxa', '실내자전거', 190000, 'coupang', 5, false),
-       ('https://tinyurl.com/28y6jl8d', 'https://tinyurl.com/29m67lsf', '폼롤러', 5000, 'adidas', 15, false),
+values ('https://tinyurl.com/25ntsq9k', 'https://tinyurl.com/27sk7wrj', '런닝머신', 883700, 'coupang', 15, false),
+       ('https://tinyurl.com/2ylb52aq', 'https://tinyurl.com/2cxw4zxa', '실내자전거', 148800, 'coupang', 5, false),
+       ('https://tinyurl.com/28y6jl8d', 'https://tinyurl.com/29m67lsf', '폼롤러', 19800, 'adidas', 15, false),
        ('https://tinyurl.com/2954eoum', 'https://brand.naver.com/adidasfitness/products/10824318636', '요가매트', 24000, 'adidas', 8, false),
        ('https://tinyurl.com/2cpy86bd', 'https://tinyurl.com/2y9fzpw8', '짐볼', 9900, 'body crew', 20, false),
-       ('https://tinyurl.com/23oej7er', 'https://tinyurl.com/2bkxjcyd', '요가 밴드', 7900, 'coupang', 11, false),
+       ('https://tinyurl.com/23oej7er', 'https://tinyurl.com/2bkxjcyd', '요가 밴드', 6600, 'coupang', 11, false),
        ('https://tinyurl.com/28g7dayl', 'https://tinyurl.com/26czhyqs', '아몬드 브리즈 언스위트', 15550, 'coupang', 25, false);
 
 insert into product_tag (tag_name, is_deprecated)
-values ('운동 상품', false),
-       ('운동 식품', false);
+values ('운동 기구', false),
+       ('건강 식품', false);
 
 insert into product_tag_mapping (product_id, product_tag_id, is_deprecated)
 values (1, 1, false),

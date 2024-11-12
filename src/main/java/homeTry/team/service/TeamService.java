@@ -197,11 +197,7 @@ public class TeamService {
     public TagListResponse getAllTeamTagList(MemberDTO memberDTO) {
         AllTeamTagDTO allTeamTagDTO = teamTagService.getAllTeamTagList(); //모든 태그 조회해 옴
 
-        return new TagListResponse(
-                allTeamTagDTO.genderTagList(),
-                allTeamTagDTO.ageTagList(),
-                allTeamTagDTO.exerciseIntensityTagList()
-        );
+        return TagListResponse.of(allTeamTagDTO);
     }
 
     //팀 랭킹 조회 기능(페이징 적용)
@@ -209,6 +205,10 @@ public class TeamService {
     public RankingResponse getTeamRanking(MemberDTO memberDTO, Long teamId, Pageable pageable, LocalDate date) {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(TeamNotFoundException::new);
+
+        Member member = memberService.getMemberEntity(memberDTO.id());
+
+        isMemberOfTeam(member, team); //유저가 팀에 속해있는지 확인
 
         List<Member> memberList = teamMemberMappingService.getMemberListByTeam(team); //팀의 멤버들을 조회해옴
 
@@ -219,6 +219,11 @@ public class TeamService {
         Slice<RankingDTO> slice = getSlice(rankingList, pageable); // 슬라이싱 처리
 
         return new RankingResponse(myRanking.ranking(), myRanking.name(), myRanking.totalExerciseTime(), slice);
+    }
+
+    //유저가 해당 팀에 속해있는 멤버인지 조회
+    private void isMemberOfTeam(Member member, Team team) {
+        teamMemberMappingService.getTeamMemberMapping(team, member);
     }
 
     //리스트에 대해서 슬라이싱 처리해 주는 제네릭 메소드
@@ -237,7 +242,11 @@ public class TeamService {
                 .stream()
                 .filter(rankingDTO -> userNickname.equals(rankingDTO.name()))
                 .findFirst()
-                .orElseThrow(MyRankingNotFoundException::new);
+                .orElse(new RankingDTO(
+                        userNickname,
+                        DEFAULT_RANKING,
+                        0L
+                ));
     }
 
     //멤버 리스트에서 랭킹을 매겨주는 기능
@@ -255,6 +264,7 @@ public class TeamService {
 
         return totalExerciseTimeList //멤버들 랭킹 구함
                 .stream()
+                .filter(rankingDTO -> rankingDTO.totalExerciseTime() > 0) //기록이 없는 멥버들은 모두 제외
                 .sorted(Comparator.comparing(RankingDTO::totalExerciseTime).reversed())
                 .map(rankingDTO -> new RankingDTO(
                         rankingDTO.name(),
@@ -264,7 +274,7 @@ public class TeamService {
                 .toList();
     }
 
-    //멤버들의 오늘 totalExerciseTime 을 조회 후
+    //멤버들의 오늘 totalExerciseTime 을 조회
     private List<RankingDTO> getTotalExerciseTimeListOfToday(List<Member> memberList) {
         return memberList
                 .stream()
@@ -354,11 +364,6 @@ public class TeamService {
 
         team.decreaseParticipantsByWithdraw(); //팀의 현재 참여인원 감소
     }
-
-    public List<Team> getTeamListByLeaderId(Long memberId) {
-        return teamRepository.findByLeaderId(memberId);
-    }
-
 }
 
 

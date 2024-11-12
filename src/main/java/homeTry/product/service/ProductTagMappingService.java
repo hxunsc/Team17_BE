@@ -1,9 +1,11 @@
 package homeTry.product.service;
 
+import homeTry.product.model.entity.Product;
 import homeTry.product.model.entity.ProductTagMapping;
 import homeTry.product.repository.ProductTagMappingRepository;
 import homeTry.tag.productTag.dto.ProductTagDto;
 import homeTry.tag.productTag.exception.badRequestException.ProductTagNotFoundException;
+import homeTry.tag.productTag.model.entity.ProductTag;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,6 +59,25 @@ public class ProductTagMappingService {
         List<ProductTagMapping> mappings = productTagMappingRepository.findByProductTagId(tagId);
         mappings.forEach(mapping -> mapping.markAsDeprecated());
         productTagMappingRepository.saveAll(mappings);
+    }
+
+    @Transactional
+    public void updateProductTagMapping(Product product, ProductTag newTag) {
+        // 기존 매핑 조회
+        List<ProductTagMapping> existingMappings = productTagMappingRepository.findByProductId(product.getId());
+
+        // 기존 태그와 새로운 태그가 동일한 경우, 업데이트 불필요
+        if (existingMappings.size() == 1 && existingMappings.get(0).getProductTag().equals(newTag)) {
+            return;
+        }
+
+        // 기존 매핑 비활성화
+        existingMappings.forEach(mapping -> mapping.markAsDeprecated());
+        productTagMappingRepository.saveAll(existingMappings);
+
+        // 새로운 태그로 매핑 추가
+        ProductTagMapping newMapping = new ProductTagMapping(product, newTag);
+        productTagMappingRepository.save(newMapping);
     }
 
 }

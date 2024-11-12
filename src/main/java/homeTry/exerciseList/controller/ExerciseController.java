@@ -4,11 +4,16 @@ import homeTry.common.annotation.LoginMember;
 import homeTry.exerciseList.dto.request.ExerciseRequest;
 import homeTry.exerciseList.service.ExerciseService;
 import homeTry.member.dto.MemberDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "Exercise", description = "운동 관련 API")
 @RestController
 @RequestMapping("/api/exercise")
 public class ExerciseController {
@@ -19,6 +24,10 @@ public class ExerciseController {
         this.exerciseService = exerciseService;
     }
 
+    @Operation(summary = "운동 생성", description = "새로운 운동 생성")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "운동이 성공적으로 생성됨")
+    })
     @PostMapping
     public ResponseEntity<Void> createExercise(@Valid @RequestBody ExerciseRequest request,
                                                @LoginMember MemberDTO memberDTO) {
@@ -27,6 +36,10 @@ public class ExerciseController {
         return new ResponseEntity<>(HttpStatus.CREATED);  // 상태 코드 201
     }
 
+    @Operation(summary = "운동 삭제", description = "특정 운동 삭제")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "운동이 성공적으로 삭제됨")
+    })
     @DeleteMapping("/{exerciseId}")
     public ResponseEntity<Void> deleteExercise(@PathVariable Long exerciseId,
                                                @LoginMember MemberDTO memberDTO) {
@@ -35,6 +48,10 @@ public class ExerciseController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);  // 상태 코드 204
     }
 
+    @Operation(summary = "운동 시작", description = "특정 운동 시작")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "운동이 성공적으로 시작됨")
+    })
     @PostMapping("/{exerciseId}")
     public ResponseEntity<Void> startExercise(@PathVariable("exerciseId") Long exerciseId,
                                               @LoginMember MemberDTO memberDTO) {
@@ -43,6 +60,10 @@ public class ExerciseController {
         return new ResponseEntity<>(HttpStatus.OK);  // 상태 코드 200
     }
 
+    @Operation(summary = "운동 종료", description = "특정 운동 종료")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "운동이 성공적으로 종료됨")
+    })
     @PutMapping("/{exerciseId}")
     public ResponseEntity<Void> stopExercise(@PathVariable Long exerciseId,
                                              @LoginMember MemberDTO memberDTO) {

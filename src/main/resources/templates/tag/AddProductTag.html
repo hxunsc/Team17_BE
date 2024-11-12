@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <title>Add Product Tag</title>
     <link rel="stylesheet" type="text/css" href="/css/styles.css">
@@ -7,12 +7,12 @@
 <body>
 <div class="container">
     <h1>Add New Product Tag</h1>
-    <form action="/admin/tag/product/save" method="post">
+    <form action="/admin/page/tag/product/save" method="post">
         <label for="productTagName">Tag Name:</label>
         <input type="text" id="productTagName" name="productTagName" required>
         <button type="submit">Save Tag</button>
     </form>
-    <button onclick="location.href='/admin/tag/product'">Back To List</button>
+    <button onclick="location.href='/admin/page/tag/product'">Back To List</button>
 </div>
 </body>
 </html>

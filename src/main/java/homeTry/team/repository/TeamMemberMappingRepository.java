@@ -14,11 +14,22 @@ import java.util.Optional;
 
 public interface TeamMemberMappingRepository extends JpaRepository<TeamMemberMapping, Long> {
 
-    Optional<TeamMemberMapping> findByTeamAndMember(Team team, Member member);
+    @Query("SELECT tm " +
+            "FROM TeamMemberMapping tm " +
+            "WHERE tm.member = :member " +
+            "AND tm.team = :team " +
+            "AND tm.isDeprecated = false"
+    )
+    Optional<TeamMemberMapping> findByTeamAndMember(@Param("team") Team team, @Param("member") Member member);
 
     void deleteByTeam(Team team); //특정 팀에 속한 모든 엔티티 삭제
 
-    List<TeamMemberMapping> findByTeam(Team team);
+    @Query("SELECT tm " +
+            "FROM TeamMemberMapping tm " +
+            "WHERE tm.team = :team " +
+            "AND tm.isDeprecated = false"
+    )
+    List<TeamMemberMapping> findByTeam(@Param("team") Team team);
 
     @Query("SELECT tm " +
             "FROM TeamMemberMapping tm " +

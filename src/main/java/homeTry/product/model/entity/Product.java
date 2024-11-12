@@ -53,6 +53,15 @@ public class Product extends SoftDeletableEntity {
         this.viewCount = 0L;
     }
 
+    // 상품 수정
+    public void update(String imageUrl, String productUrl, String name, Long price, String storeName) {
+        this.imageUrl = new ProductImageUrl(imageUrl);
+        this.productUrl = new ProductUrl(productUrl);
+        this.name = new ProductName(name);
+        this.price = new ProductPrice(price);
+        this.storeName = new StoreName(storeName);
+    }
+
     public Long getId() {
         return id;
     }
