@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockCookie;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
@@ -47,8 +46,8 @@ class AdminProductViewTest {
     @Test
     @DisplayName("관리자 - 상품 목록 페이지")
     void testGetProducts() throws Exception {
-        mockMvc.perform(get("/admin/product")
-                .cookie(new MockCookie("adminToken", adminToken)))
+        mockMvc.perform(get("/admin/page/product")
+                .header("Authorization", "Bearer " + adminToken))
             .andExpect(status().isOk())
             .andExpect(view().name("product/productList"))
             .andExpect(model().attributeExists("products"));
@@ -57,8 +56,8 @@ class AdminProductViewTest {
     @Test
     @DisplayName("관리자 - 상품 추가 폼 페이지")
     void testShowAddProductForm() throws Exception {
-        mockMvc.perform(get("/admin/product/add")
-                .cookie(new MockCookie("adminToken", adminToken)))
+        mockMvc.perform(get("/admin/page/product/add")
+                .header("Authorization", "Bearer " + adminToken))
             .andExpect(status().isOk())
             .andExpect(view().name("product/productAdd"))
             .andExpect(model().attributeExists("productRequest"))
@@ -68,8 +67,8 @@ class AdminProductViewTest {
     @Test
     @DisplayName("관리자 - 상품 추가 요청")
     void testAddProduct() throws Exception {
-        mockMvc.perform(post("/admin/product/add")
-                .cookie(new MockCookie("adminToken", adminToken))
+        mockMvc.perform(post("/admin/page/product/add")
+                .header("Authorization", "Bearer " + adminToken)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)  // Content-Type을 폼 형식으로 설정
                 .param("imageUrl", "https://example.com/image.jpg")
                 .param("productUrl", "https://example.com/product")
@@ -86,8 +85,8 @@ class AdminProductViewTest {
     void testDeleteProduct() throws Exception {
         Long productId = 1L;
 
-        mockMvc.perform(post("/admin/product/delete/{productId}", productId)
-                .cookie(new MockCookie("adminToken", adminToken)))
+        mockMvc.perform(post("/admin/page/product/delete/{productId}", productId)
+                .header("Authorization", "Bearer " + adminToken))
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl("/admin/product"));
     }

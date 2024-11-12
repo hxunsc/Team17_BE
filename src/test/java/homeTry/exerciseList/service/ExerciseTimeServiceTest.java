@@ -1,9 +1,7 @@
 package homeTry.exerciseList.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
-import homeTry.exerciseList.exception.badRequestException.ExerciseTimeLimitExceededException;
 import homeTry.exerciseList.model.entity.Exercise;
 import homeTry.exerciseList.model.entity.ExerciseTime;
 import homeTry.exerciseList.repository.ExerciseRepository;
@@ -52,16 +50,12 @@ class ExerciseTimeServiceTest {
         exerciseTimeHelper.saveExerciseTime(exerciseTime);
 
         // when & then
-        ExerciseTimeLimitExceededException exception = assertThrows(
-            ExerciseTimeLimitExceededException.class,
-            () -> exerciseTimeService.stopExerciseTime(exercise)
-        );
-
-        assertThat(exception.getMessage()).isEqualTo("한 번에 저장되는 운동 시간은 8시간을 초과할 수 없습니다.");
+        exerciseTimeService.stopExerciseTime(exercise);
 
         // 운동 상태 확인
         ExerciseTime updatedExerciseTime = exerciseTimeService.getExerciseTime(exercise.getExerciseId());
         assertThat(updatedExerciseTime.isActive()).isFalse();
+        assertThat(updatedExerciseTime.getExerciseTime().toMillis()).isEqualTo(0);
     }
 
     @Test
