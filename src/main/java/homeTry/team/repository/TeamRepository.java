@@ -42,7 +42,7 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
             "          WHERE tt.teamTag IN :tagList " +
             "          GROUP BY tt.team " +
             "          HAVING COUNT(DISTINCT tt.teamTag) = :tagListSize)" +
-            "AND t.teamName.value LIKE :teamName% "
+            "AND t.teamName.value LIKE CONCAT ('%', :teamName, '%') "
     )
     Slice<Team> findByTeamNameAndTagListExcludingMember(@Param("tagList") List<TeamTag> tagList, @Param("tagListSize") long tagListSize, @Param("member") Member member, Pageable pageable, @Param("teamName") String teamName);
 
@@ -52,7 +52,7 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
             "                   FROM TeamMemberMapping tm " +
             "                   WHERE tm.member = :member" +
             "                   AND tm.isDeprecated = false) " +
-            "AND t.teamName.value LIKE :teamName% "
+            "AND t.teamName.value LIKE CONCAT ('%', :teamName, '%') "
     )
     Slice<Team> findByTeamNameExcludingMember(@Param("teamName") String teamName, @Param("member") Member member, Pageable pageable);
 
