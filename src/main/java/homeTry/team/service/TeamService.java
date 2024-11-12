@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 
@@ -36,7 +37,7 @@ public class TeamService {
 
     private static final int DEFAULT_PARTICIPANTS = 1;
     private static final int DEFAULT_RANKING = 0;
-    private static final int FIRST = 1;
+    private static final int ZERO = 0;
 
     private final TeamRepository teamRepository;
     private final MemberService memberService;
@@ -260,18 +261,22 @@ public class TeamService {
         if (!date.isEqual(currentDate)) // 과거 조회인경우
             totalExerciseTimeList = getTotalExerciseTimeListOfHistory(memberList, date);
 
-        AtomicInteger rankCounter = new AtomicInteger(FIRST);
+        AtomicLong previousTotalExerciseTime = new AtomicLong(-1); //내 앞 순위의 totalExerciseTime을 저장
+        AtomicInteger rankCounter = new AtomicInteger(ZERO); //초기 순위를 0으로 지정
 
-        return totalExerciseTimeList //멤버들 랭킹 구함
+        List<RankingDTO> rankingDTOList = totalExerciseTimeList // 시간기준 내림차순으로 정렬
                 .stream()
-                .filter(rankingDTO -> rankingDTO.totalExerciseTime() > 0) //기록이 없는 멥버들은 모두 제외
                 .sorted(Comparator.comparing(RankingDTO::totalExerciseTime).reversed())
-                .map(rankingDTO -> new RankingDTO(
-                        rankingDTO.name(),
-                        rankCounter.getAndIncrement(),
-                        rankingDTO.totalExerciseTime()
-                ))
+                .map(rankingDTO -> {
+                    if (rankingDTO.totalExerciseTime() != previousTotalExerciseTime.get()) { //앞 순위와 나의 totalExerciseTime 시간이 다른 경우
+                        rankCounter.getAndIncrement();
+                        previousTotalExerciseTime.set(rankingDTO.totalExerciseTime());
+                    }
+                    return new RankingDTO(rankingDTO.name(), rankCounter.get(), rankingDTO.totalExerciseTime());
+                })
                 .toList();
+
+        return rankingDTOList;
     }
 
     //멤버들의 오늘 totalExerciseTime 을 조회

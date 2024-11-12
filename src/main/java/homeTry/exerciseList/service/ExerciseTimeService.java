@@ -68,6 +68,7 @@ public class ExerciseTimeService {
         // 하루 총 운동 시간이 12시간을 초과한 경우
         if (totalTime.compareTo(Duration.ofHours(12)) > 0) {
             exerciseTime.stopExerciseWithoutSavingTime();  // 기록 저장 없이 강제 종료
+            exerciseTime.limitTotalExerciseTime(); // 11시간 59분 59초 까지만 시간 저장
         }
     }
 
