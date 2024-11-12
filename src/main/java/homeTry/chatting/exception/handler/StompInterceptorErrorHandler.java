@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import homeTry.chatting.exception.ChattingErrorType;
 import homeTry.chatting.exception.badRequestException.InvalidChattingTokenException;
-import homeTry.chatting.exception.internalServerException.NoSuchMemberInDbWithValidTokenException;
+import homeTry.common.exception.BadRequestException;
 import homeTry.common.exception.ErrorType;
 import homeTry.common.exception.dto.response.ErrorResponse;
 import java.nio.charset.StandardCharsets;
@@ -53,10 +53,10 @@ public class StompInterceptorErrorHandler extends StompSubProtocolErrorHandler {
             case InvalidChattingTokenException e ->
                     createErrorMessage(handleError(e.getErrorType()));
 
-            case NoSuchMemberInDbWithValidTokenException e -> {
-                logger.error("인터셉터 에러 핸들러에서 에러 발생 {} - {}", e.getErrorType().getErrorCode(),
+            case BadRequestException e -> {
+                logger.error("인터셉터 에러 핸들러에서 에러 발생 | {} - {}", e.getErrorType().getErrorCode(),
                         e.getErrorType().getMessage());
-                yield createErrorMessage(handleError(ChattingErrorType.UNKNOWN_CHATTING_EXCEPTION));
+                yield createErrorMessage(handleError(e.getErrorType()));
             }
 
             case null -> {

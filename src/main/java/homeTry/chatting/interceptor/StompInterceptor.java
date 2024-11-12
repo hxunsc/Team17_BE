@@ -1,7 +1,8 @@
 package homeTry.chatting.interceptor;
 
+import homeTry.chatting.exception.badRequestException.InactivatedMemberWithValidTokenException;
 import homeTry.chatting.exception.badRequestException.InvalidChattingTokenException;
-import homeTry.chatting.exception.internalServerException.NoSuchMemberInDbWithValidTokenException;
+import homeTry.chatting.exception.badRequestException.NoSuchMemberInDbWithValidTokenException;
 import homeTry.common.auth.jwt.JwtAuth;
 import homeTry.common.auth.jwt.JwtUtil;
 import homeTry.member.dto.MemberDTO;
@@ -20,13 +21,11 @@ import org.springframework.stereotype.Component;
 public class StompInterceptor implements ChannelInterceptor {
 
     private final JwtAuth jwtAuth;
-    private final JwtUtil jwtUtil;
     private final MemberService memberService;
 
     @Autowired
-    public StompInterceptor(JwtAuth jwtAuth, JwtUtil jwtUtil, MemberService memberService) {
+    public StompInterceptor(JwtAuth jwtAuth, MemberService memberService) {
         this.jwtAuth = jwtAuth;
-        this.jwtUtil = jwtUtil;
         this.memberService = memberService;
     }
 
@@ -43,20 +42,19 @@ public class StompInterceptor implements ChannelInterceptor {
 
     private void handleConnectCommand(StompHeaderAccessor accessor) {
         if (accessor.getCommand() == StompCommand.CONNECT) {
-            String bearerToken = String.valueOf(
-                    accessor.getNativeHeader("Authorization").getFirst());
-
-            if (!jwtUtil.isValidBearerToken(bearerToken))
-                throw new InvalidChattingTokenException();
-
-            String token = bearerToken.substring(7);
-
             MemberDTO memberDTO;
 
             try {
+                String token = String.valueOf(accessor.getNativeHeader("Authorization").getFirst())
+                        .substring(7); // Expect after B e a r e r _
+
                 memberDTO = memberService.getMember(jwtAuth.extractId(token));
-            } catch (MemberNotFoundException | InactivatedMemberException e) {
+            } catch (MemberNotFoundException e) {
                 throw new NoSuchMemberInDbWithValidTokenException();
+            } catch (InactivatedMemberException e) {
+                throw new InactivatedMemberWithValidTokenException();
+            } catch (Exception e) {
+                throw new InvalidChattingTokenException();
             }
 
             //세션에 저장
