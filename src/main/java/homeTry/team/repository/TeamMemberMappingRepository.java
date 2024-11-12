@@ -22,6 +22,8 @@ public interface TeamMemberMappingRepository extends JpaRepository<TeamMemberMap
     )
     Optional<TeamMemberMapping> findByTeamAndMember(@Param("team") Team team, @Param("member") Member member);
 
+    Optional<TeamMemberMapping> findByTeamIdAndMemberId(Long memberId, Long teamId);
+
     void deleteByTeam(Team team); //특정 팀에 속한 모든 엔티티 삭제
 
     @Query("SELECT tm " +
