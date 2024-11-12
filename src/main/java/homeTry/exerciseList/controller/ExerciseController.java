@@ -24,11 +24,11 @@ public class ExerciseController {
         this.exerciseService = exerciseService;
     }
 
+    @PostMapping
     @Operation(summary = "운동 생성", description = "새로운 운동 생성")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "운동이 성공적으로 생성됨")
     })
-    @PostMapping
     public ResponseEntity<Void> createExercise(@Valid @RequestBody ExerciseRequest request,
         @LoginMember MemberDTO memberDTO) {
 
@@ -36,11 +36,11 @@ public class ExerciseController {
         return new ResponseEntity<>(HttpStatus.CREATED);  // 상태 코드 201
     }
 
+    @DeleteMapping("/{exerciseId}")
     @Operation(summary = "운동 삭제", description = "특정 운동 삭제")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "운동이 성공적으로 삭제됨")
     })
-    @DeleteMapping("/{exerciseId}")
     public ResponseEntity<Void> deleteExercise(@PathVariable Long exerciseId,
         @LoginMember MemberDTO memberDTO) {
 
@@ -48,11 +48,11 @@ public class ExerciseController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);  // 상태 코드 204
     }
 
+    @PostMapping("/{exerciseId}")
     @Operation(summary = "운동 시작", description = "특정 운동 시작")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "운동이 성공적으로 시작됨")
     })
-    @PostMapping("/{exerciseId}")
     public ResponseEntity<Void> startExercise(@PathVariable("exerciseId") Long exerciseId,
         @LoginMember MemberDTO memberDTO) {
 
@@ -60,11 +60,11 @@ public class ExerciseController {
         return new ResponseEntity<>(HttpStatus.OK);  // 상태 코드 200
     }
 
+    @PutMapping("/{exerciseId}")
     @Operation(summary = "운동 종료", description = "특정 운동 종료")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "운동이 성공적으로 종료됨")
     })
-    @PutMapping("/{exerciseId}")
     public ResponseEntity<Void> stopExercise(@PathVariable Long exerciseId,
         @LoginMember MemberDTO memberDTO) {
 

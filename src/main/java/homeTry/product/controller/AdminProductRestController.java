@@ -30,11 +30,11 @@ public class AdminProductRestController {
     }
 
     // 상품 추가
+    @PostMapping
     @Operation(summary = "상품 추가", description = "새로운 상품 추가")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "상품이 성공적으로 추가됨")
     })
-    @PostMapping
     public ResponseEntity<Void> addProduct(@RequestBody @Valid ProductRequest productRequest) {
 
         adminProductService.addProduct(productRequest);
@@ -42,11 +42,11 @@ public class AdminProductRestController {
     }
 
     // 상품 수정
+    @PutMapping("/{productId}")
     @Operation(summary = "상품 수정", description = "기존 상품 정보 수정")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "상품이 성공적으로 수정됨")
     })
-    @PutMapping("/{productId}")
     public ResponseEntity<Void> editProduct(@PathVariable("productId") Long productId,
             @ModelAttribute @Valid ProductRequest productRequest) {
 
@@ -55,11 +55,11 @@ public class AdminProductRestController {
     }
 
     // 상품 삭제
+    @DeleteMapping("/{productId}")
     @Operation(summary = "상품 삭제", description = "특정 상품 삭제")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "상품이 성공적으로 샥제됨")
     })
-    @DeleteMapping("/{productId}")
     public ResponseEntity<Void> deleteProduct(@PathVariable("productId") Long productId) {
 
         adminProductService.deleteProduct(productId);
