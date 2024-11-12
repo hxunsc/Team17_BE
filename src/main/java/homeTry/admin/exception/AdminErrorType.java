@@ -19,16 +19,16 @@ public enum AdminErrorType implements ErrorType {
 
     @Override
     public String getErrorCode() {
-        return "";
+        return errorCode;
     }
 
     @Override
     public HttpStatus getHttpStatus() {
-        return null;
+        return httpStatus;
     }
 
     @Override
     public String getMessage() {
-        return "";
+        return message;
     }
 }
