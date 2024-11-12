@@ -5,6 +5,7 @@ import homeTry.exerciseList.dto.request.ExerciseRequest;
 import homeTry.exerciseList.service.ExerciseService;
 import homeTry.member.dto.MemberDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,7 +31,7 @@ public class ExerciseController {
     })
     @PostMapping
     public ResponseEntity<Void> createExercise(@Valid @RequestBody ExerciseRequest request,
-                                               @LoginMember MemberDTO memberDTO) {
+        @Parameter(hidden = true) @LoginMember MemberDTO memberDTO) {
 
         exerciseService.createExercise(request, memberDTO);  // 운동 생성
         return new ResponseEntity<>(HttpStatus.CREATED);  // 상태 코드 201
@@ -42,7 +43,7 @@ public class ExerciseController {
     })
     @DeleteMapping("/{exerciseId}")
     public ResponseEntity<Void> deleteExercise(@PathVariable Long exerciseId,
-                                               @LoginMember MemberDTO memberDTO) {
+        @Parameter(hidden = true) @LoginMember MemberDTO memberDTO) {
 
         exerciseService.deleteExercise(exerciseId, memberDTO);  // 운동 삭제
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);  // 상태 코드 204
@@ -54,7 +55,7 @@ public class ExerciseController {
     })
     @PostMapping("/{exerciseId}")
     public ResponseEntity<Void> startExercise(@PathVariable("exerciseId") Long exerciseId,
-                                              @LoginMember MemberDTO memberDTO) {
+        @Parameter(hidden = true) @LoginMember MemberDTO memberDTO) {
 
         exerciseService.startExercise(exerciseId, memberDTO);  // 운동 시작
         return new ResponseEntity<>(HttpStatus.OK);  // 상태 코드 200
@@ -66,7 +67,7 @@ public class ExerciseController {
     })
     @PutMapping("/{exerciseId}")
     public ResponseEntity<Void> stopExercise(@PathVariable Long exerciseId,
-                                             @LoginMember MemberDTO memberDTO) {
+        @Parameter(hidden = true) @LoginMember MemberDTO memberDTO) {
 
         exerciseService.stopExercise(exerciseId, memberDTO);  // 운동 종료
         return new ResponseEntity<>(HttpStatus.OK);  // 상태 코드 200
