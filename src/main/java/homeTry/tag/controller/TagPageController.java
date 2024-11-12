@@ -47,7 +47,7 @@ public class TagPageController {
     public String saveProductTag(
             @ModelAttribute ProductTagRequest productTagRequest) {
         productTagService.addProductTag(productTagRequest);
-        return "redirect:/admin/tag/product"; // 상품 태그 목록 페이지로 리다이렉트
+        return "redirect:/admin/page/tag/product"; // 상품 태그 목록 페이지로 리다이렉트
     }
 
     @GetMapping("/team/add")
@@ -59,19 +59,19 @@ public class TagPageController {
     public String saveTeamTag(
             @ModelAttribute TeamTagRequest teamTagRequest) {
         teamTagService.addTeamTag(teamTagRequest);
-        return "redirect:/admin/tag/team";
+        return "redirect:/admin/page/tag/team";
     }
 
     @PostMapping("/product/delete/{id}")
     public String deleteProductTag(@PathVariable("id") Long id) {
         productTagService.deleteProductTag(id);
-        return "redirect:/admin/tag/product";
+        return "redirect:/admin/page/tag/product";
     }
 
     @PostMapping("/team/delete/{id}")
     public String deleteTeamTag(@PathVariable("id") Long id) {
         teamTagService.deleteTeamTag(id);
-        return "redirect:/admin/tag/team";
+        return "redirect:/admin/page/tag/team";
     }
 
 }
