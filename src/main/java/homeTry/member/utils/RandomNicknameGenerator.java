@@ -1,6 +1,7 @@
 package homeTry.member.utils;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public final class RandomNicknameGenerator {
 
@@ -39,7 +40,7 @@ public final class RandomNicknameGenerator {
     };
 
     public static String generateNickname() {
-        Random random = new Random();
+        Random random = ThreadLocalRandom.current();
         String adjective = ADJECTIVES[random.nextInt(ADJECTIVES.length)];
         String noun = NOUNS[random.nextInt(NOUNS.length)];
         return adjective + noun;

@@ -4,7 +4,6 @@ import homeTry.chatting.exception.badRequestException.InactivatedMemberWithValid
 import homeTry.chatting.exception.badRequestException.InvalidChattingTokenException;
 import homeTry.chatting.exception.badRequestException.NoSuchMemberInDbWithValidTokenException;
 import homeTry.common.auth.jwt.JwtAuth;
-import homeTry.common.auth.jwt.JwtUtil;
 import homeTry.member.dto.MemberDTO;
 import homeTry.member.exception.badRequestException.InactivatedMemberException;
 import homeTry.member.exception.badRequestException.MemberNotFoundException;
