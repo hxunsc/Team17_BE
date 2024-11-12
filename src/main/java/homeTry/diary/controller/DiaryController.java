@@ -5,7 +5,6 @@ import homeTry.diary.dto.request.DiaryRequest;
 import homeTry.diary.service.DiaryService;
 import homeTry.member.dto.MemberDTO;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -40,7 +39,7 @@ public class DiaryController {
     @ApiResponse(responseCode = "204", description = "일기 삭제 성공")
     public ResponseEntity<Void> deleteDiary(
             @PathVariable Long diaryId,
-            @Parameter(hidden = true) @LoginMember MemberDTO memberDto) {
+            @LoginMember MemberDTO memberDto) {
 
         diaryService.deleteDiary(diaryId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
