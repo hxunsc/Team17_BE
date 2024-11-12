@@ -5,6 +5,7 @@ import homeTry.diary.dto.request.DiaryRequest;
 import homeTry.diary.service.DiaryService;
 import homeTry.member.dto.MemberDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -28,7 +29,7 @@ public class DiaryController {
     @PostMapping
     public ResponseEntity<Void> createDiary(
             @Valid @RequestBody DiaryRequest diaryRequest,
-            @LoginMember MemberDTO memberDTO) {
+            @Parameter(hidden = true) @LoginMember MemberDTO memberDTO) {
 
         diaryService.createDiary(diaryRequest, memberDTO.id());
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -39,7 +40,7 @@ public class DiaryController {
     @DeleteMapping("/{diaryId}")
     public ResponseEntity<Void> deleteDiary(
             @PathVariable Long diaryId,
-            @LoginMember MemberDTO memberDto) {
+            @Parameter(hidden = true) @LoginMember MemberDTO memberDto) {
 
         diaryService.deleteDiary(diaryId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

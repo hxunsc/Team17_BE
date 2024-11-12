@@ -7,6 +7,7 @@ import homeTry.mainPage.service.MainPageService;
 import homeTry.member.dto.MemberDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Pageable;
@@ -35,8 +36,8 @@ public class MainPageController {
     @GetMapping
     public ResponseEntity<MainPageResponse> mainPage(
             @RequestParam(name = "date") @DateValid @DateTimeFormat(pattern = "yyyyMMdd") LocalDate date,
-            @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.ASC) Pageable pageable,
-            @LoginMember MemberDTO memberDTO) {
+            @Parameter(hidden = true) @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.ASC) Pageable pageable,
+            @Parameter(hidden = true) @LoginMember MemberDTO memberDTO) {
 
         return new ResponseEntity<>(mainPageService.getMainPage(date, memberDTO.id(), pageable),
                 HttpStatus.OK);
