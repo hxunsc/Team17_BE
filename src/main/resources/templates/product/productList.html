@@ -34,7 +34,7 @@
     <td th:text="${product.tag.productTagName}"></td>
     <td th:text="${product.viewCount}"></td>
     <td>
-      <button th:onclick="'productDeleteRequestWithToken(\'/admin/page/product/delete/' + ${product.productId} + '\')'">
+      <button th:onclick="'productDeleteRequestWithToken(\'/admin/page/product/' + ${product.productId} + '\')'">
         Delete
       </button>
       <button th:onclick="'getRequestWithToken(\'/admin/page/product/edit/' + ${product.productId} + '\')'">
