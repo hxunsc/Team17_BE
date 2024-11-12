@@ -11,6 +11,6 @@ import java.util.List;
 public interface ProductTagRepository extends JpaRepository<ProductTag, Long>{
 
     List<ProductTag> findAllByIsDeprecatedFalse();
-    boolean existsByTagName(TagName tagName);
+    boolean existsByTagNameAndIsDeprecatedFalse(TagName tagName);
 
 }

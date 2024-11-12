@@ -48,7 +48,7 @@ public class ProductTagService {
     public void addProductTag(ProductTagRequest productTagRequest) {
 
 
-        if(productTagRepository.existsByTagName(new TagName(productTagRequest.productTagName()))){
+        if(productTagRepository.existsByTagNameAndIsDeprecatedFalse(new TagName(productTagRequest.productTagName()))){
             throw new ProductTagAlreadyExistsException();
         }
 

@@ -84,7 +84,7 @@ public class TeamTagService {
     @Transactional
     public void addTeamTag(TeamTagRequest teamTagRequest) {
 
-        if (teamTagRepository.existsByTagName(new TagName(teamTagRequest.teamTagName()))) {
+        if (teamTagRepository.existsByTagNameAndIsDeprecatedFalse(new TagName(teamTagRequest.teamTagName()))) {
             throw new TeamTagAlreadyExistsException();
         }
 
