@@ -2,10 +2,8 @@ package homeTry.exerciseList.service;
 
 import homeTry.common.constants.DateTimeUtil;
 import homeTry.exerciseList.dto.response.ExerciseResponse;
-import homeTry.exerciseList.exception.badRequestException.DailyExerciseTimeLimitExceededException;
 import homeTry.exerciseList.exception.badRequestException.ExerciseAlreadyStartedException;
 import homeTry.exerciseList.exception.badRequestException.ExerciseNotStartedException;
-import homeTry.exerciseList.exception.badRequestException.ExerciseTimeLimitExceededException;
 import homeTry.exerciseList.model.entity.Exercise;
 import homeTry.exerciseList.model.entity.ExerciseTime;
 import homeTry.exerciseList.repository.ExerciseTimeRepository;
@@ -43,9 +41,7 @@ public class ExerciseTimeService {
         exerciseTimeHelper.saveExerciseTime(currentExerciseTime);
     }
 
-    // 해당 예외 발생 시 롤백하지 않고 isActive=false 상태가 저장되도록 함
-    @Transactional(noRollbackFor = {ExerciseTimeLimitExceededException.class,
-        DailyExerciseTimeLimitExceededException.class})
+    @Transactional
     public void stopExerciseTime(Exercise exercise) {
         ExerciseTime currentExerciseTime = getExerciseTime(exercise.getExerciseId());
 
@@ -54,12 +50,7 @@ public class ExerciseTimeService {
         }
 
         // 하루 최대 12시간, 한 번에 저장되는 최대 시간 8시간을 넘었는지 확인
-        try {
-            validateExerciseDurationLimits(currentExerciseTime);
-        } catch (ExerciseTimeLimitExceededException | DailyExerciseTimeLimitExceededException e) {
-            currentExerciseTime.stopExerciseWithoutSavingTime();  // 기록 저장 없이 강제 종료
-            throw e;
-        }
+        validateExerciseDurationLimits(currentExerciseTime);
 
         // 정상 종료
         currentExerciseTime.stopExercise();
@@ -71,12 +62,12 @@ public class ExerciseTimeService {
 
         // 한 번 운동한 시간이 8시간을 초과한 경우
         if (timeElapsed.compareTo(Duration.ofHours(8)) > 0) {
-            throw new ExerciseTimeLimitExceededException();
+            exerciseTime.stopExerciseWithoutSavingTime();  // 기록 저장 없이 강제 종료
         }
 
         // 하루 총 운동 시간이 12시간을 초과한 경우
         if (totalTime.compareTo(Duration.ofHours(12)) > 0) {
-            throw new DailyExerciseTimeLimitExceededException();
+            exerciseTime.stopExerciseWithoutSavingTime();  // 기록 저장 없이 강제 종료
         }
     }
 
