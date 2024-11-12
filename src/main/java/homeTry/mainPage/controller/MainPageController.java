@@ -31,9 +31,9 @@ public class MainPageController {
         this.mainPageService = mainPageService;
     }
 
+    @GetMapping
     @Operation(summary = "메인 페이지 조회", description = "date Parameter에 해당하는 메인페이지 조회")
     @ApiResponse(responseCode = "200", description = "메인페이지 조회 성공")
-    @GetMapping
     public ResponseEntity<MainPageResponse> mainPage(
             @RequestParam(name = "date") @DateValid @DateTimeFormat(pattern = "yyyyMMdd") LocalDate date,
             @Parameter(hidden = true) @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.ASC) Pageable pageable,
