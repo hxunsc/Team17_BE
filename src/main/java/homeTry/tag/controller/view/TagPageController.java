@@ -1,4 +1,4 @@
-package homeTry.tag.controller;
+package homeTry.tag.controller.view;
 
 import homeTry.tag.productTag.dto.ProductTagDto;
 import homeTry.tag.productTag.dto.request.ProductTagRequest;
@@ -39,15 +39,9 @@ public class TagPageController {
     }
 
     @GetMapping("/product/add")
-    public String showProductTagForm() {
+    public String showProductTagForm(Model model) {
+        model.addAttribute("productTagRequest", new ProductTagRequest("tagName"));
         return "tag/AddProductTag";
-    }
-
-    @PostMapping("/product/save")
-    public String saveProductTag(
-            @ModelAttribute ProductTagRequest productTagRequest) {
-        productTagService.addProductTag(productTagRequest);
-        return "redirect:/admin/page/tag/product"; // 상품 태그 목록 페이지로 리다이렉트
     }
 
     @GetMapping("/team/add")
@@ -60,12 +54,6 @@ public class TagPageController {
             @ModelAttribute TeamTagRequest teamTagRequest) {
         teamTagService.addTeamTag(teamTagRequest);
         return "redirect:/admin/page/tag/team";
-    }
-
-    @PostMapping("/product/delete/{id}")
-    public String deleteProductTag(@PathVariable("id") Long id) {
-        productTagService.deleteProductTag(id);
-        return "redirect:/admin/page/tag/product";
     }
 
     @PostMapping("/team/delete/{id}")
