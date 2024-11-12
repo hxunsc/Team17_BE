@@ -23,9 +23,9 @@ public class DiaryController {
         this.diaryService = diaryService;
     }
 
+    @PostMapping
     @Operation(summary = "일기 생성", description = "diaryRequest의 memo로 운동 일기 생성")
     @ApiResponse(responseCode = "201", description = "일기 생성 성공")
-    @PostMapping
     public ResponseEntity<Void> createDiary(
             @Valid @RequestBody DiaryRequest diaryRequest,
             @LoginMember MemberDTO memberDTO) {
@@ -34,9 +34,9 @@ public class DiaryController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @DeleteMapping("/{diaryId}")
     @Operation(summary = "일기 삭제", description = "diaryId로 운동 일기 삭제")
     @ApiResponse(responseCode = "204", description = "일기 삭제 성공")
-    @DeleteMapping("/{diaryId}")
     public ResponseEntity<Void> deleteDiary(
             @PathVariable Long diaryId,
             @LoginMember MemberDTO memberDto) {
