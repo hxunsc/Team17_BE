@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/admin/tag")
+@RequestMapping("/admin/page/tag")
 public class TagPageController {
 
     private final TeamTagService teamTagService;
