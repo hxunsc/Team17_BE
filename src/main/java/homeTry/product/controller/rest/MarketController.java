@@ -32,11 +32,11 @@ public class MarketController {
         this.productService = productService;
     }
 
+    @GetMapping
     @Operation(summary = "상품 목록 조회", description = "필터링된 상품 목록을 페이지네이션과 함께 조회")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "상품 목록이 성공적으로 조회됨")
     })
-    @GetMapping
     public ResponseEntity<Slice<ProductResponse>> getProducts(
         @RequestParam(required = false) List<Long> tagIds,
         @PageableDefault(size = 5)
@@ -47,11 +47,11 @@ public class MarketController {
         return new ResponseEntity<>(products, HttpStatus.OK);  // 상태 코드 200
     }
 
-    @Operation(summary = "상품 상세 조회", description = "상품의 조회수를 증가시키며 상품 정보를 조회")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "상품 목록이 성공적으로 선택되고 조회수가 증가함")
-    })
     @GetMapping("/{productId}")
+    @Operation(summary = "특정 상품 상세 조회", description = "상품의 조회수를 증가시키며 특정 상품 정보를 조회")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "특정 상품이 성공적으로 선택되고 조회수가 증가함")
+    })
     public ResponseEntity<Void> redirectProduct(@PathVariable Long productId) {
         productService.incrementViewCount(productId);
         return new ResponseEntity<>(HttpStatus.OK);
