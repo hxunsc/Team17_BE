@@ -173,7 +173,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 errorType.getErrorCode(),
                 errorType.getMessage()
         );
-        logger.error("서버에서 출처를 알 수 없는 오류 발생!! {}", ex.getMessage());
+        logger.error("서버에서 출처를 알 수 없는 오류 발생!! {} | {}", ex.getMessage(), ex.getStackTrace());
 
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }

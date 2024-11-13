@@ -2,6 +2,7 @@ package homeTry.member.service;
 
 
 import homeTry.common.auth.kakaoAuth.dto.KakaoMemberInfoDTO;
+import homeTry.common.auth.kakaoAuth.dto.KakaoMemberWithdrawDTO;
 import homeTry.exerciseList.service.ExerciseHistoryService;
 import homeTry.member.dto.MemberDTO;
 import homeTry.member.dto.request.ChangeNicknameRequest;
@@ -50,11 +51,14 @@ public class MemberService {
 
         Member member = memberDTO.toEntity();
 
-        if (memberRepository.existsByEmail(new Email(memberDTO.email()))) {
+        if (memberRepository.existsByEmail(new Email(memberDTO.email())))
             throw new RegisterEmailConflictException();
-        }
 
-        return MemberDTO.from(memberRepository.save(member));
+        memberRepository.save(member);
+
+        setKakaoMemberId(member.getId(), kakaoMemberInfoDTO.kakaoMemberId());
+
+        return MemberDTO.from(member);
     }
 
     @Transactional(readOnly = true)
@@ -76,6 +80,12 @@ public class MemberService {
     public void setMemberAccessToken(Long id, String kakaoAccessToken) {
         Member member = getMemberEntity(id);
         member.setKakaoAccessToken(kakaoAccessToken);
+    }
+
+    @Transactional
+    public void setKakaoMemberId(Long memberId, Long kakaoMemberId) {
+        Member member = getMemberEntity(memberId);
+        member.setKakaoMemberId(kakaoMemberId);
     }
 
     @Transactional
@@ -103,9 +113,13 @@ public class MemberService {
     }
 
     @Transactional
-    public void withdrawMember(Long id) {
+    public KakaoMemberWithdrawDTO withdrawMember(Long id) {
         Member member = getMemberEntity(id);
+        KakaoMemberWithdrawDTO kakaoMemberWithdrawDTO = new KakaoMemberWithdrawDTO(
+                member.getKakaoMemberId(), member.getKakaoAccessToken());
         deactivateMember(member);
+
+        return kakaoMemberWithdrawDTO;
     }
 
     @Transactional
@@ -136,6 +150,7 @@ public class MemberService {
         member.revokeEmail();
         member.revokeNickname();
         member.revokeExerciseAttendanceDate();
+        member.revokeKakaoMemberId();
         member.revokeKakaoAccessToken();
         member.demoteToUser();
         member.deactivate();
