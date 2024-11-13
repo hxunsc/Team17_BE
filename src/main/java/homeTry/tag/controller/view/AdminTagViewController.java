@@ -33,7 +33,7 @@ public class AdminTagViewController {
     public String showProductTagList(Model model) {
         List<ProductTagDto> productTags = productTagService.getProductTagResponse().productTags();
         model.addAttribute("productTags", productTags);
-        return "tag/ProductTags";
+        return "tag/productTags";
     }
 
     @GetMapping("/team")
@@ -42,21 +42,21 @@ public class AdminTagViewController {
     public String showTeamTagList(Model model) {
         List<TeamTagDTO> teamTags = teamTagService.getTeamTagResponse().teamTags();
         model.addAttribute("teamTags", teamTags);
-        return "tag/TeamTags";
+        return "tag/teamTags";
     }
 
     @GetMapping("/product/add")
     @Operation(summary = "상품 태그 추가 페이지 불러오기", description = "상품 태그 추가 페이지를 응답한다.")
     @ApiResponse(responseCode = "200", description = "상품 태그 추가 페이지를 성공적으로 응답함", content = @Content(mediaType = "text/html"))
     public String showProductTagForm() {
-        return "tag/AddProductTag";
+        return "tag/addProductTag";
     }
 
     @GetMapping("/team/add")
     @Operation(summary = "팀 태그 추가 페이지 불러오기", description = "팀 태그 추가 페이지를 응답한다.")
     @ApiResponse(responseCode = "200", description = "팀 태그 추가 페이지를 성공적으로 응답함", content = @Content(mediaType = "text/html"))
     public String showTeamTagFrom() {
-        return "tag/AddTeamTag";
+        return "tag/addTeamTag";
     }
 
 }
