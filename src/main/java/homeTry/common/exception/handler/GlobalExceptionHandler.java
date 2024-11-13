@@ -51,9 +51,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             HttpStatusCode status,
             WebRequest request) {
         ErrorType errorType = CommonErrorType.METHOD_ARGUMENT_NOT_VALID_EXCEPTION;
+        String additionalMessage = ex.getBindingResult().getFieldErrors().getFirst().getDefaultMessage();
+
         ErrorResponse errorResponse = new ErrorResponse(
                 errorType.getErrorCode(),
-                errorType.getMessage()
+                errorType.getMessage() + " : " + additionalMessage
         );
         return new ResponseEntity<>(errorResponse, errorType.getHttpStatus());
     }

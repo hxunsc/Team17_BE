@@ -48,7 +48,7 @@ public class AdminProductRestController {
         @ApiResponse(responseCode = "200", description = "상품이 성공적으로 수정됨")
     })
     public ResponseEntity<Void> editProduct(@PathVariable("productId") Long productId,
-            @ModelAttribute @Valid ProductRequest productRequest) {
+            @RequestBody @Valid ProductRequest productRequest) {
 
         adminProductService.updateProduct(productId, productRequest);
         return new ResponseEntity<>(HttpStatus.OK);

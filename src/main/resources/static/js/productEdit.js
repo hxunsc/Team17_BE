@@ -25,8 +25,8 @@ function productUpdateRequestWithToken() {
       getRequestWithToken('/admin/page/product'); // 상품 목록 페이지로 돌아가기
     },
     error: function (xhr) {
-      const errorResponse = xhr.responseJSON;
-      alert(errorResponse.message);  // 에러 메시지 alert
+      const errorResponse = JSON.stringify(xhr.responseJSON.message);
+      alert(errorResponse);  // 에러 메시지 alert
     }
   });
 }

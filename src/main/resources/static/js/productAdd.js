@@ -22,8 +22,8 @@ function productAddRequestWithToken() {
       getRequestWithToken('/admin/page/product');
     },
     error: function (xhr) {
-      const errorResponse = xhr.responseJSON;
-      alert(errorResponse.message);  // 에러 메시지 alert
+      const errorResponse = JSON.stringify(xhr.responseJSON.message);
+      alert(errorResponse);  // 에러 메시지 alert
     }
   });
 }
