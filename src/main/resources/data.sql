@@ -22,7 +22,7 @@ insert into team (team_name, team_description, leader_id, max_participants, curr
                   password)
 values ('test1 team', 'test1 team description', 1, 8, 2, null),
        ('test2 team', 'test2 team description', 1, 8, 1, '1234'),
-       ('test3 team', 'test3 team description', 3, 8, 2, '1234'),
+       ('test3 team', 'test3 team description', 3, 8, 1, '1234'),
        ('test4 team', 'test4 team description', 3, 8, 1, '1234');
 
 
