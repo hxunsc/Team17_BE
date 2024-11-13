@@ -106,8 +106,6 @@ public class AdminProductService {
 
             productTagMappingService.updateProductTagMapping(product, newTag);
         }
-
-        productRepository.save(product);
     }
 
 }
