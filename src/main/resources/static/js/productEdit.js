@@ -13,7 +13,7 @@ function productUpdateRequestWithToken() {
   // PUT 요청 보내기
   $.ajax({
     type: 'PUT',
-    url: `/admin/page/product/edit/${productId}`,
+    url: `/admin/page/product/${productId}`,
     contentType: 'application/json; charset=utf-8',
     data: JSON.stringify(requestJson),
     beforeSend: function (xhr) {
