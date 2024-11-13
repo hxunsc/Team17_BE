@@ -51,9 +51,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             HttpStatusCode status,
             WebRequest request) {
         ErrorType errorType = CommonErrorType.METHOD_ARGUMENT_NOT_VALID_EXCEPTION;
+        String additionalMessage = ex.getBindingResult().getFieldErrors().getFirst().getDefaultMessage();
+
         ErrorResponse errorResponse = new ErrorResponse(
                 errorType.getErrorCode(),
-                errorType.getMessage()
+                errorType.getMessage() + " : " + additionalMessage
         );
         return new ResponseEntity<>(errorResponse, errorType.getHttpStatus());
     }
@@ -171,7 +173,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 errorType.getErrorCode(),
                 errorType.getMessage()
         );
-        logger.error("서버에서 출처를 알 수 없는 오류 발생!! {}", ex.getMessage());
+        logger.error("서버에서 출처를 알 수 없는 오류 발생!! {} | {}", ex.getMessage(), ex.getStackTrace());
 
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }

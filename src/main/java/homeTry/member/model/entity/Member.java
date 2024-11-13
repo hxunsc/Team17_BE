@@ -34,6 +34,9 @@ public class Member extends BaseEntity {
     private Nickname nickname;
 
     @Column(nullable = true)
+    private Long kakaoMemberId;
+
+    @Column(nullable = true)
     private String kakaoAccessToken;
 
     @Column(nullable = false)
@@ -72,6 +75,18 @@ public class Member extends BaseEntity {
 
     public String getNickname() {
         return nickname.value();
+    }
+
+    public Long getKakaoMemberId() {
+        return kakaoMemberId;
+    }
+
+    public void setKakaoMemberId(Long kakaoMemberId) {
+        this.kakaoMemberId = kakaoMemberId;
+    }
+
+    public void revokeKakaoMemberId() {
+        this.kakaoMemberId = null;
     }
 
     public String getKakaoAccessToken() {

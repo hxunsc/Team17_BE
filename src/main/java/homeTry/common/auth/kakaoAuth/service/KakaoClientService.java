@@ -5,6 +5,7 @@ import homeTry.common.auth.exception.internalServerException.HomeTryServerExcept
 import homeTry.common.auth.exception.internalServerException.KakaoAuthServerException;
 import homeTry.common.auth.kakaoAuth.client.KakaoApiClient;
 import homeTry.common.auth.kakaoAuth.dto.KakaoMemberInfoDTO;
+import homeTry.common.auth.kakaoAuth.dto.KakaoMemberWithdrawDTO;
 import homeTry.common.auth.kakaoAuth.dto.response.KakaoErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,13 +40,17 @@ public class KakaoClientService {
         try {
             var userInfo = kakaoApiClient.getMemberInfo(kakaoAccessToken);
             var kakaoAccount = userInfo.kakaoAccount();
-            return new KakaoMemberInfoDTO(kakaoAccount.email());
+            return new KakaoMemberInfoDTO(userInfo.id(), kakaoAccount.email());
         } catch (HttpClientErrorException e) {
             handleClientError(e);
         } catch (HttpServerErrorException e) {
             handleServerError(e);
         }
         throw new HomeTryServerException();
+    }
+
+    public void unlinkKakao(KakaoMemberWithdrawDTO kakaoMemberWithdrawDTO) {
+        kakaoApiClient.unlinkKakao(kakaoMemberWithdrawDTO);
     }
 
     private void handleClientError(HttpClientErrorException e) {
