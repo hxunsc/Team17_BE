@@ -12,7 +12,7 @@
 <h1>Product List</h1>
 <button type="button" onclick="getRequestWithToken('/admin/page/product/add')">Add New Product
 </button>
-<button type="button" onclick=`getRequestWithToken('/admin/page')`>Back To Main</button>
+<button type="button" onclick="getRequestWithToken('/admin/page')">Back To Main</button>
 <table>
   <thead>
   <tr>
@@ -34,7 +34,7 @@
     <td th:text="${product.tag.productTagName}"></td>
     <td th:text="${product.viewCount}"></td>
     <td>
-      <button th:onclick="'productDeleteRequestWithToken(\'/admin/page/product/delete/' + ${product.productId} + '\')'">
+      <button th:onclick="'productDeleteRequestWithToken(\'/admin/page/product/' + ${product.productId} + '\')'">
         Delete
       </button>
       <button th:onclick="'getRequestWithToken(\'/admin/page/product/edit/' + ${product.productId} + '\')'">
