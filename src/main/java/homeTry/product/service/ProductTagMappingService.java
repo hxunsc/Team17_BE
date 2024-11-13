@@ -73,7 +73,6 @@ public class ProductTagMappingService {
 
         // 기존 매핑 비활성화
         existingMappings.forEach(mapping -> mapping.markAsDeprecated());
-        productTagMappingRepository.saveAll(existingMappings);
 
         // 새로운 태그로 매핑 추가
         ProductTagMapping newMapping = new ProductTagMapping(product, newTag);
