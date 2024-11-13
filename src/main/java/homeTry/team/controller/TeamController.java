@@ -9,7 +9,7 @@ import homeTry.team.dto.response.RankingResponse;
 import homeTry.team.dto.response.TagListResponse;
 import homeTry.team.dto.response.TeamResponse;
 import homeTry.team.service.TeamService;
-import homeTry.team.service.TeamWithdrawService;
+import homeTry.team.service.TeamJoinAndWithdrawService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,12 +32,12 @@ import java.util.List;
 public class TeamController {
 
     private final TeamService teamService;
-    private final TeamWithdrawService teamWithdrawService;
+    private final TeamJoinAndWithdrawService teamJoinAndWithdrawService;
 
     public TeamController(TeamService teamService,
-                          TeamWithdrawService teamWithdrawService) {
+                          TeamJoinAndWithdrawService teamJoinAndWithdrawService) {
         this.teamService = teamService;
-        this.teamWithdrawService = teamWithdrawService;
+        this.teamJoinAndWithdrawService = teamJoinAndWithdrawService;
     }
 
     //팀 생성 api
@@ -56,7 +56,7 @@ public class TeamController {
     @ApiResponse(responseCode = "204", description = "팀이 성공적으로 삭제됌")
     public ResponseEntity<Void> deleteTeam(@LoginMember MemberDTO memberDTO,
                                            @PathVariable("teamId") Long teamID) {
-        teamWithdrawService.deleteTeam(memberDTO.id(), teamID);
+        teamJoinAndWithdrawService.deleteTeam(memberDTO.id(), teamID);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -103,7 +103,7 @@ public class TeamController {
     public ResponseEntity<Void> joinTeam(
             @LoginMember MemberDTO memberDTO,
             @PathVariable("teamId") Long teamId) {
-        teamService.joinTeam(memberDTO, teamId);
+        teamJoinAndWithdrawService.joinTeam(memberDTO, teamId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -114,7 +114,7 @@ public class TeamController {
     public ResponseEntity<Void> withdrawTeam(
             @LoginMember MemberDTO memberDTO,
             @PathVariable("teamId") Long teamId) {
-        teamWithdrawService.withdrawTeam(memberDTO.id(), teamId);
+        teamJoinAndWithdrawService.withdrawTeam(memberDTO.id(), teamId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

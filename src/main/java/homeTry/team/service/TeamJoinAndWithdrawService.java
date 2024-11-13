@@ -1,6 +1,7 @@
 package homeTry.team.service;
 
 import homeTry.chatting.service.ChattingService;
+import homeTry.member.dto.MemberDTO;
 import homeTry.member.service.MemberService;
 import homeTry.team.exception.badRequestException.TeamNotFoundException;
 import homeTry.team.model.entity.Team;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class TeamWithdrawService {
+public class TeamJoinAndWithdrawService {
     private final TeamService teamService;
     private final ChattingService chattingService;
     private final TeamRepository teamRepository;
@@ -17,7 +18,7 @@ public class TeamWithdrawService {
     private final TeamMemberMappingService teamMemberMappingService;
     private final TeamTagMappingService teamTagMappingService;
 
-    public TeamWithdrawService(
+    public TeamJoinAndWithdrawService(
             TeamService teamService,
             ChattingService chattingService,
             TeamRepository teamRepository,
@@ -32,6 +33,11 @@ public class TeamWithdrawService {
         this.teamTagMappingService = teamTagMappingService;
     }
 
+
+    public synchronized void joinTeam(MemberDTO memberDTO, Long teamId) {
+        teamService.joinTeam(memberDTO, teamId);
+    }
+
     //팀 삭제 기능
     @Transactional
     public void deleteTeam(Long memberId, Long teamId) {
@@ -43,9 +49,7 @@ public class TeamWithdrawService {
         teamService.deleteTeam(memberId, team);
     }
 
-    //팀 탈퇴 기능
-    @Transactional
-    public void withdrawTeam(Long memberId, Long teamId) {
+    public synchronized void withdrawTeam(Long memberId, Long teamId) {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(TeamNotFoundException::new);
 
