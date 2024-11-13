@@ -358,6 +358,7 @@ public class TeamService {
         teamRepository.delete(team); //Team 삭제
     }
 
+    @Transactional
     public void withdrawTeam(Long memberId, Team team) {
         Member member = memberService.getMemberEntity(memberId);
 
