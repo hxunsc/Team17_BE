@@ -37,7 +37,7 @@ public class TagRestController {
     @DeleteMapping("/product/{productTagId}")
     @Operation(summary = "상품 태그 삭제", description = "productTagId로 상품 태그 삭제")
     @ApiResponse(responseCode = "204", description = "상품 태그 삭제 성공")
-    public ResponseEntity<Void> deleteProductTag(@PathVariable Long productTagId) {
+    public ResponseEntity<Void> deleteProductTag(@PathVariable("productTagId") Long productTagId) {
         productTagService.deleteProductTag(productTagId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -53,7 +53,7 @@ public class TagRestController {
     @DeleteMapping("/team/{teamTagId}")
     @Operation(summary = "팀 태그 삭제", description = "teamTagId로 상품 태그 삭제")
     @ApiResponse(responseCode = "204", description = "팀 태그 삭제 성공")
-    public ResponseEntity<Void> deleteTeamTag(@PathVariable Long teamTagId) {
+    public ResponseEntity<Void> deleteTeamTag(@PathVariable("teamTagId") Long teamTagId) {
         teamTagService.deleteTeamTag(teamTagId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
