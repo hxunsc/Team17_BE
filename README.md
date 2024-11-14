@@ -141,6 +141,13 @@
 - 운동 기록 저장
     - `@Scheduled`의 cron을 이용하여 매일 새벽 3시에 사용자의 운동 기록을 히스토리에 저장하고, 하루 운동 시간을 초기화하는 스케줄러 기능이 있습니다.
     - 스케줄러가 실행되면 모든 진행 중인 운동을 강제 종료하고, 운동 시간을 저장한 후 `ExerciseHistory`에 `ExerciseTime`의 기록을 이동시킵니다. 그리고 운동 시간을 기록한 사용자에 대해 **출석일**을 증가시킵니다.
+      <details>
+          <summary>스케줄러 시퀀스 다이어그램</summary>
+  
+      ![스케줄러 시퀀스 다이어그램](https://github.com/user-attachments/assets/09788c1e-b5bb-4116-9282-f9f1ee3e9b04)
+
+</details>
+
 
 #### 일기
 - 
