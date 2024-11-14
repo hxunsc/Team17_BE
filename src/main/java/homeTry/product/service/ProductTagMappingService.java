@@ -64,19 +64,16 @@ public class ProductTagMappingService {
     @Transactional
     public void updateProductTagMapping(Product product, ProductTag newTag) {
         // 기존 매핑 조회
-        List<ProductTagMapping> existingMappings = productTagMappingRepository.findByProductId(product.getId());
+        ProductTagMapping existingMapping = productTagMappingRepository.findByProductId(product.getId()).get(0);
 
         // 기존 태그와 새로운 태그가 동일한 경우, 업데이트 불필요
-        if (existingMappings.size() == 1 && existingMappings.get(0).getProductTag().equals(newTag)) {
+        if (existingMapping.getProductTag().equals(newTag)) {
             return;
         }
 
-        // 기존 매핑 비활성화
-        existingMappings.forEach(mapping -> mapping.markAsDeprecated());
-
         // 새로운 태그로 매핑 추가
-        ProductTagMapping newMapping = new ProductTagMapping(product, newTag);
-        productTagMappingRepository.save(newMapping);
+        existingMapping.updateProductTag(newTag);
+        productTagMappingRepository.save(existingMapping);
     }
 
 }

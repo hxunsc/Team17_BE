@@ -49,28 +49,56 @@ public class ExerciseTimeService {
             throw new ExerciseNotStartedException();
         }
 
-        // 하루 최대 12시간, 한 번에 저장되는 최대 시간 8시간을 넘었는지 확인
+        // 한 번에 저장되는 최대 시간 8시간을 넘었는지 확인
         validateExerciseDurationLimits(currentExerciseTime);
 
         // 정상 종료
         currentExerciseTime.stopExercise();
+
+        // 하루 전체 운동 시간 제한 적용
+        applyDailyExerciseTimeLimit(exercise.getMember().getId(), currentExerciseTime);
+
+        // 업데이트된 운동 시간을 저장
+        exerciseTimeHelper.saveExerciseTime(currentExerciseTime);
     }
 
     private void validateExerciseDurationLimits(ExerciseTime exerciseTime) {
         Duration timeElapsed = Duration.between(exerciseTime.getStartTime(), LocalDateTime.now());
-        Duration totalTime = exerciseTime.getExerciseTime().plus(timeElapsed);
 
         // 한 번 운동한 시간이 8시간을 초과한 경우
         if (timeElapsed.compareTo(Duration.ofHours(8)) > 0) {
             exerciseTime.stopExerciseWithoutSavingTime();  // 기록 저장 없이 강제 종료
         }
 
-        // 하루 총 운동 시간이 12시간을 초과한 경우
-        if (totalTime.compareTo(Duration.ofHours(12)) > 0) {
-            exerciseTime.stopExerciseWithoutSavingTime();  // 기록 저장 없이 강제 종료
-            exerciseTime.limitTotalExerciseTime(); // 11시간 59분 59초 까지만 시간 저장
+    }
+
+    private void applyDailyExerciseTimeLimit(Long memberId, ExerciseTime currentExerciseTime) {
+        Duration maxAllowedDuration = Duration.ofHours(11).plusMinutes(59).plusSeconds(59);
+        // 오늘 하루 전체 운동 시간 계산
+        Long totalExerciseTimeMillis = getExerciseTimesForToday(memberId);
+        Duration totalExerciseTime = Duration.ofMillis(totalExerciseTimeMillis);
+
+        // 현재 운동 시간을 포함한 하루 총 운동 시간이 최대 허용 시간을 초과하는 경우 제한
+        if (totalExerciseTime.compareTo(maxAllowedDuration) > 0) {
+            adjustCurrentExerciseTime(totalExerciseTime, maxAllowedDuration, currentExerciseTime);
         }
     }
+
+    private void adjustCurrentExerciseTime(Duration totalExerciseTime, Duration maxAllowedDuration,
+        ExerciseTime currentExerciseTime) {
+        // 초과된 시간 = 하루 총 운동 시간 - 최대 허용 운동 시간
+        Duration excessTime = totalExerciseTime.minus(maxAllowedDuration);
+        // 현재 운동 시간 - 초과된 시간
+        Duration adjustedExerciseTime = currentExerciseTime.getExerciseTime().minus(excessTime);
+
+        if (adjustedExerciseTime.isNegative()) {
+            adjustedExerciseTime = Duration.ZERO;
+        }
+
+        currentExerciseTime.limitExerciseTime(adjustedExerciseTime);
+
+    }
+
 
     @Transactional
     public void resetDailyExercise(ExerciseTime exerciseTime) {

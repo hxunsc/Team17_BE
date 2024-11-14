@@ -72,9 +72,7 @@ public class ExerciseTime extends BaseEntity {
         this.startTime = DateTimeUtil.getStartOfDay(LocalDate.now());
     }
 
-    public void limitTotalExerciseTime() {
-        // 운동 시간이 12시간을 넘는 경우 11시간 59분 59초까지만 유지
-        Duration maxAllowedDuration = Duration.ofHours(11).plusMinutes(59).plusSeconds(59);
+    public void limitExerciseTime(Duration maxAllowedDuration) {
         if (this.exerciseTime.compareTo(maxAllowedDuration) > 0) {
             this.exerciseTime = maxAllowedDuration;
         }
