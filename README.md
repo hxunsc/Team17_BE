@@ -92,7 +92,7 @@
 <br />
 
 ### 개발 문서
-- [API 명세서](https://www.notion.so/zip-a9658fe9f60d405197cf314431d4f3c8?p=979bd88c8a8e4b15be3cc4d9d3ab0500&pm=s)
+- [API 명세서](https://home-try.13.125.102.156.sslip.io/docs)
 - [와이어 프레임](https://www.figma.com/design/TsCneAgt5ONEKWAiArCA6u/%EC%B9%B4%ED%85%8C%EC%BA%A0-%ED%99%88%ED%8A%B8%EB%9D%BC%EC%9D%B4-%EC%99%80%EC%9D%B4%EC%96%B4%ED%94%84%EB%A0%88%EC%9E%84_%EC%BF%A0%ED%82%A4zip?node-id=130-2033&t=idsBFD1mOYhPFPFk-1)
 - erd
 ![ERD Image](img/erd.png)
