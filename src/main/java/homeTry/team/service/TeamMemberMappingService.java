@@ -9,6 +9,7 @@ import homeTry.team.repository.TeamMemberMappingRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TeamMemberMappingService {
@@ -21,15 +22,19 @@ public class TeamMemberMappingService {
 
     //TeamMemberMapping 엔티티 추가 (멤버가 팀 가입시 사용)
     public void addTeamMember(Team team, Member member) {
-        teamMemberMappingRepository.findByTeamAndMemberAndActivated(team, member)
-                .ifPresent(teamMemberMapping -> {
-                    if (!teamMemberMapping.isDeprecated()) // isDeprecated 값이 false인 경우 예외 던짐
-                        throw new AlreadyJoinedTeamException();
-                    teamMemberMapping.markAsActivated(); // isDeprecated 값이 true인 경우 다시 활성화
-                    return;
-                });
+        Optional<TeamMemberMapping> teamMemberMapping = teamMemberMappingRepository.findByTeamAndMemberAndActivated(team, member);
 
-        teamMemberMappingRepository.save(new TeamMemberMapping(member, team));
+        if (teamMemberMapping.isPresent())
+            markAsActivated(teamMemberMapping.get());
+        
+        if (teamMemberMapping.isEmpty())
+            teamMemberMappingRepository.save(new TeamMemberMapping(member, team));
+    }
+
+    private void markAsActivated(TeamMemberMapping teamMemberMapping) {
+        if (!teamMemberMapping.isDeprecated())
+            throw new AlreadyJoinedTeamException();
+        teamMemberMapping.markAsActivated(); // isDeprecated 값이 true인 경우 다시 활성화
     }
 
     //TeamMemberMapping 엔티티 삭제 (멤버가 팀에서 나갈 시)
