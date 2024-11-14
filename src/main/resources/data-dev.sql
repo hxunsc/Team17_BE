@@ -18,7 +18,7 @@ values (1, 1, false),
 
 insert into chatting (team_member_mapping_id, message, created_at)
 values (1, '채팅 테스트 1', '2024-10-04T12:30:00'),
-       (1, '채팅 테스트 2', '2024-10-04T12:30:00');
+       (1, '채팅 테스트 2', '2024-10-04T12:30:02');
 
 
 insert into team_tag_mapping (team_tag_id, team_id, is_deprecated)
