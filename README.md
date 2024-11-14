@@ -133,6 +133,8 @@
 
 
 ### 폴더 구조
+<details>
+  <summary> 폴더 구조 보기 </summary>
 
 ```
 src
@@ -584,7 +586,7 @@ src
             └── team
                 └── TeamTest.java
 ```
-
+</details>
 
 <br />
 
