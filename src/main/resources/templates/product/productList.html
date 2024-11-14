@@ -48,10 +48,10 @@
   </tbody>
 </table>
 <div th:if="${products.totalPages > 1}">
-        <span th:each="pageNumber : ${#numbers.sequence(0, products.totalPages - 1)}">
-            <a th:href="@{/admin/page/product/list(page=${pageNumber})}"
-               th:text="${pageNumber + 1}"></a>
-        </span>
+    <span th:each="pageNumber : ${#numbers.sequence(0, products.totalPages - 1)}">
+        <a href="#" th:onclick="'getRequestWithToken(\'/admin/page/product?page=' + ${pageNumber} + '\')'"
+           th:text="${pageNumber + 1}" class="pagination-link"></a>
+    </span>
 </div>
 </body>
 </html>
