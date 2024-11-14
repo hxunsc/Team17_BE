@@ -1,17 +1,14 @@
 insert into team_tag (tag_attribute, tag_name, is_deprecated)
 values ('성별', '여성', false),
        ('성별', '남성', false),
-       ('성별', '무관', false),
        ('나이', '10대', true),
        ('나이', '20대', false),
        ('나이', '30대', false),
        ('나이', '40대', false),
        ('나이', '50대', false),
-       ('나이', '전연령', false),
        ('운동강도', '강', false),
        ('운동강도', '중', false),
-       ('운동강도', '약', false),
-       ('운동강도', '자유', false);
+       ('운동강도', '약', false);
 
 insert into product (image_url, product_url, name, price, store_name, view_count, is_deprecated)
 values ('https://tinyurl.com/25ntsq9k', 'https://tinyurl.com/27sk7wrj', '런닝머신', 883700, 'coupang', 15, false),
