@@ -55,7 +55,7 @@
 **BE**
 | [정우재(팀장)](https://github.com/Woojae-Jeong) | [김수랑(BE 테크리더)](https://github.com/rdme0) | [박준형](https://github.com/cliant) | [조현서](https://github.com/hxunsc) |
 |----------|----------|----------|----------|
-| 나의 그룹, 그룹탐색 | 회원, 인증, 채팅 | 메인  | 운동, 마켓  |
+| 나의 그룹, 그룹탐색 | 회원, 인증, 채팅 | 일기, 태그 | 운동, 마켓  |
 
 
 
