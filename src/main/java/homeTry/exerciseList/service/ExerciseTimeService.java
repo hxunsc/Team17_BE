@@ -58,7 +58,7 @@ public class ExerciseTimeService {
         // 하루 전체 운동 시간 제한 적용
         applyDailyExerciseTimeLimit(exercise.getMember().getId(), currentExerciseTime);
 
-        // 업데이트된 운동 시간을 저장 (강제 적용)
+        // 업데이트된 운동 시간을 저장
         exerciseTimeHelper.saveExerciseTime(currentExerciseTime);
     }
 
