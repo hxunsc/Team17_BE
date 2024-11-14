@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,7 +34,8 @@ public class ChattingController {
     @ApiResponse(responseCode = "200", description = "채팅을 성공적으로 불러옴")
     public ResponseEntity<Slice<ChattingMessageResponse>> getChatMessages(
             @PathVariable("teamId") Long teamId,
-            @LoginMember MemberDTO memberDTO, Pageable pageable) {
+            @LoginMember MemberDTO memberDTO,
+            @SortDefault(sort="createdAt", direction = Direction.ASC) Pageable pageable) {
 
         return new ResponseEntity<>(
                 chattingService.getChattingMessageSlice(teamId, memberDTO, pageable),
