@@ -74,18 +74,14 @@ public class ExerciseTimeService {
 
     private void applyDailyExerciseTimeLimit(Long memberId, ExerciseTime currentExerciseTime) {
         Duration maxAllowedDuration = Duration.ofHours(11).plusMinutes(59).plusSeconds(59);
-        Duration totalExerciseTime = calculateTotalExerciseTimeForToday(memberId);
+        // 오늘 하루 전체 운동 시간 계산
+        Long totalExerciseTimeMillis = getExerciseTimesForToday(memberId);
+        Duration totalExerciseTime = Duration.ofMillis(totalExerciseTimeMillis);
 
         // 현재 운동 시간을 포함한 하루 총 운동 시간이 최대 허용 시간을 초과하는 경우 제한
         if (totalExerciseTime.compareTo(maxAllowedDuration) > 0) {
             adjustCurrentExerciseTime(totalExerciseTime, maxAllowedDuration, currentExerciseTime);
         }
-    }
-
-    // 하루 전체 시간 계산
-    private Duration calculateTotalExerciseTimeForToday(Long memberId) {
-        Long totalExerciseTimeMillis = getExerciseTimesForToday(memberId);
-        return Duration.ofMillis(totalExerciseTimeMillis);
     }
 
     private void adjustCurrentExerciseTime(Duration totalExerciseTime, Duration maxAllowedDuration,
