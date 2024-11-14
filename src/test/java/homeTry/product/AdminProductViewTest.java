@@ -19,8 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+@ActiveProfiles("dev")
 @SpringBootTest
 @AutoConfigureMockMvc
 class AdminProductViewTest {
@@ -90,16 +92,21 @@ class AdminProductViewTest {
     @DisplayName("관리자 - 상품 수정 요청 (REST API)")
     void testEditProductWithoutObjectMapper() throws Exception {
         Long productId = 1L;
+        String productRequestJson = """
+            {
+                "imageUrl": "https://example.com/image_updated.jpg",
+                "productUrl": "https://example.com/product_updated",
+                "name": "수정된 상품명",
+                "price": 15000,
+                "storeName": "수정된 스토어명",
+                "tagId": 1
+            }
+            """;
 
         mockMvc.perform(put("/admin/page/product/{productId}", productId)
                 .header("Authorization", "Bearer " + adminToken)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("imageUrl", "https://example.com/image_updated.jpg")
-                .param("productUrl", "https://example.com/product_updated")
-                .param("name", "수정된 상품명")
-                .param("price", "15000")
-                .param("storeName", "수정된 스토어명")
-                .param("tagId", "1"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(productRequestJson))
             .andExpect(status().isOk());
     }
 
