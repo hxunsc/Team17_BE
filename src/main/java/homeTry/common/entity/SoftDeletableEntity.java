@@ -15,4 +15,8 @@ public abstract class SoftDeletableEntity extends BaseEntity {
         this.isDeprecated = true;
     }
 
+    public void markAsActivated() {
+        this.isDeprecated = false;
+    }
+
 }
