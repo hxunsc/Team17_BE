@@ -21,9 +21,12 @@ public class TeamMemberMappingService {
 
     //TeamMemberMapping 엔티티 추가 (멤버가 팀 가입시 사용)
     public void addTeamMember(Team team, Member member) {
-        teamMemberMappingRepository.findByTeamAndMember(team, member) // 이미 가입되어 있는경우 예외 던짐
+        teamMemberMappingRepository.findByTeamAndMemberAndActivated(team, member)
                 .ifPresent(teamMemberMapping -> {
-                    throw new AlreadyJoinedTeamException();
+                    if (!teamMemberMapping.isDeprecated()) // isDeprecated 값이 false인 경우 예외 던짐
+                        throw new AlreadyJoinedTeamException();
+                    teamMemberMapping.markAsActivated(); // isDeprecated 값이 true인 경우 다시 활성화
+                    return;
                 });
 
         teamMemberMappingRepository.save(new TeamMemberMapping(member, team));
