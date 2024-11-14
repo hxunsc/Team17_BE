@@ -19,11 +19,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
 @ActiveProfiles("dev")
 @SpringBootTest
-@Transactional
 class ExerciseSchedulerServiceTest {
 
     @Autowired
@@ -47,12 +45,18 @@ class ExerciseSchedulerServiceTest {
         exerciseTimeRepository.deleteAll();
         exerciseRepository.deleteAll();
 
-        Member member = memberRepository.save(new Member("test@example.com", "1234"));
-        Member member2 = memberRepository.save(new Member("test2@example.com", "5678"));
+        if (!memberRepository.existsByEmail(new Email("test@example.com"))) {
+            memberRepository.save(new Member("test@example.com", "1234"));
+        }
+        if (!memberRepository.existsByEmail(new Email("test2@example.com"))) {
+            memberRepository.save(new Member("test2@example.com", "5678"));
+        }
 
-        Exercise exercise = new Exercise("헬스", member);
+        Exercise exercise = new Exercise("헬스",
+            memberRepository.findByEmail(new Email("test@example.com")).orElseThrow());
         exerciseRepository.save(exercise);
-        Exercise exercise2 = new Exercise("요가", member2);
+        Exercise exercise2 = new Exercise("요가",
+            memberRepository.findByEmail(new Email("test2@example.com")).orElseThrow());
         exerciseRepository.save(exercise2);
 
         ExerciseTime exerciseTime = new ExerciseTime(exercise);
@@ -68,7 +72,8 @@ class ExerciseSchedulerServiceTest {
         exerciseSchedulerService.saveAllExerciseHistoryAt3AM();
 
         List<ExerciseTime> exerciseTimes = exerciseTimeRepository.findAll();
-        Member member = memberRepository.findByEmail(new Email("test@example.com")).orElseThrow();
+        Member member = memberRepository.findByEmail(new Email("test@example.com"))
+            .orElseThrow();
         List<ExerciseHistory> exerciseHistories = exerciseHistoryRepository.findAll();
 
         // 3시 이후 운동이 강제 종료 되는가
@@ -87,7 +92,8 @@ class ExerciseSchedulerServiceTest {
         exerciseSchedulerService.saveAllExerciseHistoryAt3AM();
 
         List<ExerciseTime> exerciseTimes = exerciseTimeRepository.findAll();
-        Member member2 = memberRepository.findByEmail(new Email("test2@example.com")).orElseThrow();
+        Member member2 = memberRepository.findByEmail(new Email("test2@example.com"))
+            .orElseThrow();
         List<ExerciseHistory> exerciseHistories = exerciseHistoryRepository.findAll();
 
         // 두 번째 멤버의 출석일이 증가하지 않았는지 확인
