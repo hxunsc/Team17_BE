@@ -13,7 +13,7 @@ public record TeamCreateRequest(
         String teamName,
 
         @NotBlank
-        @Size(min = 1, message = "팀 설명은 필수입니다.")
+        @Size(min = 1, max = 255, message = "팀 설명은 최소 1글자 최대 255글자 입니다")
         String teamDescription,
 
         @Min(value = 1, message = "최대 참여 인원은 1명 이상이여야 합니다")
