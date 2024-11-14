@@ -35,7 +35,7 @@ public class ChattingController {
     public ResponseEntity<Slice<ChattingMessageResponse>> getChatMessages(
             @PathVariable("teamId") Long teamId,
             @LoginMember MemberDTO memberDTO,
-            @SortDefault(sort="createdAt", direction = Direction.ASC) Pageable pageable) {
+            @SortDefault(sort="createdAt", direction = Direction.DESC) Pageable pageable) {
 
         return new ResponseEntity<>(
                 chattingService.getChattingMessageSlice(teamId, memberDTO, pageable),
