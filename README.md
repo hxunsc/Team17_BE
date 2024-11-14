@@ -5,7 +5,7 @@
 
 <br />
 
-### 목차
+### 📄 목차
 - [팀 내 배포 링크](#팀-내-배포-링크)
 - [개발 동기 및 목적](#개발-동기-및-목적)
 - [서비스 소개](#서비스-소개)
@@ -18,14 +18,14 @@
 
 <br />
 
-### 팀 내 배포 링크
+### 🚀 팀 내 배포 링크
 [FE] https://hometry.vercel.app/
 
 [BE] https://home-try.13.125.102.156.sslip.io
 
 <br />
 
-### 개발 동기 및 목적
+### 🎯개발 동기 및 목적
 홈트라이는 혼자 운동하기 어려운 이들을 위해, 함께 운동하는 느낌과 동기를 제공하는 홈트 플랫폼입니다. 코로나 이후 홈트 붐이 일어났지만 집에서 혼자 운동하다 보니 동기부여가 어렵고, 쉽게 포기할 수 있습니다. 홈트라이는 이러한 문제점을 해결하고자 시작되었습니다.
 - **꾸준한 운동 습관 형성**
     - 운동 시간을 시각화하고 기록하여 매일 운동을 실천하도록 돕고, 그룹 내 랭킹 시스템과 채팅 기능을 통해 그룹원들과 소통하며 운동의 재미를 더합니다. 👏
@@ -37,7 +37,7 @@
 
 <br />
 
-### 서비스 소개
+### ✨ 서비스 소개
 그룹원들과 홈트 시간을 공유하며 쉽고 꾸준한 운동 습관을 길러주는 홈트 플랫폼, **홈트라이**
 - 실시간으로 운동 시간을 측정하여 시각화를 통해, 혼자 집에서도 꾸준히 홈트를 진행하도록 동기 부여 🔥
 - 매일 반복되는 운동 사이클 속 재미와 운동 습관 형성 ✨
@@ -46,7 +46,7 @@
 <br />
 
 
-### 팀원 소개
+### 🖥️ 팀원 소개
 **FE**
 | [정서윤(FE 테크리더)](https://github.com/yunn23) | [이도현](https://github.com/leedyun) |
 |----------|----------|
@@ -55,18 +55,19 @@
 **BE**
 | [정우재(팀장)](https://github.com/Woojae-Jeong) | [김수랑(BE 테크리더)](https://github.com/rdme0) | [박준형](https://github.com/cliant) | [조현서](https://github.com/hxunsc) |
 |----------|----------|----------|----------|
-| 나의 그룹, 그룹탐색 | 로그인, 채팅 | 메인  | 운동, 마켓  |
+| 나의 그룹, 그룹탐색 | 회원, 인증, 채팅 | 메인  | 운동, 마켓  |
 
 
 
 <br />
 
-### 기술 스택
+### 📚 기술 스택
 
 
 서버 사이드
 
-![Spring](https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white) ![Spring Data JPA](https://img.shields.io/badge/Spring%20Data%20JPA-6DB33F?style=for-the-badge&logo=springdata&logoColor=white)
+<img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white"> ![Spring](https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white) <img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"> ![Spring Data JPA](https://img.shields.io/badge/Spring%20Data%20JPA-6DB33F?style=for-the-badge&logo=springdata&logoColor=white) 
+
 
 데이터베이스
 
@@ -86,12 +87,13 @@
 
 빌드 도구 및 배포
 
-![Gradle](https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white) ![AWS](https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white) ![Nginx](https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white)
+![Gradle](https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white) ![AWS](https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white) ![Nginx](https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white) <img src="https://img.shields.io/badge/linux-FCC624?style=for-the-badge&logo=linux&logoColor=black">
+
 
 
 <br />
 
-### 개발 문서
+### 📝 개발 문서
 - [API 명세서](https://home-try.13.125.102.156.sslip.io/docs)
 - [와이어 프레임](https://www.figma.com/design/TsCneAgt5ONEKWAiArCA6u/%EC%B9%B4%ED%85%8C%EC%BA%A0-%ED%99%88%ED%8A%B8%EB%9D%BC%EC%9D%B4-%EC%99%80%EC%9D%B4%EC%96%B4%ED%94%84%EB%A0%88%EC%9E%84_%EC%BF%A0%ED%82%A4zip?node-id=130-2033&t=idsBFD1mOYhPFPFk-1)
 - erd
@@ -99,19 +101,19 @@
 
 <br />
 
-### 주요 기능
+### ✨ 주요 기능
 
 
 <br />
 
 
-### 개발 주안점
+### 💡 개발 주안점
 
 
 <br />
 
 
-### 페이지별 기능
+### ✨ 페이지별 기능
 
 
 
@@ -132,7 +134,7 @@
 <br />
 
 
-### 폴더 구조
+### 📁 폴더 구조
 <details>
   <summary> 폴더 구조 보기 </summary>
 
