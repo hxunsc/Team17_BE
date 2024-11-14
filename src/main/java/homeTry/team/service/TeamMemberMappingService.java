@@ -21,7 +21,7 @@ public class TeamMemberMappingService {
 
     //TeamMemberMapping 엔티티 추가 (멤버가 팀 가입시 사용)
     public void addTeamMember(Team team, Member member) {
-        teamMemberMappingRepository.findByTeamAndMember(team, member)
+        teamMemberMappingRepository.findByTeamAndMemberAndActivated(team, member)
                 .ifPresent(teamMemberMapping -> {
                     if (!teamMemberMapping.isDeprecated()) // isDeprecated 값이 false인 경우 예외 던짐
                         throw new AlreadyJoinedTeamException();
