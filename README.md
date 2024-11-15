@@ -61,6 +61,12 @@
 
 <br />
 
+### 개발 기간
+2024년 9월 ~ 11월
+
+
+<br />
+
 ### 📚 기술 스택
 
 
@@ -96,9 +102,9 @@
 ### 📝 개발 문서
 - [API 명세서](https://home-try.13.125.102.156.sslip.io/docs)
 - [와이어 프레임](https://www.figma.com/design/TsCneAgt5ONEKWAiArCA6u/%EC%B9%B4%ED%85%8C%EC%BA%A0-%ED%99%88%ED%8A%B8%EB%9D%BC%EC%9D%B4-%EC%99%80%EC%9D%B4%EC%96%B4%ED%94%84%EB%A0%88%EC%9E%84_%EC%BF%A0%ED%82%A4zip?node-id=130-2033&t=idsBFD1mOYhPFPFk-1)
+- [회의록](https://www.notion.so/7b8ead85e5bc495a949fafeb01846587?v=aae07c49cc774787981f9752728a99fd&pvs=18)
 - ERD
 <img width="1377" alt="ERD" src="https://github.com/user-attachments/assets/bd3135de-5a4f-436b-a380-59ba75f2c130">
-
 
 <br />
 
