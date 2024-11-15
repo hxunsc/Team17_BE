@@ -49,6 +49,7 @@
 
 
 ### 🖥️팀원 소개
+
 **FE**
 | [정서윤(FE 테크리더)](https://github.com/yunn23) | [이도현](https://github.com/leedyun) |
 |----------|----------|
