@@ -7,7 +7,7 @@ import homeTry.product.model.entity.Product;
 import homeTry.product.model.entity.ProductTagMapping;
 import homeTry.product.repository.ProductRepository;
 import homeTry.tag.productTag.dto.ProductTagDto;
-import homeTry.tag.productTag.exception.BadRequestException.ProductTagNotFoundException;
+import homeTry.tag.productTag.exception.badRequestException.ProductTagNotFoundException;
 import homeTry.tag.productTag.model.entity.ProductTag;
 import homeTry.tag.productTag.repository.ProductTagRepository;
 import org.springframework.data.domain.Page;
@@ -69,7 +69,7 @@ public class AdminProductService {
         productRepository.save(product);
     }
 
-    // 상품 조회
+    // 상품 전체 조회
     @Transactional(readOnly = true)
     public Page<ProductAdminResponse> getProducts(Pageable pageable) {
 
@@ -78,6 +78,34 @@ public class AdminProductService {
                 ProductTagDto tagDto = productTagMappingService.getTagForProduct(product.getId());
                 return ProductAdminResponse.from(product, tagDto);
             });
+    }
+
+    // 상품 단일 조회
+    @Transactional(readOnly = true)
+    public ProductAdminResponse getProductById(Long productId) {
+        Product product = productRepository.findById(productId)
+            .orElseThrow(ProductNotFoundException::new);
+
+        ProductTagDto tagDto = productTagMappingService.getTagForProduct(product.getId());
+        return ProductAdminResponse.from(product, tagDto);
+    }
+
+    // 상품 수정
+    @Transactional
+    public void updateProduct(Long productId, ProductRequest request) {
+        Product product = productRepository.findById(productId)
+            .orElseThrow(ProductNotFoundException::new);
+
+        product.update(request.imageUrl(), request.productUrl(), request.name(), request.price(),
+            request.storeName());
+
+        // 태그 업데이트
+        if (request.tagId() != null) {
+            ProductTag newTag = productTagRepository.findById(request.tagId())
+                .orElseThrow(ProductTagNotFoundException::new);
+
+            productTagMappingService.updateProductTagMapping(product, newTag);
+        }
     }
 
 }

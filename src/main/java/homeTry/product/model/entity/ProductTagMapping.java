@@ -54,4 +54,7 @@ public class ProductTagMapping extends SoftDeletableEntity {
         return productTag;
     }
 
+    public void updateProductTag(ProductTag productTag) {
+        this.productTag = productTag;
+    }
 }

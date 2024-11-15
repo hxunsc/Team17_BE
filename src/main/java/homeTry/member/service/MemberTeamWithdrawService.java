@@ -3,8 +3,10 @@ package homeTry.member.service;
 import homeTry.member.model.entity.Member;
 import homeTry.team.model.entity.Team;
 import homeTry.team.service.TeamMemberMappingService;
-import homeTry.team.service.TeamWithdrawService;
+import homeTry.team.service.TeamJoinAndWithdrawService;
+
 import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,13 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberTeamWithdrawService {
 
     private final TeamMemberMappingService teamMemberMappingService;
-    private final TeamWithdrawService teamWithdrawService;
+    private final TeamJoinAndWithdrawService teamJoinAndWithdrawService;
     private final MemberService memberService;
 
     public MemberTeamWithdrawService(TeamMemberMappingService teamMemberMappingService,
-            TeamWithdrawService teamWithdrawService, MemberService memberService) {
+                                     TeamJoinAndWithdrawService teamJoinAndWithdrawService, MemberService memberService) {
         this.teamMemberMappingService = teamMemberMappingService;
-        this.teamWithdrawService = teamWithdrawService;
+        this.teamJoinAndWithdrawService = teamJoinAndWithdrawService;
         this.memberService = memberService;
     }
 
@@ -29,11 +31,11 @@ public class MemberTeamWithdrawService {
         List<Team> withdrawTeamList = teamMemberMappingService.getTeamListByMember(withdrawMember);
 
         for (Team team : withdrawTeamList) {
-            if(team.getLeaderId().equals(withdrawMemberId)) {
-                teamWithdrawService.deleteTeam(withdrawMemberId, team.getId());
+            if (team.getLeaderId().equals(withdrawMemberId)) {
+                teamJoinAndWithdrawService.deleteTeam(withdrawMemberId, team.getId());
                 continue;
             }
-            teamWithdrawService.withdrawTeam(withdrawMemberId, team.getId());
+            teamJoinAndWithdrawService.withdrawTeam(withdrawMemberId, team.getId());
         }
     }
 

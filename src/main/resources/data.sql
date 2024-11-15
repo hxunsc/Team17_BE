@@ -1,79 +1,32 @@
 insert into team_tag (tag_attribute, tag_name, is_deprecated)
 values ('성별', '여성', false),
        ('성별', '남성', false),
-       ('성별', '무관', false),
        ('나이', '10대', true),
        ('나이', '20대', false),
        ('나이', '30대', false),
        ('나이', '40대', false),
        ('나이', '50대', false),
-       ('나이', '전연령', false),
        ('운동강도', '강', false),
        ('운동강도', '중', false),
-       ('운동강도', '약', false),
-       ('운동강도', '자유', false);
-
-insert into member (email, nickname, exercise_attendance_date, created_at, is_inactive)
-values ('test1@naver.com', 'test1', '0', '2024-10-04T12:30:00', false),
-       ('test2@naver.com', 'test2', '0', '2024-10-04T12:40:00', false),
-       ('test3@naver.com', 'test3', '0', '2024-10-04T12:40:00', false);
-
-insert into team (team_name, team_description, leader_id, max_participants, current_participants,
-                  password)
-values ('test1 team', 'test1 team description', 1, 8, 2, null),
-       ('test2 team', 'test2 team description', 1, 8, 1, '1234'),
-       ('test3 team', 'test3 team description', 3, 8, 2, '1234'),
-       ('test4 team', 'test4 team description', 3, 8, 1, '1234');
-
-
-insert into team_member_mapping (member_id, team_id, is_deprecated)
-values (1, 1, false),
-       (2, 1, false),
-       (1, 3, false);
-
-insert into chatting (team_member_mapping_id, message, created_at)
-values (1, '채팅 테스트 1', '2024-10-04T12:30:00'),
-       (1, '채팅 테스트 2', '2024-10-04T12:30:00');
-
-insert into team_tag_mapping (team_tag_id, team_id, is_deprecated)
-values (1, 1, false),
-       (4, 1, false),
-       (2, 2, false),
-       (5, 2, false),
-       (9, 3, false),
-       (1, 3, false),
-       (2, 3, false),
-       (5, 4, false),
-       (8, 4, false);
-
-insert into exercise (exercise_name, is_deprecated, member_id)
-values ('test1 User exercise1', false, 1),
-       ('test1 User exercise2', false, 1),
-       ('test2 User exercise1', false, 2),
-       ('test2 User exercise2', false, 2);
-
-insert into exercise_time (start_time, exercise_time, is_active, exercise_id)
-values ('2024-10-10 10:10:00', 6600, false, 1),
-       ('2024-10-10 10:10:00', 5400, false, 3);
-
-insert into exercise_history (exercise_id, exercised_at, exercise_history_time)
-values (1, '2024-10-09 03:00:10', 5400),
-       (2, '2024-10-08 03:00:20', 3600),
-       (3, '2024-10-09 03:00:10', 3600),
-       (4, '2024-10-08 03:00:20', 5400);
+       ('운동강도', '약', false);
 
 insert into product (image_url, product_url, name, price, store_name, view_count, is_deprecated)
-values ('https://tinyurl.com/25ntsq9k', 'https://tinyurl.com/27sk7wrj', '런닝머신', 240000, 'coupang', 15, false),
-       ('https://tinyurl.com/2ylb52aq', 'https://tinyurl.com/2cxw4zxa', '실내자전거', 190000, 'coupang', 5, false),
-       ('https://tinyurl.com/28y6jl8d', 'https://tinyurl.com/29m67lsf', '폼롤러', 5000, 'adidas', 15, false),
+values ('https://tinyurl.com/25ntsq9k', 'https://tinyurl.com/27sk7wrj', '런닝머신', 883700, 'coupang', 15, false),
+       ('https://tinyurl.com/2ylb52aq', 'https://tinyurl.com/2cxw4zxa', '실내자전거', 148800, 'coupang', 5, false),
+       ('https://tinyurl.com/28y6jl8d', 'https://tinyurl.com/29m67lsf', '폼롤러', 19800, 'adidas', 15, false),
        ('https://tinyurl.com/2954eoum', 'https://brand.naver.com/adidasfitness/products/10824318636', '요가매트', 24000, 'adidas', 8, false),
        ('https://tinyurl.com/2cpy86bd', 'https://tinyurl.com/2y9fzpw8', '짐볼', 9900, 'body crew', 20, false),
-       ('https://tinyurl.com/23oej7er', 'https://tinyurl.com/2bkxjcyd', '요가 밴드', 7900, 'coupang', 11, false),
-       ('https://tinyurl.com/28g7dayl', 'https://tinyurl.com/26czhyqs', '아몬드 브리즈 언스위트', 15550, 'coupang', 25, false);
+       ('https://tinyurl.com/23oej7er', 'https://tinyurl.com/2bkxjcyd', '요가 밴드', 6600, 'coupang', 11, false),
+       ('https://tinyurl.com/28g7dayl', 'https://tinyurl.com/26czhyqs', '아몬드 브리즈 언스위트', 15550, 'coupang', 25, false),
+       ('https://tinyurl.com/2cfhbtwo', 'https://tinyurl.com/2379qb7d', '친환경 무농약 샐러드 (정기배송)', 14900, '39파머스', 2, false),
+       ('https://tinyurl.com/2b2f3too', 'https://tinyurl.com/2bqzt8gx', '하림 닭가슴살 블랙페퍼 (8매)', 15800, 'coupang', 5, false),
+       ('https://tinyurl.com/23l6ngbs', 'https://tinyurl.com/25jjdl9m', '풀무원 순생 나또', 9900, 'coupang', 7, false),
+       ('https://tinyurl.com/26hnkcq4', 'https://tinyurl.com/29yko8yd', '코코밥 초코 단백질 쉐이크', 25500, '리빙라이프', 10, false),
+       ('https://tinyurl.com/2ye79qd6', 'https://tinyurl.com/2dpzjzzt', '햇반 현미 귀리 곤약밥', 22000, 'G마켓', 8, false);
 
 insert into product_tag (tag_name, is_deprecated)
-values ('운동 상품', false),
-       ('운동 식품', false);
+values ('운동 기구', false),
+       ('건강 식품', false);
 
 insert into product_tag_mapping (product_id, product_tag_id, is_deprecated)
 values (1, 1, false),
@@ -82,7 +35,12 @@ values (1, 1, false),
        (4, 1, false),
        (5, 1, false),
        (6, 1, false),
-       (7, 2, false);
+       (7, 2, false),
+       (8, 2, false),
+       (9, 2, false),
+       (10, 2, false),
+       (11, 2, false),
+       (12, 2, false);
 
 
 

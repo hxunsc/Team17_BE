@@ -5,8 +5,8 @@ import homeTry.tag.teamTag.dto.AllTeamTagDTO;
 import homeTry.tag.teamTag.dto.TeamTagDTO;
 import homeTry.tag.teamTag.dto.request.TeamTagRequest;
 import homeTry.tag.teamTag.dto.response.TeamTagResponse;
-import homeTry.tag.teamTag.exception.BadRequestException.TeamTagAlreadyExistsException;
-import homeTry.tag.teamTag.exception.BadRequestException.TeamTagNotFoundException;
+import homeTry.tag.teamTag.exception.badRequestException.TeamTagAlreadyExistsException;
+import homeTry.tag.teamTag.exception.badRequestException.TeamTagNotFoundException;
 import homeTry.tag.teamTag.model.entity.TeamTag;
 import homeTry.tag.teamTag.repository.TeamTagRepository;
 import homeTry.team.model.entity.Team;
@@ -84,7 +84,7 @@ public class TeamTagService {
     @Transactional
     public void addTeamTag(TeamTagRequest teamTagRequest) {
 
-        if (teamTagRepository.existsByTagName(new TagName(teamTagRequest.teamTagName()))) {
+        if (teamTagRepository.existsByTagNameAndIsDeprecatedFalse(new TagName(teamTagRequest.teamTagName()))) {
             throw new TeamTagAlreadyExistsException();
         }
 

@@ -6,8 +6,8 @@ import homeTry.tag.model.vo.TagName;
 import homeTry.tag.productTag.dto.ProductTagDto;
 import homeTry.tag.productTag.dto.request.ProductTagRequest;
 import homeTry.tag.productTag.dto.response.ProductTagResponse;
-import homeTry.tag.productTag.exception.BadRequestException.ProductTagAlreadyExistsException;
-import homeTry.tag.productTag.exception.BadRequestException.ProductTagNotFoundException;
+import homeTry.tag.productTag.exception.badRequestException.ProductTagAlreadyExistsException;
+import homeTry.tag.productTag.exception.badRequestException.ProductTagNotFoundException;
 import homeTry.tag.productTag.model.entity.ProductTag;
 import homeTry.tag.productTag.repository.ProductTagRepository;
 import org.springframework.stereotype.Service;
@@ -48,7 +48,7 @@ public class ProductTagService {
     public void addProductTag(ProductTagRequest productTagRequest) {
 
 
-        if(productTagRepository.existsByTagName(new TagName(productTagRequest.productTagName()))){
+        if(productTagRepository.existsByTagNameAndIsDeprecatedFalse(new TagName(productTagRequest.productTagName()))){
             throw new ProductTagAlreadyExistsException();
         }
 

@@ -72,6 +72,12 @@ public class ExerciseTime extends BaseEntity {
         this.startTime = DateTimeUtil.getStartOfDay(LocalDate.now());
     }
 
+    public void limitExerciseTime(Duration maxAllowedDuration) {
+        if (this.exerciseTime.compareTo(maxAllowedDuration) > 0) {
+            this.exerciseTime = maxAllowedDuration;
+        }
+    }
+
     public Long getId() {
         return id;
     }

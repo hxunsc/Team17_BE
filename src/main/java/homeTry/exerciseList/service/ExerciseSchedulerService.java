@@ -1,13 +1,9 @@
 package homeTry.exerciseList.service;
 
-import homeTry.exerciseList.exception.badRequestException.DailyExerciseTimeLimitExceededException;
-import homeTry.exerciseList.exception.badRequestException.ExerciseTimeLimitExceededException;
 import homeTry.exerciseList.model.entity.Exercise;
 import homeTry.exerciseList.model.entity.ExerciseTime;
 import homeTry.member.dto.MemberDTO;
 import homeTry.member.service.MemberService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,8 +14,6 @@ import java.util.Set;
 
 @Service
 public class ExerciseSchedulerService {
-
-    private static final Logger logger = LoggerFactory.getLogger(ExerciseSchedulerService.class);
 
     private final ExerciseService exerciseService;
     private final ExerciseTimeService exerciseTimeService;
@@ -63,7 +57,7 @@ public class ExerciseSchedulerService {
 
         // 3시에도 운동이 실행 중이면 강제로 멈추고 exerciseTime 저장
         if (exerciseTime.isActive()) {
-            stopExerciseAndHandleExceptions(exercise);
+            exerciseService.stopExercise(exercise.getExerciseId(), MemberDTO.from(exercise.getMember()));
             exerciseTimeHelper.saveExerciseTime(exerciseTime);
         }
 
@@ -75,15 +69,6 @@ public class ExerciseSchedulerService {
         // exerciseTime -> exerciseHistory 이동
         exerciseHistoryService.saveExerciseHistory(exerciseTime.getExercise(), exerciseTime);
         exerciseTimeService.resetDailyExercise(exerciseTime);
-    }
-
-    private void stopExerciseAndHandleExceptions(Exercise exercise) {
-        try {
-            exerciseService.stopExercise(exercise.getExerciseId(), MemberDTO.from(exercise.getMember()));
-        } catch (ExerciseTimeLimitExceededException | DailyExerciseTimeLimitExceededException e) {
-            // 예외가 발생해도 스케줄러는 중단되지 않고 다음 운동을 처리
-            logger.warn("운동 시간이 초과되어 강제 종료되었습니다. Exercise ID: {}", exercise.getExerciseId(), e);
-        }
     }
 
 }

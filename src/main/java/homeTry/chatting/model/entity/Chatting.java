@@ -1,8 +1,11 @@
 package homeTry.chatting.model.entity;
 
+import homeTry.chatting.model.vo.Message;
 import homeTry.common.entity.BaseEntity;
 import homeTry.team.model.entity.TeamMemberMapping;
+import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,15 +22,16 @@ public class Chatting extends BaseEntity {
     @ManyToOne
     private TeamMemberMapping teamMemberMapping;
 
-    @Column(nullable = false)
-    private String message;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "message", nullable = false, length = 511))
+    private Message message;
 
     protected Chatting() {
     }
 
     public Chatting(TeamMemberMapping teamMember, String message) {
         this.teamMemberMapping = teamMember;
-        this.message = message;
+        this.message = new Message(message);
     }
 
     public Long getId() {
@@ -39,6 +43,6 @@ public class Chatting extends BaseEntity {
     }
 
     public String getMessage() {
-        return message;
+        return message.value();
     }
 }
