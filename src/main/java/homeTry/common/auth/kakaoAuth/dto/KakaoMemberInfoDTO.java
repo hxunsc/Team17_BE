@@ -1,3 +1,3 @@
 package homeTry.common.auth.kakaoAuth.dto;
 
-public record KakaoMemberInfoDTO(String email) { }
+public record KakaoMemberInfoDTO(Long kakaoMemberId, String email) { }

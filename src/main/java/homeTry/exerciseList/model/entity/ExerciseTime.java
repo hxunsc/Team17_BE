@@ -8,14 +8,12 @@ import jakarta.persistence.*;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Entity
 @Table(
     name = "exercise_time",
     indexes = {
-        @Index(name = "idx_exercise_time_exercise_start_time", columnList = "exercise_id, startTime"),
-        @Index(name = "idx_exercise_time_exercise_id", columnList = "exercise_id")
+        @Index(name = "idx_exercise_time_exercise_start_time", columnList = "exercise_id, start_time")
     }
 )
 public class ExerciseTime extends BaseEntity {
@@ -72,6 +70,12 @@ public class ExerciseTime extends BaseEntity {
         this.exerciseTime = Duration.ZERO;
         this.isActive = false;
         this.startTime = DateTimeUtil.getStartOfDay(LocalDate.now());
+    }
+
+    public void limitExerciseTime(Duration maxAllowedDuration) {
+        if (this.exerciseTime.compareTo(maxAllowedDuration) > 0) {
+            this.exerciseTime = maxAllowedDuration;
+        }
     }
 
     public Long getId() {

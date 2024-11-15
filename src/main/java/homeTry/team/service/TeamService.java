@@ -1,5 +1,6 @@
 package homeTry.team.service;
 
+import homeTry.common.constants.DateTimeUtil;
 import homeTry.exerciseList.service.ExerciseHistoryService;
 import homeTry.exerciseList.service.ExerciseTimeService;
 import homeTry.member.dto.MemberDTO;
@@ -15,9 +16,8 @@ import homeTry.team.dto.request.TeamCreateRequest;
 import homeTry.team.dto.response.RankingResponse;
 import homeTry.team.dto.response.TagListResponse;
 import homeTry.team.dto.response.TeamResponse;
-import homeTry.team.exception.*;
+import homeTry.team.exception.badRequestException.*;
 import homeTry.team.model.entity.Team;
-import homeTry.team.model.entity.TeamMemberMapping;
 import homeTry.team.model.vo.Name;
 import homeTry.team.repository.TeamRepository;
 import org.springframework.data.domain.*;
@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 
@@ -36,6 +37,8 @@ public class TeamService {
 
     private static final int DEFAULT_PARTICIPANTS = 1;
     private static final int DEFAULT_RANKING = 0;
+    private static final int ZERO = 0;
+
     private final TeamRepository teamRepository;
     private final MemberService memberService;
     private final TeamTagService teamTagService;
@@ -43,7 +46,6 @@ public class TeamService {
     private final TeamMemberMappingService teamMemberMappingService;
     private final ExerciseHistoryService exerciseHistoryService;
     private final ExerciseTimeService exerciseTimeService;
-    private static final int FIRST = 1;
 
 
     public TeamService(TeamRepository teamRepository,
@@ -100,23 +102,6 @@ public class TeamService {
         List<TeamTag> tagList = teamTagService.getTeamTagList(tagIdList);
 
         teamTagMappingService.addTeamTagMappings(tagList, team);
-    }
-
-    //팀 삭제 기능
-    @Transactional
-    public void deleteTeam(MemberDTO memberDTO, Long teamId) {
-        Member member = memberService.getMemberEntity(memberDTO.id());
-
-        Team team = teamRepository.findById(teamId)
-                .orElseThrow(TeamNotFoundException::new);
-
-        team.validateIsLeader(member.getId()); //팀 리더인지 체크
-
-        teamMemberMappingService.deleteAllTeamMemberFromTeam(team); // 해당 팀에 대한 TeamMemberMapping 데이터 삭제
-
-        teamTagMappingService.deleteAllTeamTagMappingFromTeam(team); //해당 팀에 대한 TeamTagMapping 데이터 삭제
-
-        teamRepository.delete(team); //Team 삭제
     }
 
     //팀 조회 기능
@@ -213,11 +198,7 @@ public class TeamService {
     public TagListResponse getAllTeamTagList(MemberDTO memberDTO) {
         AllTeamTagDTO allTeamTagDTO = teamTagService.getAllTeamTagList(); //모든 태그 조회해 옴
 
-        return new TagListResponse(
-                allTeamTagDTO.genderTagList(),
-                allTeamTagDTO.ageTagList(),
-                allTeamTagDTO.exerciseIntensityTagList()
-        );
+        return TagListResponse.of(allTeamTagDTO);
     }
 
     //팀 랭킹 조회 기능(페이징 적용)
@@ -225,6 +206,10 @@ public class TeamService {
     public RankingResponse getTeamRanking(MemberDTO memberDTO, Long teamId, Pageable pageable, LocalDate date) {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(TeamNotFoundException::new);
+
+        Member member = memberService.getMemberEntity(memberDTO.id());
+
+        isMemberOfTeam(member, team); //유저가 팀에 속해있는지 확인
 
         List<Member> memberList = teamMemberMappingService.getMemberListByTeam(team); //팀의 멤버들을 조회해옴
 
@@ -235,6 +220,11 @@ public class TeamService {
         Slice<RankingDTO> slice = getSlice(rankingList, pageable); // 슬라이싱 처리
 
         return new RankingResponse(myRanking.ranking(), myRanking.name(), myRanking.totalExerciseTime(), slice);
+    }
+
+    //유저가 해당 팀에 속해있는 멤버인지 조회
+    private void isMemberOfTeam(Member member, Team team) {
+        teamMemberMappingService.getTeamMemberMapping(team, member);
     }
 
     //리스트에 대해서 슬라이싱 처리해 주는 제네릭 메소드
@@ -253,31 +243,43 @@ public class TeamService {
                 .stream()
                 .filter(rankingDTO -> userNickname.equals(rankingDTO.name()))
                 .findFirst()
-                .orElseThrow(MyRankingNotFoundException::new);
+                .orElse(new RankingDTO(
+                        userNickname,
+                        DEFAULT_RANKING,
+                        0L
+                ));
     }
 
     //멤버 리스트에서 랭킹을 매겨주는 기능
     private List<RankingDTO> getRankingList(List<Member> memberList, LocalDate date) {
-        List<RankingDTO> totalExerciseTimeList = new ArrayList<>();
-        if (date.isEqual(LocalDate.now())) // 오늘 조회인경우
+        List<RankingDTO> totalExerciseTimeList = new ArrayList<>(); //멤버들의 totalExerciseTime을 저장하는 리스트
+
+        LocalDate currentDate = DateTimeUtil.getAdjustedCurrentDate(); //현재 날짜값 받아옴
+
+        if (date.isEqual(currentDate)) // 오늘 조회인경우
             totalExerciseTimeList = getTotalExerciseTimeListOfToday(memberList);
-        if (!date.isEqual(LocalDate.now())) // 과거 조회인경우
+        if (!date.isEqual(currentDate)) // 과거 조회인경우
             totalExerciseTimeList = getTotalExerciseTimeListOfHistory(memberList, date);
 
-        AtomicInteger rankCounter = new AtomicInteger(FIRST);
+        AtomicLong previousTotalExerciseTime = new AtomicLong(-1); //내 앞 순위의 totalExerciseTime을 저장
+        AtomicInteger rankCounter = new AtomicInteger(ZERO); //초기 순위를 0으로 지정
 
-        return totalExerciseTimeList //멤버들 랭킹 구함
+        List<RankingDTO> rankingDTOList = totalExerciseTimeList // 시간기준 내림차순으로 정렬
                 .stream()
                 .sorted(Comparator.comparing(RankingDTO::totalExerciseTime).reversed())
-                .map(rankingDTO -> new RankingDTO(
-                        rankingDTO.name(),
-                        rankCounter.getAndIncrement(),
-                        rankingDTO.totalExerciseTime()
-                ))
+                .map(rankingDTO -> {
+                    if (rankingDTO.totalExerciseTime() != previousTotalExerciseTime.get()) { //앞 순위와 나의 totalExerciseTime 시간이 다른 경우
+                        rankCounter.getAndIncrement();
+                        previousTotalExerciseTime.set(rankingDTO.totalExerciseTime());
+                    }
+                    return new RankingDTO(rankingDTO.name(), rankCounter.get(), rankingDTO.totalExerciseTime());
+                })
                 .toList();
+
+        return rankingDTOList;
     }
 
-    //멤버들의 오늘 totalExerciseTime 을 조회 후
+    //멤버들의 오늘 totalExerciseTime 을 조회
     private List<RankingDTO> getTotalExerciseTimeListOfToday(List<Member> memberList) {
         return memberList
                 .stream()
@@ -312,23 +314,6 @@ public class TeamService {
         teamMemberMappingService.addTeamMember(team, member); // 매핑 정보 추가
     }
 
-    //멤버가 팀에서 탈퇴
-    @Transactional
-    public void withDrawTeam(MemberDTO memberDTO, Long teamId) {
-        Team team = teamRepository.findById(teamId)
-                .orElseThrow(TeamNotFoundException::new);
-
-        Member member = memberService.getMemberEntity(memberDTO.id());
-
-        if (team.validateIsLeader(member.getId())) { // 팀 리더가 탈퇴하는 요청인지 체크. 팀 리더는 팀 삭제만 가능. 탈퇴는 불가
-            throw new TeamLeaderCannotWithdrawException();
-        }
-
-        teamMemberMappingService.deleteTeamMember(team, member); //TeamMember 중간테이블에서 데이터 삭제
-
-        team.decreaseParticipantsByWithdraw(); //팀의 현재 참여인원 감소
-    }
-
     //팀 비밀번호 검사
     @Transactional(readOnly = true)
     public void checkPassword(Long teamId, CheckingPasswordRequest checkingPasswordRequest) {
@@ -358,6 +343,32 @@ public class TeamService {
                 .toList();
 
         return getSlice(myTeamList, pageable);
+    }
+
+    public void deleteTeam(Long memberId, Team team) {
+        Member member = memberService.getMemberEntity(memberId);
+
+        if (!team.validateIsLeader(memberId)) //팀 리더인지 체크
+            throw new NotTeamLeaderException();
+
+        teamMemberMappingService.deleteAllTeamMemberFromTeam(team); // 해당 팀에 대한 TeamMemberMapping 데이터 삭제
+
+        teamTagMappingService.deleteAllTeamTagMappingFromTeam(team); //해당 팀에 대한 TeamTagMapping 데이터 삭제
+
+        teamRepository.delete(team); //Team 삭제
+    }
+
+    @Transactional
+    public void withdrawTeam(Long memberId, Team team) {
+        Member member = memberService.getMemberEntity(memberId);
+
+        if (team.validateIsLeader(memberId)) { // 팀 리더가 탈퇴하는 요청인지 체크. 팀 리더는 팀 삭제만 가능. 탈퇴는 불가
+            throw new TeamLeaderCannotWithdrawException();
+        }
+
+        teamMemberMappingService.markDeprecated(team, member); //TeamMemberMapping 테이블에서 softDelete
+
+        team.decreaseParticipantsByWithdraw(); //팀의 현재 참여인원 감소
     }
 }
 

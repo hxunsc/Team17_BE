@@ -1,7 +1,5 @@
 package homeTry.product.service;
 
-import homeTry.member.dto.MemberDTO;
-import homeTry.member.service.MemberService;
 import homeTry.product.dto.request.ProductRequest;
 import homeTry.product.dto.response.ProductAdminResponse;
 import homeTry.product.exception.badRequestException.*;
@@ -9,7 +7,7 @@ import homeTry.product.model.entity.Product;
 import homeTry.product.model.entity.ProductTagMapping;
 import homeTry.product.repository.ProductRepository;
 import homeTry.tag.productTag.dto.ProductTagDto;
-import homeTry.tag.productTag.exception.BadRequestException.ProductTagNotFoundException;
+import homeTry.tag.productTag.exception.badRequestException.ProductTagNotFoundException;
 import homeTry.tag.productTag.model.entity.ProductTag;
 import homeTry.tag.productTag.repository.ProductTagRepository;
 import org.springframework.data.domain.Page;
@@ -23,22 +21,18 @@ public class AdminProductService {
     private final ProductRepository productRepository;
     private final ProductTagRepository productTagRepository;
     private final ProductTagMappingService productTagMappingService;
-    private final MemberService memberService;
 
     public AdminProductService(ProductRepository productRepository,
         ProductTagRepository productTagRepository,
-        ProductTagMappingService productTagMappingService, MemberService memberService) {
+        ProductTagMappingService productTagMappingService) {
         this.productRepository = productRepository;
         this.productTagRepository = productTagRepository;
         this.productTagMappingService = productTagMappingService;
-        this.memberService = memberService;
     }
 
     // 상품 추가
     @Transactional
-    public void addProduct(ProductRequest request, MemberDTO memberDTO) {
-        // 관리자 권한 확인
-        verifyAdmin(memberDTO);
+    public void addProduct(ProductRequest request) {
 
         if (request.tagId() == null) {
             throw new MissingProductTagException();
@@ -62,9 +56,7 @@ public class AdminProductService {
 
     // 상품 삭제
     @Transactional
-    public void deleteProduct(Long productId, MemberDTO memberDTO) {
-        // 관리자 권한 확인
-        verifyAdmin(memberDTO);
+    public void deleteProduct(Long productId) {
 
         Product product = productRepository.findById(productId)
             .orElseThrow(ProductNotFoundException::new);
@@ -77,11 +69,9 @@ public class AdminProductService {
         productRepository.save(product);
     }
 
-    // 상품 조회
+    // 상품 전체 조회
     @Transactional(readOnly = true)
-    public Page<ProductAdminResponse> getProducts(Pageable pageable, MemberDTO memberDTO) {
-        // 관리자 권한 확인
-        verifyAdmin(memberDTO);
+    public Page<ProductAdminResponse> getProducts(Pageable pageable) {
 
         return productRepository.findAllNonDeprecated(pageable)
             .map(product -> {
@@ -90,10 +80,31 @@ public class AdminProductService {
             });
     }
 
-    // 관리자 권한 확인
-    private void verifyAdmin(MemberDTO memberDTO) {
-        if (!memberService.isAdmin(memberDTO.id())) {
-            throw new ForbiddenProductAccessException();
+    // 상품 단일 조회
+    @Transactional(readOnly = true)
+    public ProductAdminResponse getProductById(Long productId) {
+        Product product = productRepository.findById(productId)
+            .orElseThrow(ProductNotFoundException::new);
+
+        ProductTagDto tagDto = productTagMappingService.getTagForProduct(product.getId());
+        return ProductAdminResponse.from(product, tagDto);
+    }
+
+    // 상품 수정
+    @Transactional
+    public void updateProduct(Long productId, ProductRequest request) {
+        Product product = productRepository.findById(productId)
+            .orElseThrow(ProductNotFoundException::new);
+
+        product.update(request.imageUrl(), request.productUrl(), request.name(), request.price(),
+            request.storeName());
+
+        // 태그 업데이트
+        if (request.tagId() != null) {
+            ProductTag newTag = productTagRepository.findById(request.tagId())
+                .orElseThrow(ProductTagNotFoundException::new);
+
+            productTagMappingService.updateProductTagMapping(product, newTag);
         }
     }
 

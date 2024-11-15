@@ -1,10 +1,12 @@
 package homeTry.member.service;
 
+import homeTry.common.auth.kakaoAuth.dto.KakaoMemberWithdrawDTO;
+import homeTry.common.auth.kakaoAuth.service.KakaoClientService;
 import homeTry.diary.service.DiaryService;
 import homeTry.exerciseList.service.ExerciseService;
 import homeTry.member.dto.MemberDTO;
-import homeTry.member.model.entity.Member;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MemberWithdrawService {
@@ -12,20 +14,28 @@ public class MemberWithdrawService {
     private final ExerciseService exerciseService;
     private final MemberService memberService;
     private final DiaryService diaryService;
+    private final MemberTeamWithdrawService memberTeamWithdrawService;
+    private final KakaoClientService kakaoClientService;
 
     public MemberWithdrawService(ExerciseService exerciseService, MemberService memberService,
-            DiaryService diaryService) {
+            DiaryService diaryService, MemberTeamWithdrawService memberTeamWithdrawService,
+            KakaoClientService kakaoClientService) {
         this.exerciseService = exerciseService;
         this.memberService = memberService;
         this.diaryService = diaryService;
+        this.memberTeamWithdrawService = memberTeamWithdrawService;
+        this.kakaoClientService = kakaoClientService;
     }
 
+    @Transactional
     public void withdraw(MemberDTO memberDTO) {
-        Member member = memberService.getMemberEntity(memberDTO.id());
-        Long memberId = member.getId();
+        Long withdrawMemberId = memberDTO.id();
 
-        exerciseService.deleteAllExercisesByMemberId(memberId);
-        diaryService.deleteByMember(memberId);
-        memberService.withdrawMember(memberId);
+        memberTeamWithdrawService.withdrawTeamByWithdrawMember(withdrawMemberId);
+        exerciseService.deleteAllExercisesByMemberId(withdrawMemberId);
+        diaryService.deleteByMember(withdrawMemberId);
+
+        KakaoMemberWithdrawDTO kakaoWithdrawDTO = memberService.withdrawMember(withdrawMemberId);
+        kakaoClientService.unlinkKakao(kakaoWithdrawDTO);
     }
 }

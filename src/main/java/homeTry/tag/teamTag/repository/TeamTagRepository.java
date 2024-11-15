@@ -9,6 +9,6 @@ import java.util.List;
 public interface TeamTagRepository extends JpaRepository<TeamTag, Long> {
 
     List<TeamTag> findAllByIsDeprecatedFalse();
-    boolean existsByTagName(TagName tagName);
+    boolean existsByTagNameAndIsDeprecatedFalse(TagName tagName);
 
 }

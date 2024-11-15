@@ -10,7 +10,7 @@ public record ProductRequest(
     @NotBlank
     String productUrl,
     @NotBlank
-    @Size(min = 1, max = 15, message = "상품의 이름은 최소 1글자, 최대 15글자 입니다")
+    @Size(min = 1, max = 20, message = "상품의 이름은 최소 1글자, 최대 20글자 입니다")
     String name,
     @NotNull
     Long price,

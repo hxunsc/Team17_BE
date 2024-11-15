@@ -18,10 +18,10 @@ public class TeamTagMappingService {
     }
 
     //팀에 해당하는 태그를 TeamTagMapping 에 추가
-    //TeamService의 addTeam 메소드에서 하나의 트랜잭션으로 묶여있음
     public void addTeamTagMappings(List<TeamTag> tagList, Team team) {
         tagList.forEach(
-                tag -> teamTagMappingRepository.save(new TeamTagMapping(tag, team)));
+                tag -> teamTagMappingRepository.save(new TeamTagMapping(tag, team))
+        );
     }
 
     //팀과 연관된 teamTagMapping 을 반환
@@ -32,5 +32,12 @@ public class TeamTagMappingService {
     //해당 팀의 TeamTagMapping 모두 삭제
     public void deleteAllTeamTagMappingFromTeam(Team team) {
         teamTagMappingRepository.deleteByTeam(team);
+    }
+
+    //관리자에 의한 TeamTag 삭제로 인해 해당 TeamTagMapping deprecated화
+    public void markDeprecated(TeamTag teamTag) {
+        TeamTagMapping teamTagMapping = teamTagMappingRepository.findByTeamTag(teamTag);
+
+        teamTagMapping.markAsDeprecated();
     }
 }

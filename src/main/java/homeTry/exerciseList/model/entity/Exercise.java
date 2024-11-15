@@ -1,6 +1,6 @@
 package homeTry.exerciseList.model.entity;
 
-import homeTry.common.entity.BaseEntity;
+import homeTry.common.entity.SoftDeletableEntity;
 import homeTry.exerciseList.model.vo.ExerciseName;
 import homeTry.member.model.entity.Member;
 import jakarta.persistence.*;
@@ -13,7 +13,7 @@ import jakarta.persistence.*;
         @Index(name = "idx_exercise_is_deprecated", columnList = "is_deprecated")
     }
 )
-public class Exercise extends BaseEntity {
+public class Exercise extends SoftDeletableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

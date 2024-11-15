@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import homeTry.common.auth.jwt.JwtAuth;
 import homeTry.exerciseList.model.entity.Exercise;
 import homeTry.exerciseList.model.entity.ExerciseTime;
+import homeTry.exerciseList.repository.ExerciseHistoryRepository;
 import homeTry.exerciseList.repository.ExerciseRepository;
 import homeTry.exerciseList.repository.ExerciseTimeRepository;
 import homeTry.exerciseList.service.ExerciseTimeService;
@@ -22,12 +23,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 
+@ActiveProfiles("dev")
 @SpringBootTest
 @AutoConfigureMockMvc
-@Transactional
 public class ExerciseTest {
 
     @Autowired
@@ -43,6 +44,9 @@ public class ExerciseTest {
     private ExerciseTimeRepository exerciseTimeRepository;
 
     @Autowired
+    private ExerciseHistoryRepository exerciseHistoryRepository;
+
+    @Autowired
     private ExerciseTimeService exerciseTimeService;
 
     @Autowired
@@ -52,7 +56,12 @@ public class ExerciseTest {
 
     @BeforeEach
     void beforeEach() {
-        Member testMember = memberRepository.save(new Member("test@example.com", "1234"));
+        exerciseHistoryRepository.deleteAll();
+        exerciseTimeRepository.deleteAll();
+        exerciseRepository.deleteAll();
+
+        Member testMember = memberRepository.findByEmail(new Email("test@example.com"))
+            .orElseGet(() -> memberRepository.save(new Member("test@example.com", "1234")));
         token = jwtAuth.generateToken(MemberDTO.from(testMember));
     }
 

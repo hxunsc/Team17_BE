@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -90,6 +91,7 @@ public class ChattingTest {
     }
 
     @Test
+    @DisplayName("채팅 내역 가져오기 테스트")
     void restChattingTest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/team/chatting/1?page=3&size=5")
                         .header("Authorization", "Bearer " + token)

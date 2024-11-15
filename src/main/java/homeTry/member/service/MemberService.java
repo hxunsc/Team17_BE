@@ -2,10 +2,12 @@ package homeTry.member.service;
 
 
 import homeTry.common.auth.kakaoAuth.dto.KakaoMemberInfoDTO;
+import homeTry.common.auth.kakaoAuth.dto.KakaoMemberWithdrawDTO;
 import homeTry.exerciseList.service.ExerciseHistoryService;
 import homeTry.member.dto.MemberDTO;
 import homeTry.member.dto.request.ChangeNicknameRequest;
 import homeTry.member.dto.response.MyPageResponse;
+import homeTry.member.exception.badRequestException.InactivatedMemberException;
 import homeTry.member.exception.badRequestException.LoginFailedException;
 import homeTry.member.exception.badRequestException.MemberNotFoundException;
 import homeTry.member.exception.badRequestException.RegisterEmailConflictException;
@@ -35,27 +37,38 @@ public class MemberService {
         Member member = memberRepository.findByEmail(new Email(kakaoMemberInfoDTO.email()))
                 .orElseThrow(LoginFailedException::new);
 
+        if(member.isInactive())
+            throw new InactivatedMemberException();
+
         return MemberDTO.from(member);
     }
 
     @Transactional
     public MemberDTO register(KakaoMemberInfoDTO kakaoMemberInfoDTO) {
 
-        MemberDTO memberDTO = new MemberDTO(1L, kakaoMemberInfoDTO.email(),
+        MemberDTO memberDTO = new MemberDTO(kakaoMemberInfoDTO.email(),
                 RandomNicknameGenerator.generateNickname(), Role.USER);
 
         Member member = memberDTO.toEntity();
 
-        if (memberRepository.existsByEmail(new Email(memberDTO.email()))) {
+        if (memberRepository.existsByEmail(new Email(memberDTO.email())))
             throw new RegisterEmailConflictException();
-        }
 
-        return MemberDTO.from(memberRepository.save(member));
+        memberRepository.save(member);
+
+        setKakaoMemberId(member.getId(), kakaoMemberInfoDTO.kakaoMemberId());
+
+        return MemberDTO.from(member);
     }
 
     @Transactional(readOnly = true)
     public MemberDTO getMember(Long id) {
-        return MemberDTO.from(getMemberEntity(id));
+        Member member = getMemberEntity(id);
+
+        if(member.isInactive())
+            throw new InactivatedMemberException();
+
+        return MemberDTO.from(member);
     }
 
     @Transactional(readOnly = true)
@@ -64,9 +77,15 @@ public class MemberService {
     }
 
     @Transactional
-    public void setMemeberAccessToken(Long id, String kakaoAccessToken) {
+    public void setMemberAccessToken(Long id, String kakaoAccessToken) {
         Member member = getMemberEntity(id);
         member.setKakaoAccessToken(kakaoAccessToken);
+    }
+
+    @Transactional
+    public void setKakaoMemberId(Long memberId, Long kakaoMemberId) {
+        Member member = getMemberEntity(memberId);
+        member.setKakaoMemberId(kakaoMemberId);
     }
 
     @Transactional
@@ -94,9 +113,13 @@ public class MemberService {
     }
 
     @Transactional
-    public void withdrawMember(Long id) {
+    public KakaoMemberWithdrawDTO withdrawMember(Long id) {
         Member member = getMemberEntity(id);
+        KakaoMemberWithdrawDTO kakaoMemberWithdrawDTO = new KakaoMemberWithdrawDTO(
+                member.getKakaoMemberId(), member.getKakaoAccessToken());
         deactivateMember(member);
+
+        return kakaoMemberWithdrawDTO;
     }
 
     @Transactional
@@ -127,8 +150,9 @@ public class MemberService {
         member.revokeEmail();
         member.revokeNickname();
         member.revokeExerciseAttendanceDate();
+        member.revokeKakaoMemberId();
         member.revokeKakaoAccessToken();
         member.demoteToUser();
-        member.markAsDeprecated();
+        member.deactivate();
     }
 }

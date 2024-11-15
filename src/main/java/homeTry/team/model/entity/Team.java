@@ -2,10 +2,9 @@ package homeTry.team.model.entity;
 
 import homeTry.common.entity.BaseEntity;
 import homeTry.member.model.entity.Member;
-import homeTry.team.exception.InvalidPasswordException;
-import homeTry.team.exception.NotTeamLeaderException;
-import homeTry.team.exception.TeamHasNotPasswordException;
-import homeTry.team.exception.TeamParticipantsFullException;
+import homeTry.team.exception.badRequestException.InvalidPasswordException;
+import homeTry.team.exception.badRequestException.TeamHasNotPasswordException;
+import homeTry.team.exception.badRequestException.TeamParticipantsFullException;
 import homeTry.team.model.vo.Description;
 import homeTry.team.model.vo.Name;
 import homeTry.team.model.vo.Participant;
@@ -99,11 +98,7 @@ public class Team extends BaseEntity {
     }
 
     public boolean validateIsLeader(long memberId) {
-        if (leaderId != memberId) {
-            throw new NotTeamLeaderException();
-        }
-
-        return true;
+        return this.leaderId == memberId;
     }
 
     public void verifyPassword(String password) {

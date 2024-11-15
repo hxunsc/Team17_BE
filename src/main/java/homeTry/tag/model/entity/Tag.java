@@ -1,11 +1,11 @@
 package homeTry.tag.model.entity;
 
-import homeTry.common.entity.BaseEntity;
+import homeTry.common.entity.SoftDeletableEntity;
 import homeTry.tag.model.vo.TagName;
 import jakarta.persistence.*;
 
 @MappedSuperclass
-public abstract class Tag extends BaseEntity {
+public abstract class Tag extends SoftDeletableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -14,5 +14,5 @@ public interface ExerciseRepository extends JpaRepository<Exercise, Long> {
     void deleteByMemberId(Long memberId);
 
     @Query("SELECT e FROM Exercise e WHERE e.isDeprecated = false")
-    List<Exercise> findAllNonDeprecatedExercises();
+    List<Exercise> findByIsDeprecatedFalse();
 }

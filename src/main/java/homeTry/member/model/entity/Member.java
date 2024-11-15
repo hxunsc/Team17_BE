@@ -34,6 +34,9 @@ public class Member extends BaseEntity {
     private Nickname nickname;
 
     @Column(nullable = true)
+    private Long kakaoMemberId;
+
+    @Column(nullable = true)
     private String kakaoAccessToken;
 
     @Column(nullable = false)
@@ -41,6 +44,10 @@ public class Member extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    //탈퇴했는지 여부
+    @Column(nullable = false)
+    private boolean isInactive;
 
     protected Member() {
     }
@@ -70,6 +77,18 @@ public class Member extends BaseEntity {
         return nickname.value();
     }
 
+    public Long getKakaoMemberId() {
+        return kakaoMemberId;
+    }
+
+    public void setKakaoMemberId(Long kakaoMemberId) {
+        this.kakaoMemberId = kakaoMemberId;
+    }
+
+    public void revokeKakaoMemberId() {
+        this.kakaoMemberId = null;
+    }
+
     public String getKakaoAccessToken() {
         return kakaoAccessToken;
     }
@@ -84,6 +103,10 @@ public class Member extends BaseEntity {
 
     public Role getRole() {
         return role;
+    }
+
+    public boolean isInactive() {
+        return isInactive;
     }
 
     public void changeNickname(Nickname nickname) {
@@ -122,7 +145,7 @@ public class Member extends BaseEntity {
         return (this.role == Role.ADMIN);
     }
 
-
-
-
+    public void deactivate() {
+        this.isInactive = true;
+    }
 }
