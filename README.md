@@ -13,6 +13,7 @@
 - [기술 스택](#기술-스택)
 - [주요 기능](#주요-기능)
 - [개발 주안점](#개발-주안점)
+- [페이지별 화면 소개](#페이지별-화면-소개)
 - [페이지별 기능](#페이지별-기능)
 - [폴더 구조](#폴더-구조)
 
@@ -144,10 +145,12 @@
 - 회원 탈퇴
     - 사용자가 로그인한 회원을 탈퇴하는 기능입니다.
     - 회원 탈퇴는 해당 **시퀀스 다이어그램**을 따릅니다.
-              <details>
-          <summary>회원 탈퇴 시퀀스 다이어그램 보기</summary>
-         ![회원 탈퇴 시퀀스 다이어그램](https://github.com/user-attachments/assets/3959846b-14a4-40cb-b026-01fe919982bc)
-      </details>
+        <details>
+            <summary>회원 탈퇴 시퀀스 다이어그램 보기</summary>
+
+        ![회원 탈퇴 시퀀스 다이어그램](https://github.com/user-attachments/assets/3959846b-14a4-40cb-b026-01fe919982bc)
+
+</details>
 
 
 #### 운동
@@ -263,6 +266,20 @@
             - 팀태그: 이름, 속성
     - 태그 삭제
         - 필요 없는 태그는 삭제할 수 있으며, 삭제는 Soft Delete 방식으로 처리되어 데이터 추적이 가능합니다.
+
+<br />
+
+### ✨ 페이지별 화면 소개
+- 아래 화면은 모바일에서 실제 웹을 캡쳐한 사진입니다.
+
+|  메인 페이지  |  나의그룹 페이지  |  그룹탐색 페이지  |  마켓 페이지  |  마이 페이지  |
+|----|----|----|----|----|
+| ![hometry1_main1](https://github.com/user-attachments/assets/9fc74cd4-ab70-4327-b08f-82acc68e64fd)  |  ![hometry3_mygroup](https://github.com/user-attachments/assets/7bdaa928-2969-4d58-92fb-8d03930e30ac)  |  ![hometry6_searchgroup](https://github.com/user-attachments/assets/fa757def-2a30-4c73-b15b-ec3afd1e9d62)  |  ![hometry8_market](https://github.com/user-attachments/assets/b14ea3df-707c-47f8-a943-d4dac841e34f)  |  ![hometry9_mypage](https://github.com/user-attachments/assets/72ac9119-dcbc-4355-a8fd-61af96ca4a6a)  |
+| ![hometry2_main2](https://github.com/user-attachments/assets/bafb30f9-6414-4ccf-bdea-7e9de334a7a1)  |  ![hometry4_ranking](https://github.com/user-attachments/assets/882128a9-a960-40c7-8c91-e71811327c96)  |  ![hometry7_addgroup](https://github.com/user-attachments/assets/3239c918-3b1c-4180-b654-42fd9a155254)  |    |    |
+|    |  ![hometry5_chat](https://github.com/user-attachments/assets/956d16fc-6fc7-4977-85b7-c5c0820cc05b)  |    |    |    |
+|    |    |    |    |    |
+
+
 
 <br />
 
