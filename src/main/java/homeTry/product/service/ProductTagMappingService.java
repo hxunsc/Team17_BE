@@ -53,14 +53,6 @@ public class ProductTagMappingService {
         productTagMappingRepository.saveAll(mappings);
     }
 
-    // 특정 ProductTag와 연관된 ProductTagMapping을 조회하고, isDeprecated를 true로 설정
-    @Transactional
-    public void setMappingsDeprecatedByTagId(Long tagId) {
-        List<ProductTagMapping> mappings = productTagMappingRepository.findByProductTagId(tagId);
-        mappings.forEach(mapping -> mapping.markAsDeprecated());
-        productTagMappingRepository.saveAll(mappings);
-    }
-
     @Transactional
     public void updateProductTagMapping(Product product, ProductTag newTag) {
         // 기존 매핑 조회
